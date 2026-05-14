@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LessonHub v2.0.0-alpha.2 · Admin Writer</title>
+<title>LessonHub v2.0.0-alpha.2.1.1 · Admin Writer Hotfix</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#756e67;--line:rgba(24,21,18,.14);--line2:rgba(24,21,18,.07);--wash:rgba(255,253,249,.78);--shadow:0 28px 80px rgba(35,28,20,.055);--danger:#9d2d25;--ok:#28745a}
@@ -14,7 +14,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}textarea{min-hei
 <body>
 <div class="gate active" id="gate"><div><h2>Carregando LessonHub…</h2><p class="subtle" id="gateText">Verificando sessão com segurança.</p></div></div>
 <div class="shell">
-<header class="mast"><div><h1 class="logo">Lesson<br>Hub</h1><p class="kicker" style="margin-top:12px">v2.0.0-alpha.2 · Admin Writer</p></div><p class="kicker" id="sessionMini">backend staging</p></header>
+<header class="mast"><div><h1 class="logo">Lesson<br>Hub</h1><p class="kicker" style="margin-top:12px">v2.0.0-alpha.2.1.1 · Admin Writer Hotfix</p></div><p class="kicker" id="sessionMini">backend staging</p></header>
 <main id="app"></main>
 <footer class="footer"><span>Erik Azevedo (@prof.erikazevedo)</span><span id="footerMode">Supabase</span></footer>
 </div>
@@ -80,5 +80,126 @@ function openMaterial(id){const all=Object.values(state.materialsByLesson).flat(
 function renderFinance(){document.getElementById("app").innerHTML=`<section class="hero"><h2>Financeiro</h2><p class="subtle">Resumo simples para o aluno.</p></section>${studentTab("finance")}<section class="panel"><div class="panel-title"><h3>Mensalidades</h3></div><div class="list">${state.payments.map(paymentCard).join("")||empty("Sem mensalidade","Nenhuma mensalidade cadastrada ainda.")}</div></section>`}
 init();
 </script>
+
+<script id="lessonhub-alpha2-1-gate-timeout-hotfix">
+(function(){
+'use strict';
+
+let LH_LOADING_221 = false;
+let LH_LAST_LOAD_221 = 0;
+
+function gate221(msg, show=true){
+  const gt=document.getElementById("gate");
+  const txt=document.getElementById("gateText");
+  if(txt) txt.textContent = msg || "Carregando.";
+  if(gt) gt.classList.toggle("active", !!show);
+}
+
+async function withTimeout221(promise, label, ms=9000){
+  let timer;
+  const timeout = new Promise((_, reject)=>{
+    timer=setTimeout(()=>reject(new Error((label||"Operação")+" demorou demais. Recarregue a página ou confira RLS/policies.")), ms);
+  });
+  try { return await Promise.race([promise, timeout]); }
+  finally { clearTimeout(timer); }
+}
+
+async function safeLoad221(){
+  if(LH_LOADING_221) return;
+  const now = Date.now();
+  if(now - LH_LAST_LOAD_221 < 900) return;
+  LH_LOADING_221 = true;
+  LH_LAST_LOAD_221 = now;
+  try{
+    gate221("Verificando sessão…", true);
+    const sessionRes = await withTimeout221(client.auth.getSession(), "Sessão", 8000);
+    const session = sessionRes && sessionRes.data && sessionRes.data.session;
+    if(!session){
+      if(typeof renderLogin === "function") renderLogin();
+      return;
+    }
+    state.session=session;
+    state.user=session.user;
+    state.email=(session.user.email||"").toLowerCase();
+
+    gate221("Buscando perfil…", true);
+    const profRes = await withTimeout221(
+      client.from("profiles").select("*").eq("email",state.email).maybeSingle(),
+      "Busca de profile",
+      10000
+    );
+
+    if(profRes.error){
+      if(typeof renderLogin === "function") renderLogin("Erro ao consultar profile:\n"+profRes.error.message+"\n\nSe for RLS/policy, rode novamente o SQL da alpha.2.");
+      return;
+    }
+    if(!profRes.data){
+      if(typeof renderUnauthorized === "function") renderUnauthorized();
+      return;
+    }
+
+    state.profile=profRes.data;
+    if(state.profile.role==="admin"){
+      await withTimeout221(loadAdmin(), "Carregamento do admin", 12000);
+    }else if(state.profile.role==="student"){
+      await withTimeout221(loadStudent(state.profile), "Carregamento do aluno", 12000);
+    }else{
+      if(typeof renderUnauthorized === "function") renderUnauthorized("Role desconhecida: "+state.profile.role);
+    }
+  }catch(e){
+    console.error("LessonHub alpha.2.1 recovery", e);
+    if(typeof renderLogin === "function"){
+      renderLogin("O carregamento travou:\n"+(e.message||e)+"\n\nDica: se acabou de subir SQL/HTML, faça F5. Se persistir, confira se o e-mail existe em profiles.");
+    }
+  }finally{
+    gate221("", false);
+    LH_LOADING_221 = false;
+  }
+}
+
+// Override init/signout with the safer versions.
+window.init = safeLoad221;
+window.lessonHubRecoverSession221 = safeLoad221;
+
+window.signOut = async function signOut221(){
+  try{
+    gate221("Saindo…", true);
+    await client.auth.signOut();
+  }catch(e){
+    console.warn(e);
+  }finally{
+    state={session:null,user:null,email:"",profile:null,student:null,lessons:[],payments:[],materialsByLesson:{},admin:{students:[],lessons:[],payments:[],materials:[],links:[]}};
+    if(typeof renderLogin === "function") renderLogin();
+    gate221("", false);
+  }
+};
+
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState === "visible"){
+    const gt=document.getElementById("gate");
+    if(gt && gt.classList.contains("active")) setTimeout(safeLoad221, 250);
+  }
+});
+
+window.addEventListener("focus", ()=>{
+  const gt=document.getElementById("gate");
+  if(gt && gt.classList.contains("active")) setTimeout(safeLoad221, 250);
+});
+
+// If app has content and gate is still active, release it.
+setInterval(()=>{
+  const gt=document.getElementById("gate");
+  const app=document.getElementById("app");
+  if(gt && gt.classList.contains("active") && app && app.innerHTML.trim()){
+    gate221("", false);
+  }
+}, 2500);
+
+// Run one safe recovery shortly after legacy init.
+setTimeout(safeLoad221, 500);
+
+})();
+</script>
+
 </body>
 </html>
