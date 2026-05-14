@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LessonHub v2.0.0-alpha.3.2.1 · Usability + Drive Attachments</title>
+<title>LessonHub v2.0.0-alpha.3.3.1 · Usability + Drive Attachments</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="shell">
-<header class="mast"><div><h1 class="logo">Lesson<br>Hub</h1><p class="kicker" style="margin-top:12px">v2.0.0-alpha.3.2.1 · Usability + Drive Attachments</p></div><div style="text-align:right"><p class="kicker" id="sessionMini">iniciando</p><p class="subtle top-status" id="topStatus"></p></div></header>
+<header class="mast"><div><h1 class="logo">Lesson<br>Hub</h1><p class="kicker" style="margin-top:12px">v2.0.0-alpha.3.3.1 · Usability + Drive Attachments</p></div><div style="text-align:right"><p class="kicker" id="sessionMini">iniciando</p><p class="subtle top-status" id="topStatus"></p></div></header>
 <main id="app"></main>
 <footer class="footer"><span>Erik Azevedo (@prof.erikazevedo)</span><span id="footerMode">Supabase backend</span></footer>
 </div>
@@ -281,6 +281,162 @@ window.uploadFileToDrive = async function uploadFileToDrive32(file){
       throw new Error("Drive upload deu Failed to fetch. Isso costuma ser bloqueio de OAuth/CORS/origem ou token Drive não emitido para esta página. Confirme se a origem https://newborders-br.github.io está no OAuth Client e tente em uma aba sem bloqueador/extensões.");
     }
     throw e;
+  }
+};
+
+})();
+</script>
+
+
+<script id="lessonhub-alpha3-3-session-drive-polish">
+(function(){
+'use strict';
+
+let LH_BUSY_33 = false;
+
+function setBusy33(on, msg=""){
+  LH_BUSY_33 = !!on;
+  if(on && msg) setTop(msg, "warn");
+  if(!on) clearStatus33();
+}
+
+function clearStatus33(){
+  const top=document.getElementById("topStatus");
+  if(top && !LH_BUSY_33) top.textContent="";
+  const mini=document.getElementById("sessionMini");
+  if(mini && App.email && !LH_BUSY_33) mini.textContent=App.email;
+}
+
+// Kill stale "buscando perfil..." when the page is already rendered.
+setInterval(()=>{
+  const app=document.getElementById("app");
+  const top=document.getElementById("topStatus");
+  if(app && app.innerHTML.trim() && top && /buscando perfil|carregando painel|restaurando sessão/i.test(top.textContent||"") && !LH_BUSY_33){
+    clearStatus33();
+  }
+}, 1200);
+
+const oldLoadProfile33 = window.loadProfile;
+window.loadProfile = async function loadProfile33(){
+  try{
+    await oldLoadProfile33.apply(this, arguments);
+  }finally{
+    clearStatus33();
+  }
+};
+
+const oldLoadAdmin33 = window.loadAdmin;
+window.loadAdmin = async function loadAdmin33(){
+  try{
+    await oldLoadAdmin33.apply(this, arguments);
+  }finally{
+    clearStatus33();
+  }
+};
+
+const oldLoadStudent33 = window.loadStudent;
+window.loadStudent = async function loadStudent33(){
+  try{
+    await oldLoadStudent33.apply(this, arguments);
+  }finally{
+    clearStatus33();
+  }
+};
+
+// Diagnostics: writes are already proven by normal operations. Make the diagnostic quick and explicit.
+window.runWriteDiagnostics = async function runWriteDiagnostics33(){
+  const out=document.getElementById("diagOut");
+  if(out){out.className="status warn";out.textContent="testando escrita leve..."}
+  setBusy33(true, "testando escrita...");
+  try{
+    const email="diag_light+"+Date.now()+"@lessonhub.test";
+    const st=await doSave("diag student", client.from("students").insert({
+      name:"Diagnóstico leve",
+      email,
+      language:"Teste",
+      active_course_name:"Diagnóstico",
+      active_course_level:"Teste",
+      status:"ativo"
+    }).select().single());
+    await doSave("diag profile", client.from("profiles").upsert({
+      email,
+      role:"student",
+      student_id:st.id
+    }, {onConflict:"email"}));
+    if(out){out.className="status good";out.textContent="Diagnóstico aprovado: students + profiles gravam."}
+    alert("Diagnóstico aprovado: escrita básica funcionando.");
+    await loadAdmin();
+  }catch(e){
+    console.error(e);
+    if(out){out.className="status bad";out.textContent=e.message||String(e)}
+    alert("Diagnóstico falhou:\n"+(e.message||String(e)));
+  }finally{
+    setBusy33(false);
+  }
+};
+
+// Drive auth polish.
+// Supabase login and Drive permission are separate. This caches the Drive token for the browser session
+// and asks silently first. If Google refuses, it opens consent only then.
+window.getDriveToken = function getDriveToken33(){
+  return new Promise((resolve,reject)=>{
+    const cached = sessionStorage.getItem("lessonhub_drive_token");
+    const exp = Number(sessionStorage.getItem("lessonhub_drive_token_exp")||0);
+    if(cached && Date.now() < exp){
+      driveAccessToken = cached;
+      return resolve(cached);
+    }
+    if(!window.google || !google.accounts || !google.accounts.oauth2){
+      return reject(new Error("Google Identity Services ainda não carregou. Aguarde alguns segundos e tente anexar novamente."));
+    }
+    const requestToken = (promptMode)=>{
+      driveTokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: DRIVE_CLIENT_ID,
+        scope: "https://www.googleapis.com/auth/drive.file",
+        callback: (resp)=>{
+          if(resp.error){
+            if(promptMode === ""){
+              requestToken("consent");
+              return;
+            }
+            reject(new Error(resp.error));
+            return;
+          }
+          driveAccessToken = resp.access_token;
+          sessionStorage.setItem("lessonhub_drive_token", driveAccessToken);
+          sessionStorage.setItem("lessonhub_drive_token_exp", String(Date.now()+45*60*1000));
+          resolve(driveAccessToken);
+        }
+      });
+      driveTokenClient.requestAccessToken({prompt: promptMode});
+    };
+    requestToken("");
+  });
+};
+
+const oldUpload33 = window.uploadFileToDrive;
+window.uploadFileToDrive = async function uploadFileToDrive33(file){
+  setBusy33(true, "anexando no Drive...");
+  try{
+    return await oldUpload33(file);
+  }catch(e){
+    const msg=(e && e.message) ? e.message : String(e);
+    if(/Failed to fetch/i.test(msg)){
+      throw new Error("Drive upload falhou na comunicação. Como o Netlify antigo funciona, isto provavelmente é diferença do fluxo novo de token Drive no GitHub Pages. Tente de novo uma vez; se persistir, precisamos religar o mesmo módulo Drive/gapi do v1 em vez do token client novo.");
+    }
+    throw e;
+  }finally{
+    setBusy33(false);
+  }
+};
+
+const oldSaveFlow33 = window.saveFlow;
+window.saveFlow = async function saveFlow33(msg, fn){
+  setBusy33(true, msg);
+  try{
+    await oldSaveFlow33(msg, fn);
+  }finally{
+    setBusy33(false);
   }
 };
 
