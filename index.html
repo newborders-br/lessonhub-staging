@@ -14,7 +14,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>LessonHub v1.9.0 — Drive + Supabase Backup</title>
+<title>LessonHub v1.10.0 — Stability & Supabase Backup Diagnostics</title>
 <style>
 :root{--bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#777069;--soft:#aaa19a;--line:rgba(24,21,18,.14);--line2:rgba(24,21,18,.08);--bad:#9d2d25;--ok:#28745a;--warn:#a06c1b;--blue:#315f8f;--shadow:0 28px 80px rgba(35,28,20,.055)}
 *{box-sizing:border-box;margin:0;padding:0} body{min-height:100vh;background:radial-gradient(circle at 15% -10%,rgba(190,165,126,.16),transparent 28%),radial-gradient(circle at 92% 0%,rgba(49,95,143,.08),transparent 30%),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(24,21,18,.025) 1px,transparent 1px);background-size:1px 44px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),transparent 82%)}button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}.shell{width:min(1500px,calc(100% - 48px));margin:0 auto;padding:28px 0 60px}.mast{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;border-bottom:1px solid var(--ink);padding:18px 0 20px;margin-bottom:16px}.brand h1{font-family:Georgia,serif;font-weight:400;font-size:56px;line-height:.82;letter-spacing:-.07em}.brand p,.datebox{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin-top:13px}.datebox{text-align:right;line-height:1.6}.nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px}.nav button,.linkbtn{border:0;background:transparent;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.16em;padding:0 0 4px;border-bottom:1px solid transparent}.nav button.active,.nav button:hover,.linkbtn:hover{color:var(--ink);border-bottom-color:var(--ink)}.actions{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}.page{display:none}.page.active{display:block}.page-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px}.page-title h2{font-family:Georgia,serif;font-weight:400;font-size:34px;letter-spacing:-.045em}.page-title p{color:var(--muted);margin-top:6px;font-size:14px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card,.panel,.item,.modal-box{background:rgba(255,253,249,.72);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.card{padding:22px;min-height:136px;display:flex;flex-direction:column;justify-content:space-between}.card .num{font-family:Georgia,serif;font-size:42px;letter-spacing:-.06em;font-weight:400;line-height:.9}.label{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-top:12px}.subtle{color:var(--muted);font-size:13px;line-height:1.55}.panel{padding:20px;margin-bottom:16px}.panel-title{font-family:Georgia,serif;font-size:25px;font-weight:400;letter-spacing:-.04em;border-bottom:1px solid var(--ink);padding-bottom:11px;margin-bottom:14px}.form{display:grid;gap:12px}.field{display:grid;gap:6px}.field label,.micro{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}input,textarea,select{width:100%;background:rgba(255,255,255,.64);border:1px solid var(--line);padding:10px 11px;outline:none;color:var(--ink)}textarea{min-height:86px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--ink);background:#fff}.btn{background:transparent;border:1px solid var(--ink);color:var(--ink);padding:9px 13px;text-transform:uppercase;letter-spacing:.13em;font-size:11px}.btn:hover{background:var(--ink);color:var(--paper)}.btn.soft{border-color:var(--line);color:var(--muted)}.btn.danger{border-color:var(--bad);color:var(--bad)}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}.toolbar-left,.row-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.search{max-width:460px}.list{display:grid;gap:10px}.item{padding:15px}.item-title{font-family:Georgia,serif;font-size:21px;font-weight:400;letter-spacing:-.035em}.item:hover{border-color:rgba(24,21,18,.28)}.meta{font-size:13px;color:var(--muted);line-height:1.5}.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.badge{border:1px solid var(--line);padding:3px 7px;font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);background:rgba(255,255,255,.35)}.badge.ok{color:var(--ok);border-color:rgba(40,116,90,.35)}.badge.bad{color:var(--bad);border-color:rgba(157,45,37,.35)}.badge.warn{color:var(--warn);border-color:rgba(160,108,27,.35)}.badge.blue{color:var(--blue);border-color:rgba(49,95,143,.35)}.empty{padding:34px;text-align:center;border:1px dashed var(--line);color:var(--soft);background:rgba(255,255,255,.35)}.table{width:100%;border-collapse:collapse}.table th{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);text-align:left;padding:10px;border-bottom:1px solid var(--ink);font-weight:400}.table td{padding:11px 10px;border-bottom:1px solid var(--line2);vertical-align:top;font-size:13px}.table tr:hover td{background:rgba(255,255,255,.48)}.modal{position:fixed;inset:0;background:rgba(24,21,18,.48);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:22px;z-index:30}.modal-box{width:min(860px,100%);max-height:90vh;overflow:auto;padding:24px}.modal-head{display:flex;justify-content:space-between;gap:16px;margin-bottom:14px;border-bottom:1px solid var(--ink);padding-bottom:12px}.modal-title{font-family:Georgia,serif;font-size:30px;letter-spacing:-.04em}.toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:var(--paper);padding:12px 14px;font-size:13px;display:none;z-index:40}.student-hero{border:1px solid var(--ink);padding:24px;margin-bottom:16px;background:rgba(255,253,249,.6)}.student-hero h2{font-family:Georgia,serif;font-size:44px;font-weight:400;letter-spacing:-.06em}.tabs{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0}.tabs button{border:0;background:transparent;border-bottom:1px solid transparent;padding-bottom:4px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;font-size:11px}.tabs button.active,.tabs button:hover{color:var(--ink);border-bottom-color:var(--ink)}.checkrow{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:center;border:1px solid var(--line);padding:11px;background:rgba(255,255,255,.28)}.course-block{border-top:1px solid var(--ink);padding-top:14px;margin-top:16px}.course-title{display:flex;justify-content:space-between;gap:12px;align-items:end}.course-title h3{font-family:Georgia,serif;font-weight:400;font-size:31px;letter-spacing:-.05em}.unit-title{font-family:Georgia,serif;font-weight:400;font-size:24px;letter-spacing:-.04em;margin:14px 0 8px;border-bottom:1px solid var(--line);padding-bottom:8px}.progress{height:4px;background:rgba(24,21,18,.09);overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--ink)}.health-ok{color:var(--ok)}.health-warn{color:var(--warn)}.health-bad{color:var(--bad)}@media(max-width:980px){.shell{width:min(100% - 24px,1480px);padding-top:18px}.mast{grid-template-columns:1fr}.datebox{text-align:left}.brand h1{font-size:42px}.grid,.two,.three{grid-template-columns:1fr}.page-head{display:block}.actions{margin-left:0}.checkrow{grid-template-columns:1fr}}
@@ -164,7 +164,7 @@ body.student-mode.previewing-student181 .student-preview181{display:flex}
 <div class="lesson-modal" id="studentLessonModal"><div class="lesson-modal-box"><div class="lesson-modal-head"><div><div class="lesson-modal-title" id="studentLessonTitle"></div><div class="subtle" id="studentLessonSub"></div></div><button class="linkbtn" onclick="studentCloseLesson()">fechar</button></div><div class="lesson-modal-body" id="studentLessonBody"></div></div></div>
 <div class="student-viewer" id="studentViewer"><div class="student-viewer-box"><div class="student-viewer-head"><div class="student-viewer-title" id="studentViewerTitle">Material</div><div class="student-viewer-actions"><button id="studentDownloadBtn" onclick="studentDownloadCurrent()">baixar</button><button onclick="studentCloseViewer()">fechar</button></div></div><div class="student-viewer-frame" id="studentViewerFrame"></div></div></div>
 
-<div class="shell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.8.1</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-student" class="page"></section><section id="page-course" class="page"></section><section id="page-lessons" class="page"></section><section id="page-materials" class="page"></section><section id="page-school" class="page"></section><section id="page-portal" class="page"></section>
+<div class="shell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.10.0</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-student" class="page"></section><section id="page-course" class="page"></section><section id="page-lessons" class="page"></section><section id="page-materials" class="page"></section><section id="page-school" class="page"></section><section id="page-portal" class="page"></section>
     <section id="page-payments" class="page"></section><section id="page-health" class="page"></section></main></div>
 <input type="file" id="backupInput" accept=".json" hidden onchange="importBackup(this.files[0])"><input type="file" id="courseCsvInput" accept=".csv,.txt" hidden onchange="importCourseCSV(this.files[0])">
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><div><div class="modal-title" id="modalTitle"></div><div class="subtle" id="modalSub"></div></div><button class="linkbtn" onclick="closeModal()">fechar</button></div><div id="modalBody"></div></div></div><div class="toast" id="toast"></div>
@@ -175,11 +175,11 @@ const PAGES=[['dashboard','Today'],['students','Students'],['course','Course Bui
 let DB=loadDB(),PAGE='dashboard',CURRENT_STUDENT=null,STUDENT_TAB='overview',LESSON_DATE_FILTER='all';
 const $=id=>document.getElementById(id);function uid(p='id'){return p+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}function today(){return new Date().toISOString().slice(0,10)}function thisMonth(){return today().slice(0,7)}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function fmtDate(d){if(!d)return '—';const [y,m,day]=String(d).slice(0,10).split('-');return day+'/'+m+'/'+y}function money(n){return (Number(n)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}function byId(a,id){return (a||[]).find(x=>x.id===id)}function studentName(id){return byId(DB.students,id)?.name||'—'}function studentLevel(id){const s=byId(DB.students,id);return s?.activeCourseLevel||s?.level||''}function courseNameFor(s){return s?.activeCourseName||s?.activeCourseLevel||s?.level||''}function slug(s){return String(s||'arquivo').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,54)||'arquivo'}function fileExt(n){const m=String(n||'').match(/\.([a-zA-Z0-9]{1,8})$/);return m?'.'+m[1].toLowerCase():''}function fmtBytes(b){b=Number(b)||0;if(b>1048576)return (b/1048576).toFixed(2)+' MB';if(b>1024)return (b/1024).toFixed(1)+' KB';return b+' B'}function dataSize(){return new Blob([JSON.stringify(DB)]).size}function addChange(){DB.meta.changesSinceBackup=(DB.meta.changesSinceBackup||0)+1}function blankDB(){return{meta:{version:'1.7.0',updatedAt:new Date().toISOString(),lastBackupAt:null,changesSinceBackup:0},students:[],courses:[],courseUnits:[],plannedLessons:[],lessons:[],materials:[],payments:[],packages:[],assessments:[],formTemplates:[],formLogs:[],studentNotes:[]}}
 function loadDB(){let raw=localStorage.getItem(STORE_KEY);if(!raw){for(const k of OLD_KEYS){if(localStorage.getItem(k)){raw=localStorage.getItem(k);break}}}try{return normalizeDB(JSON.parse(raw||'null'))}catch(e){return blankDB()}}
-function normalizeDB(d){d=d||blankDB();d.meta=d.meta||{};d.meta.version='1.4.0';d.meta.changesSinceBackup=d.meta.changesSinceBackup||0;['students','courses','courseUnits','plannedLessons','lessons','materials','payments','packages','assessments','formTemplates','formLogs','studentNotes'].forEach(k=>d[k]=Array.isArray(d[k])?d[k]:[]);d.students.forEach(s=>{s.status=s.status||'ativo';s.goal=s.goal||'';s.activeCourseLevel=s.activeCourseLevel||s.level||'';s.activeCourseName=s.activeCourseName||s.activeCourseLevel||'';s.defaultLessonValue=Number(s.defaultLessonValue)||0;s.importantNotes=s.importantNotes||'';s.strengths=s.strengths||'';s.difficulties=s.difficulties||'';s.preferences=s.preferences||'';s.placementLevel=s.placementLevel||'';s.recommendedCourse=s.recommendedCourse||''});d.plannedLessons.forEach(p=>{p.courseName=p.courseName||p.level||'';p.unit=p.unit||p.topic||'Sem unidade';p.topic=p.topic||p.unit;p.order=Number(p.order)||1;p.type=p.type||'other'});d.lessons.forEach(l=>{l.date=l.date||'';l.title=l.title||'Aula';l.level=l.level||studentLevel(l.studentId)||'';l.courseName=l.courseName||l.level||'';l.unit=l.unit||l.topic||'Sem unidade';l.topic=l.topic||l.unit;l.pedStatus=l.pedStatus||'agendada';l.finStatus=l.finStatus||'paga';l.planStatus=l.planStatus||'a planejar';l.value=Number(l.value)||0});d.materials.forEach(m=>{m.title=m.title||'Material';m.type=m.type||'material';m.globalStatus=m.globalStatus||m.status||'rascunho';m.deliveryStatus=m.deliveryStatus||'pendente';m.level=m.level||studentLevel(m.studentId)||'Sem nível';m.unit=m.unit||m.topic||'Sem unidade';m.topic=m.topic||m.unit;m.courseLesson=m.courseLesson||m.title;m.attachments=Array.isArray(m.attachments)?m.attachments:[]});d.assessments.forEach(a=>{a.date=a.date||today();a.type=a.type||'placement';a.status=a.status||'rascunho';a.attachments=Array.isArray(a.attachments)?a.attachments:[]});d.formTemplates.forEach(f=>{f.status=f.status||'ativo';f.type=f.type||'feedback mensal'});d.formLogs.forEach(f=>{f.status=f.status||'a enviar';f.date=f.date||today()});d.packages.forEach(p=>{p.month=p.month||thisMonth();p.lessonCount=Number(p.lessonCount)||4;p.amount=Number(p.amount)||0;p.status=p.status||'pendente'});ensureUnitIds(d);return d}
+function normalizeDB(d){d=d||blankDB();d.meta=d.meta||{};d.meta.version='1.10.0';d.meta.changesSinceBackup=d.meta.changesSinceBackup||0;['students','courses','courseUnits','plannedLessons','lessons','materials','payments','packages','assessments','formTemplates','formLogs','studentNotes'].forEach(k=>d[k]=Array.isArray(d[k])?d[k]:[]);d.students.forEach(s=>{s.status=s.status||'ativo';s.goal=s.goal||'';s.activeCourseLevel=s.activeCourseLevel||s.level||'';s.activeCourseName=s.activeCourseName||s.activeCourseLevel||'';s.defaultLessonValue=Number(s.defaultLessonValue)||0;s.importantNotes=s.importantNotes||'';s.strengths=s.strengths||'';s.difficulties=s.difficulties||'';s.preferences=s.preferences||'';s.placementLevel=s.placementLevel||'';s.recommendedCourse=s.recommendedCourse||''});d.plannedLessons.forEach(p=>{p.courseName=p.courseName||p.level||'';p.unit=p.unit||p.topic||'Sem unidade';p.topic=p.topic||p.unit;p.order=Number(p.order)||1;p.type=p.type||'other'});d.lessons.forEach(l=>{l.date=l.date||'';l.title=l.title||'Aula';l.level=l.level||studentLevel(l.studentId)||'';l.courseName=l.courseName||l.level||'';l.unit=l.unit||l.topic||'Sem unidade';l.topic=l.topic||l.unit;l.pedStatus=l.pedStatus||'agendada';l.finStatus=l.finStatus||'paga';l.planStatus=l.planStatus||'a planejar';l.value=Number(l.value)||0});d.materials.forEach(m=>{m.title=m.title||'Material';m.type=m.type||'material';m.globalStatus=m.globalStatus||m.status||'rascunho';m.deliveryStatus=m.deliveryStatus||'pendente';m.level=m.level||studentLevel(m.studentId)||'Sem nível';m.unit=m.unit||m.topic||'Sem unidade';m.topic=m.topic||m.unit;m.courseLesson=m.courseLesson||m.title;m.attachments=Array.isArray(m.attachments)?m.attachments:[]});d.assessments.forEach(a=>{a.date=a.date||today();a.type=a.type||'placement';a.status=a.status||'rascunho';a.attachments=Array.isArray(a.attachments)?a.attachments:[]});d.formTemplates.forEach(f=>{f.status=f.status||'ativo';f.type=f.type||'feedback mensal'});d.formLogs.forEach(f=>{f.status=f.status||'a enviar';f.date=f.date||today()});d.packages.forEach(p=>{p.month=p.month||thisMonth();p.lessonCount=Number(p.lessonCount)||4;p.amount=Number(p.amount)||0;p.status=p.status||'pendente'});ensureUnitIds(d);return d}
 function ensureUnitIds(d=DB){const existing=new Map();d.courseUnits.forEach(u=>{u.id=u.id||uid('unit');u.courseName=u.courseName||u.level;existing.set(`${u.courseName}|${u.level}|${u.unit}`,u.id)});d.plannedLessons.forEach(p=>{const key=`${p.courseName||p.level}|${p.level}|${p.unit||p.topic||'Sem unidade'}`;if(!existing.has(key)){const u={id:uid('unit'),courseName:p.courseName||p.level,level:p.level,unit:p.unit||p.topic||'Sem unidade',order:999};d.courseUnits.push(u);existing.set(key,u.id)}p.unitId=p.unitId||existing.get(key)})}
 function saveDB(skip=false){DB.meta.updatedAt=new Date().toISOString();localStorage.setItem(STORE_KEY,JSON.stringify(DB));if(!skip)render()}function toast(msg){const el=$('toast');el.textContent=msg;el.style.display='block';clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.style.display='none',3000)}function badge(t,c=''){return `<span class="badge ${c}">${esc(t)}</span>`}function pedBadge(s){return badge(s,{concluída:'ok',cancelada:'bad',reposição:'blue',pendente:'warn',agendada:''}[s]||'')}function finBadge(s){return badge(s,{paga:'ok',pendente:'bad',reposição:'blue',falta:'warn',extra:'blue'}[s]||'')}function planBadge(s){return badge(s,{preparado:'ok','a planejar':'warn'}[s]||'warn')}function matBadge(s){return badge(s,{aprovado:'ok',desatualizado:'bad',arquivado:'',rascunho:'warn'}[s]||'')}function groupBy(arr,fn){return arr.reduce((a,x)=>{const k=fn(x)||'—';(a[k]=a[k]||[]).push(x);return a},{})}
 async function openAttachDB(){return new Promise((res,rej)=>{const r=indexedDB.open('lessonhub_attachments_v1',1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains('files'))db.createObjectStore('files',{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}function canonicalName(meta,file){return `${meta.date||today()}__${slug(meta.studentName||studentName(meta.studentId)||'library')}__${slug(meta.type||'material')}__${slug(meta.title||file.name)}${fileExt(file.name)}`}async function saveAttachment(file,meta={}){if(!file)return null;const db=await openAttachDB();return new Promise((res,rej)=>{const id=uid('file'),cn=canonicalName(meta,file),tx=db.transaction('files','readwrite');tx.objectStore('files').put({id,name:file.name,canonicalName:cn,type:file.type||'application/octet-stream',size:file.size,createdAt:new Date().toISOString(),blob:file});tx.oncomplete=()=>{db.close();res({id,name:file.name,canonicalName:cn,type:file.type||'application/octet-stream',size:file.size,createdAt:new Date().toISOString()})};tx.onerror=()=>{db.close();rej(tx.error)}})}async function getAttachment(id){const db=await openAttachDB();return new Promise((res,rej)=>{const tx=db.transaction('files','readonly'),rq=tx.objectStore('files').get(id);rq.onsuccess=()=>{db.close();res(rq.result||null)};rq.onerror=()=>{db.close();rej(rq.error)}})}async function openAttachment(id){try{const f=await getAttachment(id);if(!f)return toast('Anexo não encontrado neste navegador.');const u=URL.createObjectURL(f.blob);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000)}catch(e){toast('Erro ao abrir anexo.')}}
-function init(){dateBox.innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>usability stabilization · real viewer';nav.innerHTML=PAGES.map(p=>`<button data-page="${p[0]}" onclick="showPage('${p[0]}')">${p[1]}</button>`).join('')+`<div class="actions"><button class="linkbtn" onclick="exportBackup()">exportar backup</button><button class="linkbtn" onclick="backupInput.click()">importar</button></div>`;showPage('dashboard');saveDB(true)}function showPage(p){PAGE=p;if(p!=='student')CURRENT_STUDENT=null;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p).classList.add('active');document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===p||(p==='student'&&b.dataset.page==='students')));render()}function pageHead(title,sub,actions=''){return `<div class="page-head"><div class="page-title"><h2>${title}</h2><p>${sub}</p></div><div class="toolbar-left">${actions}</div></div>`}function render(){renderDashboard();renderStudents();renderCourse();renderLessons();renderMaterials();renderSchool();renderPayments();renderHealth();if(CURRENT_STUDENT)renderStudent()}
+function init(){dateBox.innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>stability & supabase backup diagnostics';nav.innerHTML=PAGES.map(p=>`<button data-page="${p[0]}" onclick="showPage('${p[0]}')">${p[1]}</button>`).join('')+`<div class="actions"><button class="linkbtn" onclick="exportBackup()">exportar backup</button><button class="linkbtn" onclick="backupInput.click()">importar</button></div>`;showPage('dashboard');saveDB(true)}function showPage(p){PAGE=p;if(p!=='student')CURRENT_STUDENT=null;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p).classList.add('active');document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===p||(p==='student'&&b.dataset.page==='students')));render()}function pageHead(title,sub,actions=''){return `<div class="page-head"><div class="page-title"><h2>${title}</h2><p>${sub}</p></div><div class="toolbar-left">${actions}</div></div>`}function render(){renderDashboard();renderStudents();renderCourse();renderLessons();renderMaterials();renderSchool();renderPayments();renderHealth();if(CURRENT_STUDENT)renderStudent()}
 function lessonRevenue(l){if(l.finStatus==='pendente')return 0;if(['paga','falta','reposição','extra'].includes(l.finStatus))return Number(l.value)||0;return 0}function monthLessons(month=thisMonth()){return DB.lessons.filter(l=>String(l.date||'').startsWith(month))}function computeStudentCredits(id){return DB.packages.filter(p=>p.studentId===id&&p.status==='pago').reduce((s,p)=>s+packageCredits(p).remaining,0)}function computeCredits(){return{totalOpenCredits:DB.students.reduce((s,st)=>s+computeStudentCredits(st.id),0)}}function packageCredits(p){const ls=DB.lessons.filter(l=>l.studentId===p.studentId&&String(l.date||'').startsWith(p.month)&&['paga','falta','reposição'].includes(l.finStatus));return{used:ls.length,absences:ls.filter(l=>l.finStatus==='falta').length,replacements:ls.filter(l=>l.finStatus==='reposição').length,remaining:Math.max(0,Number(p.lessonCount||0)-ls.length)}}function studentProgress(studentId){const s=byId(DB.students,studentId);const level=s?.activeCourseLevel||s?.level||'',cname=s?.activeCourseName||level;const planned=DB.plannedLessons.filter(p=>p.level===level&&(p.courseName||p.level)===(cname||level)).sort((a,b)=>Number(a.order)-Number(b.order));const completedIds=new Set(DB.lessons.filter(l=>l.studentId===studentId&&['concluída','reposição'].includes(l.pedStatus)&&l.plannedLessonId).map(l=>l.plannedLessonId));let last=-1;planned.forEach((p,i)=>{if(completedIds.has(p.id))last=Math.max(last,i)});const done=completedIds.size,total=planned.length,pct=total?Math.round(done/total*100):0,next=planned[last+1]||planned.find(p=>!completedIds.has(p.id));return{done,total,pct,next,message:total?`${done} de ${total} aulas únicas concluídas.`:'Curso ativo ainda não encontrou aulas planejadas compatíveis.'}}
 function renderDashboard(){const todays=DB.lessons.filter(l=>l.date===today()).sort((a,b)=>a.title.localeCompare(b.title));const toPlan=DB.lessons.filter(l=>l.planStatus==='a planejar');const ml=monthLessons(),rev=ml.reduce((s,l)=>s+lessonRevenue(l),0),credits=computeCredits().totalOpenCredits;$('page-dashboard').innerHTML=pageHead('Today','Aulas, planejamento pendente, materiais e valor cursado.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="grid"><div class="card"><div class="num">${todays.length}</div><div class="label">aulas hoje</div></div><div class="card"><div class="num">${toPlan.length}</div><div class="label">a planejar</div></div><div class="card"><div class="num">${money(rev)}</div><div class="label">valor cursado · mês</div></div><div class="card"><div class="num">${credits}</div><div class="label">créditos abertos</div></div></div><div class="two"><div class="panel"><div class="panel-title">Aulas de hoje</div><div class="list">${todays.map(lessonCard).join('')||'<div class="empty">Nenhuma aula marcada para hoje.</div>'}</div></div><div class="panel"><div class="panel-title">Aulas a planejar</div><div class="list">${toPlan.slice(0,8).map(lessonCard).join('')||'<div class="empty">Nenhuma aula lançada aguardando planejamento.</div>'}</div></div></div>`}
 function renderStudents(q=''){const rows=DB.students.filter(s=>(s.name+' '+s.level+' '+s.activeCourseLevel+' '+s.activeCourseName+' '+s.goal).toLowerCase().includes(String(q).toLowerCase())).sort((a,b)=>a.name.localeCompare(b.name));$('page-students').innerHTML=pageHead('Students','Fichas, curso ativo, bundles e progresso.',`<button class="btn" onclick="openStudentModal()">novo aluno</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar aluno..." oninput="renderStudents(this.value)"></div><div class="list">${rows.map(studentCard).join('')||'<div class="empty">Nenhum aluno cadastrado.</div>'}</div>`}function studentCard(s){const prog=studentProgress(s.id),count=DB.lessons.filter(l=>l.studentId===s.id).length;return `<div class="item" onclick="openStudent('${s.id}')" style="cursor:pointer"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.status)}${badge(courseNameFor(s),'blue')}${badge(`${prog.done}/${prog.total} curso`,'ok')}${badge(`${count} aulas reais`)}</div><div class="progress"><i style="width:${prog.pct}%"></i></div><div class="meta">${prog.message}<br>${esc(s.goal||'Sem objetivo registrado.')}</div></div>`}function openStudent(id){CURRENT_STUDENT=id;STUDENT_TAB='overview';showPage('student')}
@@ -200,7 +200,7 @@ function openMaterialModal(studentId='',id='',plannedLessonId=''){const m=byId(D
 function openPackageModal(studentId='',id=''){const p=byId(DB.packages,id)||{};studentId=studentId||p.studentId||'';openModal(id?'Editar pacote':'Novo pacote','Pacote mensal de 4 ou 8 aulas.',`<div class="form"><div class="field"><label>Aluno</label>${studentOptions(studentId,false)}</div><div class="two"><div class="field"><label>Mês</label><input id="packMonth" type="month" value="${esc(p.month||thisMonth())}"></div><div class="field"><label>Aulas</label><select id="packCount"><option ${Number(p.lessonCount)===4?'selected':''}>4</option><option ${Number(p.lessonCount)===8?'selected':''}>8</option></select></div></div><div class="two"><div class="field"><label>Valor total</label><input id="packAmount" type="number" step="0.01" value="${p.amount||''}"></div><div class="field"><label>Status</label><select id="packStatus"><option ${p.status==='pendente'?'selected':''}>pendente</option><option ${p.status==='pago'?'selected':''}>pago</option></select></div></div><div class="field"><label>Notas</label><textarea id="packNotes">${esc(p.notes||'')}</textarea></div><button class="btn" onclick="savePackage('${id}')">salvar</button></div>`)}function savePackage(id=''){const studentId=$('studentId').value;if(!studentId)return toast('Escolha um aluno.');const p=byId(DB.packages,id)||{id:uid('pack')};p.studentId=studentId;p.month=packMonth.value||thisMonth();p.lessonCount=Number(packCount.value)||4;p.amount=Number(packAmount.value)||0;p.status=packStatus.value;p.notes=packNotes.value.trim();if(!id)DB.packages.push(p);addChange();saveDB();closeModal();toast('Pacote salvo.')}
 function openStudentNoteModal(studentId){openModal('Nova nota do aluno','Notas pedagógicas internas.',`<div class="form"><div class="two"><div class="field"><label>Data</label><input id="noteDate" type="date" value="${today()}"></div><div class="field"><label>Tipo</label><input id="noteType" value="pedagógica"></div></div><div class="field"><label>Título</label><input id="noteTitle"></div><div class="field"><label>Notas</label><textarea id="noteText"></textarea></div><button class="btn" onclick="saveStudentNote('${studentId}')">salvar</button></div>`)}function saveStudentNote(studentId){DB.studentNotes.push({id:uid('note'),studentId,date:noteDate.value||today(),type:noteType.value.trim(),title:noteTitle.value.trim()||'Nota',notes:noteText.value.trim()});addChange();saveDB();closeModal();toast('Nota salva.')}function openAssessmentModal(studentId='',id=''){const a=byId(DB.assessments,id)||{};studentId=studentId||a.studentId||'';openModal(id?'Editar avaliação':'Nova avaliação / placement','Registre provas, placements, diagnósticos e anexos.',`<div class="form"><div class="field"><label>Aluno</label>${studentOptions(studentId,false)}</div><div class="two"><div class="field"><label>Data</label><input id="assDate" type="date" value="${esc(a.date||today())}"></div><div class="field"><label>Tipo</label><select id="assType">${['placement','quiz','prova','oral test','writing','homework check','outro'].map(x=>`<option ${x===(a.type||'placement')?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="two"><div class="field"><label>Nível / resultado de nível</label><input id="assLevel" value="${esc(a.level||'')}"></div><div class="field"><label>Status</label><select id="assStatus">${['rascunho','aplicado','corrigido','arquivado'].map(x=>`<option ${x===(a.status||'rascunho')?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="field"><label>Título</label><input id="assTitle" value="${esc(a.title||'')}"></div><div class="field"><label>Resultado / nota</label><input id="assResult" value="${esc(a.result||'')}"></div><div class="field"><label>Recomendação</label><input id="assRecommendation" value="${esc(a.recommendation||'')}"></div><div class="field"><label>Comentários</label><textarea id="assNotes">${esc(a.notes||'')}</textarea></div><div class="field"><label>Anexos</label><input id="assFiles" type="file" multiple></div><button class="btn" onclick="saveAssessment('${id}')">salvar</button></div>`)}async function saveAssessment(id=''){const studentId=$('studentId').value;if(!studentId)return toast('Escolha um aluno.');const a=byId(DB.assessments,id)||{id:uid('assessment'),attachments:[]};a.studentId=studentId;a.date=assDate.value||today();a.type=assType.value;a.level=assLevel.value.trim();a.status=assStatus.value;a.title=assTitle.value.trim()||a.type;a.result=assResult.value.trim();a.recommendation=assRecommendation.value.trim();a.notes=assNotes.value.trim();for(const f of [...assFiles.files])a.attachments.push(await saveAttachment(f,{studentId,title:a.title,type:'assessment',date:a.date}));if(!id)DB.assessments.push(a);if(a.type==='placement'){const s=byId(DB.students,studentId);if(s){s.placementLevel=a.level||s.placementLevel;s.recommendedCourse=a.recommendation||s.recommendedCourse}}addChange();saveDB();closeModal();toast('Avaliação salva.')}
 function openFormTemplateModal(id=''){const f=byId(DB.formTemplates,id)||{};openModal(id?'Editar modelo de form':'Novo modelo de Google Form','Guarde links e usos dos formulários.',`<div class="form"><div class="two"><div class="field"><label>Tipo</label><select id="ftType">${['onboarding','placement','feedback mensal','autoavaliação','fim de pacote','satisfação','outro'].map(x=>`<option ${x===(f.type||'feedback mensal')?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Status</label><select id="ftStatus">${['ativo','rascunho','arquivado'].map(x=>`<option ${x===(f.status||'ativo')?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="two"><div class="field"><label>Idioma</label><input id="ftLanguage" value="${esc(f.language||'Inglês')}"></div><div class="field"><label>Curso / nível relacionado</label><input id="ftCourse" value="${esc(f.course||'')}"></div></div><div class="field"><label>Título</label><input id="ftTitle" value="${esc(f.title||'')}"></div><div class="field"><label>Link do Google Forms</label><input id="ftUrl" value="${esc(f.url||'')}"></div><div class="field"><label>Descrição / quando usar</label><textarea id="ftDescription">${esc(f.description||'')}</textarea></div><button class="btn" onclick="saveFormTemplate('${id}')">salvar</button></div>`)}function saveFormTemplate(id=''){const f=byId(DB.formTemplates,id)||{id:uid('formtpl')};f.type=ftType.value;f.status=ftStatus.value;f.language=ftLanguage.value.trim();f.course=ftCourse.value.trim();f.title=ftTitle.value.trim()||f.type;f.url=ftUrl.value.trim();f.description=ftDescription.value.trim();if(!id)DB.formTemplates.push(f);addChange();saveDB();closeModal();toast('Modelo salvo.')}function openFormLogModal(studentId='',id=''){const f=byId(DB.formLogs,id)||{};studentId=studentId||f.studentId||'';openModal(id?'Editar envio de form':'Registrar envio/resposta','Acompanhe Google Forms por aluno.',`<div class="form"><div class="field"><label>Aluno</label>${studentOptions(studentId,false)}</div><div class="two"><div class="field"><label>Modelo</label><select id="flTemplate"><option value="">Avulso</option>${DB.formTemplates.map(t=>`<option value="${t.id}" ${t.id===(f.templateId||'')?'selected':''}>${esc(t.title)}</option>`).join('')}</select></div><div class="field"><label>Status</label><select id="flStatus">${['a enviar','enviado','respondido','analisado','arquivado'].map(x=>`<option ${x===(f.status||'a enviar')?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="two"><div class="field"><label>Data</label><input id="flDate" type="date" value="${esc(f.date||today())}"></div><div class="field"><label>Prazo</label><input id="flDue" type="date" value="${esc(f.dueDate||'')}"></div></div><div class="field"><label>Título</label><input id="flTitle" value="${esc(f.title||'')}"></div><div class="field"><label>Link</label><input id="flUrl" value="${esc(f.url||'')}"></div><div class="field"><label>Resumo da resposta</label><textarea id="flSummary">${esc(f.summary||'')}</textarea></div><div class="field"><label>Ações geradas</label><textarea id="flActions">${esc(f.actions||'')}</textarea></div><button class="btn" onclick="saveFormLog('${id}')">salvar</button></div>`)}function saveFormLog(id=''){const studentId=$('studentId').value;if(!studentId)return toast('Escolha um aluno.');const tpl=byId(DB.formTemplates,flTemplate.value)||{},f=byId(DB.formLogs,id)||{id:uid('formlog')};f.studentId=studentId;f.templateId=flTemplate.value;f.status=flStatus.value;f.date=flDate.value||today();f.dueDate=flDue.value;f.title=flTitle.value.trim()||tpl.title||'Form';f.url=flUrl.value.trim()||tpl.url||'';f.summary=flSummary.value.trim();f.actions=flActions.value.trim();if(!id)DB.formLogs.push(f);addChange();saveDB();closeModal();toast('Form registrado.')}
-function splitCSVLine(line){const out=[];let cur='',q=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"')q=!q;else if(c===','&&!q){out.push(cur);cur=''}else cur+=c}out.push(cur);return out.map(x=>x.trim().replace(/^"|"$/g,''))}function importCourseCSV(file){if(!file)return;const r=new FileReader();r.onload=e=>{const lines=String(e.target.result).split(/\r?\n/).filter(x=>x.trim());if(lines.length<2)return toast('CSV vazio.');const hdr=splitCSVLine(lines[0]).map(x=>x.toLowerCase()),idx=n=>hdr.indexOf(n);let count=0;for(const line of lines.slice(1)){const c=splitCSVLine(line),level=c[idx('level')]||'',title=c[idx('lesson_title')]||c[idx('title')]||'';if(!level||!title)continue;const topic=c[idx('topic')]||title;DB.plannedLessons.push({id:uid('planned'),level,courseName:c[idx('course_name')]||level,unit:c[idx('unit')]||topic,order:Number(c[idx('lesson_order')]||c[idx('order')]||count+1),title,topic,type:c[idx('lesson_type')]||c[idx('type')]||'other',notes:c[idx('notes')]||''});count++}ensureUnitIds();addChange();saveDB();toast(`${count} aulas planejadas importadas.`)};r.readAsText(file)}function exportBackup(){DB.meta.lastBackupAt=new Date().toISOString();DB.meta.changesSinceBackup=0;saveDB(true);const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_6_0_backup_'+today()+'.json';a.click();URL.revokeObjectURL(a.href);render();toast('Backup exportado.')}function importBackup(file){if(!file)return;const r=new FileReader();r.onload=e=>{try{DB=normalizeDB(JSON.parse(e.target.result));addChange();saveDB();toast('Backup importado e migrado.')}catch(err){toast('Erro ao importar backup.')}};r.readAsText(file)}function exportAttachmentInventory(){const rows=DB.materials.flatMap(m=>(m.attachments||[]).map(a=>({aluno:studentName(m.studentId),nivel:m.level,unidade:m.unit,assunto:m.topic,aula:m.courseLesson,titulo:m.title,tipo:m.type,status_global:m.globalStatus,status_envio:m.deliveryStatus,nome_original:a.name,nome_padrao:a.canonicalName,tamanho_bytes:a.size})));const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),attachments:rows},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_6_0_inventario_anexos_'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}function downloadStudentHistory(id){const data={student:byId(DB.students,id),lessons:DB.lessons.filter(x=>x.studentId===id),materials:DB.materials.filter(x=>x.studentId===id),packages:DB.packages.filter(x=>x.studentId===id),assessments:DB.assessments.filter(x=>x.studentId===id),forms:DB.formLogs.filter(x=>x.studentId===id),notes:DB.studentNotes.filter(x=>x.studentId===id)};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_historico_'+slug(studentName(id))+'_'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
+function splitCSVLine(line){const out=[];let cur='',q=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"')q=!q;else if(c===','&&!q){out.push(cur);cur=''}else cur+=c}out.push(cur);return out.map(x=>x.trim().replace(/^"|"$/g,''))}function importCourseCSV(file){if(!file)return;const r=new FileReader();r.onload=e=>{const lines=String(e.target.result).split(/\r?\n/).filter(x=>x.trim());if(lines.length<2)return toast('CSV vazio.');const hdr=splitCSVLine(lines[0]).map(x=>x.toLowerCase()),idx=n=>hdr.indexOf(n);let count=0;for(const line of lines.slice(1)){const c=splitCSVLine(line),level=c[idx('level')]||'',title=c[idx('lesson_title')]||c[idx('title')]||'';if(!level||!title)continue;const topic=c[idx('topic')]||title;DB.plannedLessons.push({id:uid('planned'),level,courseName:c[idx('course_name')]||level,unit:c[idx('unit')]||topic,order:Number(c[idx('lesson_order')]||c[idx('order')]||count+1),title,topic,type:c[idx('lesson_type')]||c[idx('type')]||'other',notes:c[idx('notes')]||''});count++}ensureUnitIds();addChange();saveDB();toast(`${count} aulas planejadas importadas.`)};r.readAsText(file)}function exportBackup(){DB.meta.lastBackupAt=new Date().toISOString();DB.meta.changesSinceBackup=0;saveDB(true);const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_10_0_backup_'+today()+'.json';a.click();URL.revokeObjectURL(a.href);render();toast('Backup exportado.')}function importBackup(file){if(!file)return;const r=new FileReader();r.onload=e=>{try{DB=normalizeDB(JSON.parse(e.target.result));addChange();saveDB();toast('Backup importado e migrado.')}catch(err){toast('Erro ao importar backup.')}};r.readAsText(file)}function exportAttachmentInventory(){const rows=DB.materials.flatMap(m=>(m.attachments||[]).map(a=>({aluno:studentName(m.studentId),nivel:m.level,unidade:m.unit,assunto:m.topic,aula:m.courseLesson,titulo:m.title,tipo:m.type,status_global:m.globalStatus,status_envio:m.deliveryStatus,nome_original:a.name,nome_padrao:a.canonicalName,tamanho_bytes:a.size})));const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),attachments:rows},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_10_0_inventario_anexos_'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}function downloadStudentHistory(id){const data={student:byId(DB.students,id),lessons:DB.lessons.filter(x=>x.studentId===id),materials:DB.materials.filter(x=>x.studentId===id),packages:DB.packages.filter(x=>x.studentId===id),assessments:DB.assessments.filter(x=>x.studentId===id),forms:DB.formLogs.filter(x=>x.studentId===id),notes:DB.studentNotes.filter(x=>x.studentId===id)};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_historico_'+slug(studentName(id))+'_'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
 init();
 </script>
 
@@ -217,7 +217,7 @@ init();
 <div id="loginScreen" style="position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px">
   <div style="text-align:center">
     <h1 style="font-family:Georgia,serif;font-size:72px;font-weight:400;letter-spacing:-.07em;line-height:.85">Lesson<br>Hub</h1>
-    <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin-top:16px">Teaching Journal · v1.8.1</p>
+    <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin-top:16px">Teaching Journal · v1.10.0</p>
   </div>
   <button id="googleSignInBtn" onclick="driveSignIn()" style="display:flex;align-items:center;gap:12px;padding:14px 28px;background:#fff;border:1px solid #dadce0;border-radius:6px;font-size:15px;color:#3c4043;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15);font-family:sans-serif">
   <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -451,7 +451,7 @@ function sanitizeEmail(email){return String(email||'').toLowerCase().replace(/[^
 function today(){return new Date().toISOString().slice(0,10)}
 function defVisible(type){type=String(type||'').toLowerCase();return !(type==='test'||type==='rubric')}
 function defDownload(type){type=String(type||'').toLowerCase();return !(type==='test'||type==='rubric'||type==='video')}
-function ensureV160DB(){if(!window.DB)return;DB.meta=DB.meta||{};DB.meta.version='1.8.1';DB.meta.adminEmails=Array.isArray(DB.meta.adminEmails)?DB.meta.adminEmails:[ADMIN_EMAIL];if(!DB.meta.adminEmails.includes(ADMIN_EMAIL))DB.meta.adminEmails.push(ADMIN_EMAIL);['students','lessons','plannedLessons','materials','packages','assessments','formLogs','formTemplates','courseUnits'].forEach(k=>DB[k]=Array.isArray(DB[k])?DB[k]:[]);DB.students.forEach(s=>{s.email=(s.email||s.loginEmail||'').toLowerCase();s.phone=s.phone||s.whatsapp||'';s.studentPortalEnabled=s.studentPortalEnabled!==false});DB.lessons.forEach(l=>{l.startTime=l.startTime||l.time||'';l.materialsStatus=l.materialsStatus||'pendente';l.studentPortalVisible=l.studentPortalVisible!==false});DB.materials.forEach(m=>{m.materialScope=m.materialScope||(m.studentId?'student':(m.plannedLessonId?'curricular':'standalone'));m.studentVisible=typeof m.studentVisible==='boolean'?m.studentVisible:defVisible(m.type);m.downloadAllowed=typeof m.downloadAllowed==='boolean'?m.downloadAllowed:defDownload(m.type);m.attachments=Array.isArray(m.attachments)?m.attachments:[]});DB.assessments.forEach(a=>{a.studentVisible=!!a.studentVisible;a.studentFeedback=a.studentFeedback||'';a.internalNotes=a.internalNotes||a.notes||''});DB.formLogs.forEach(f=>{f.studentVisible=f.studentVisible!==false})}
+function ensureV160DB(){if(!window.DB)return;DB.meta=DB.meta||{};DB.meta.version='1.10.0';DB.meta.adminEmails=Array.isArray(DB.meta.adminEmails)?DB.meta.adminEmails:[ADMIN_EMAIL];if(!DB.meta.adminEmails.includes(ADMIN_EMAIL))DB.meta.adminEmails.push(ADMIN_EMAIL);['students','lessons','plannedLessons','materials','packages','assessments','formLogs','formTemplates','courseUnits'].forEach(k=>DB[k]=Array.isArray(DB[k])?DB[k]:[]);DB.students.forEach(s=>{s.email=(s.email||s.loginEmail||'').toLowerCase();s.phone=s.phone||s.whatsapp||'';s.studentPortalEnabled=s.studentPortalEnabled!==false});DB.lessons.forEach(l=>{l.startTime=l.startTime||l.time||'';l.materialsStatus=l.materialsStatus||'pendente';l.studentPortalVisible=l.studentPortalVisible!==false});DB.materials.forEach(m=>{m.materialScope=m.materialScope||(m.studentId?'student':(m.plannedLessonId?'curricular':'standalone'));m.studentVisible=typeof m.studentVisible==='boolean'?m.studentVisible:defVisible(m.type);m.downloadAllowed=typeof m.downloadAllowed==='boolean'?m.downloadAllowed:defDownload(m.type);m.attachments=Array.isArray(m.attachments)?m.attachments:[]});DB.assessments.forEach(a=>{a.studentVisible=!!a.studentVisible;a.studentFeedback=a.studentFeedback||'';a.internalNotes=a.internalNotes||a.notes||''});DB.formLogs.forEach(f=>{f.studentVisible=f.studentVisible!==false})}
 function studentName(id){return by(DB.students,id)?.name||'—'}
 function plannedOf(l){return by(DB.plannedLessons,l?.plannedLessonId)}
 function lessonTitle(l){const st=by(DB.students,l.studentId);return `${st?.name||'Aluno'} — ${fmt(l.date)}${l.startTime?' · '+l.startTime:''}`}
@@ -469,7 +469,7 @@ window.lhAfterGoogleAuth=async function(resp,ctx){window.LH_ACCESS_TOKEN=resp.ac
 async function driveList(q,fields='files(id,name,webViewLink)'){const r=await fetch('https://www.googleapis.com/drive/v3/files?q='+encodeURIComponent(q)+'&fields='+encodeURIComponent(fields),{headers:{Authorization:'Bearer '+window.LH_ACCESS_TOKEN}});if(!r.ok)throw new Error('Drive list '+r.status);return r.json()}
 async function driveRead(fileId){const r=await fetch('https://www.googleapis.com/drive/v3/files/'+fileId+'?alt=media',{headers:{Authorization:'Bearer '+window.LH_ACCESS_TOKEN}});if(!r.ok)throw new Error('Drive read '+r.status);return r.json()}
 async function loadStudentPortalFromDrive(email){try{const name='portal_'+sanitizeEmail(email)+'.json';const res=await driveList(`name='${name}' and trashed=false`,'files(id,name)');if(!res.files||!res.files.length)return false;const snap=await driveRead(res.files[0].id);applyPortalSnapshot(snap);return true}catch(err){console.warn('portal load failed',err);return false}}
-function applyPortalSnapshot(snap){const st={id:snap.student?.id||'student',name:snap.student?.name||'Aluno',email:snap.student?.email||'',activeCourseName:snap.student?.course||'',activeCourseLevel:snap.student?.level||''};const mats=[];const lessons=(snap.lessons||[]).map(l=>{(l.materials||[]).forEach(m=>{mats.push({id:m.id,title:m.title,type:m.type,studentVisible:true,downloadAllowed:m.downloadAllowed,lessonId:l.id,studentId:st.id,attachments:m.attachments||[]})});return{id:l.id,studentId:st.id,date:l.date,startTime:l.startTime,title:l.title,level:l.level,unit:l.unit,materialsStatus:l.materialsStatus,studentPortalVisible:true}});window.DB={meta:{version:'1.7.0',portalOnly:true},students:[st],lessons,plannedLessons:[],materials:mats,formLogs:snap.forms||[],assessments:snap.tests||[],packages:[],portalFinance:snap.finance||{}};CURRENT_STUDENT_PORTAL=st}
+function applyPortalSnapshot(snap){const st={id:snap.student?.id||'student',name:snap.student?.name||'Aluno',email:snap.student?.email||'',activeCourseName:snap.student?.course||'',activeCourseLevel:snap.student?.level||''};const mats=[];const lessons=(snap.lessons||[]).map(l=>{(l.materials||[]).forEach(m=>{mats.push({id:m.id,title:m.title,type:m.type,studentVisible:true,downloadAllowed:m.downloadAllowed,lessonId:l.id,studentId:st.id,attachments:m.attachments||[]})});return{id:l.id,studentId:st.id,date:l.date,startTime:l.startTime,title:l.title,level:l.level,unit:l.unit,materialsStatus:l.materialsStatus,studentPortalVisible:true}});window.DB={meta:{version:'1.10.0',portalOnly:true},students:[st],lessons,plannedLessons:[],materials:mats,formLogs:snap.forms||[],assessments:snap.tests||[],packages:[],portalFinance:snap.finance||{}};CURRENT_STUDENT_PORTAL=st}
 // Professor render overrides
 const oldRender=window.render;window.render=function(){ensureV160DB();if(STUDENT_MODE){studentRender();return}try{renderDashboard&&renderDashboard();renderStudents&&renderStudents();renderCourse&&renderCourse();renderLessons&&renderLessons()}catch(e){oldRender&&oldRender()}renderMaterialsV160();try{renderSchool&&renderSchool()}catch(e){}renderPortalAdmin();try{renderPayments&&renderPayments();renderHealth&&renderHealth();if(window.CURRENT_STUDENT&&renderStudent)renderStudent()}catch(e){}}
 const oldShowPage=window.showPage;window.showPage=function(p){if(STUDENT_MODE)return;window.PAGE=p;if(p!=='student')window.CURRENT_STUDENT=null;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));const el=document.getElementById('page-'+p);if(el)el.classList.add('active');document.querySelectorAll('[data-page]').forEach(btn=>btn.classList.toggle('active',btn.dataset.page===p||(p==='student'&&btn.dataset.page==='students')));render()}
@@ -560,7 +560,7 @@ function materialOrigin170(m){
 function defaultVisible170(type){type=String(type||'').toLowerCase();return !(type==='test'||type==='rubric')}
 function defaultDownload170(type){type=String(type||'').toLowerCase();return !(type==='test'||type==='rubric'||type==='video')}
 function normalize170(){
- DB.meta=DB.meta||{};DB.meta.version='1.8.1';DB.meta.adminEmails=DB.meta.adminEmails||[ADMIN_EMAIL_170];if(!DB.meta.adminEmails.includes(ADMIN_EMAIL_170))DB.meta.adminEmails.push(ADMIN_EMAIL_170);
+ DB.meta=DB.meta||{};DB.meta.version='1.10.0';DB.meta.adminEmails=DB.meta.adminEmails||[ADMIN_EMAIL_170];if(!DB.meta.adminEmails.includes(ADMIN_EMAIL_170))DB.meta.adminEmails.push(ADMIN_EMAIL_170);
  ['lessonMaterialLinks','portalSnapshots'].forEach(k=>{if(!DB[k])DB[k]=k==='lessonMaterialLinks'?[]:{}});
  (DB.students||[]).forEach(s=>{s.email=s.email||s.loginEmail||'';s.phone=s.phone||s.whatsapp||'';s.status=s.status||'ativo'});
  (DB.lessons||[]).forEach(l=>{l.startTime=l.startTime||l.time||'';l.materialsStatus=l.materialsStatus||'pendente';l.studentPortalVisible=l.studentPortalVisible!==false;l.contentDone=l.contentDone||'';l.afterNotes=l.afterNotes||'';l.homeworkDefined=l.homeworkDefined||''});
@@ -963,7 +963,7 @@ function toast180(msg){if(typeof toast==='function')toast(msg);else alert(msg)}
 
 function ensureDB180(){
  if(!window.DB)return;
- DB.meta=DB.meta||{};DB.meta.version='1.8.1';
+ DB.meta=DB.meta||{};DB.meta.version='1.10.0';
  admins180();
  ['students','lessons','plannedLessons','materials','packages','assessments','formLogs','formTemplates','courseUnits','nativeFormTemplates','nativeFormAssignments','nativeFormResponses','lessonMaterialLinks'].forEach(k=>{if(!Array.isArray(DB[k]))DB[k]=[]});
  DB.students.forEach(s=>{s.email=normEmail180(s.email||s.loginEmail);s.phone=s.phone||s.whatsapp||''});
@@ -1568,66 +1568,122 @@ window.studentRenderUnauthorized=function studentRenderUnauthorized181b(email){
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script id="lessonhub-supabase-backup">
-// === LESSONHUB SUPABASE BACKUP v1.0 ===
-// Backup silencioso paralelo ao Drive. Não interfere em nada existente.
-// Salva o DB inteiro como um JSON numa tabela simples: backups(user_email, data, updated_at)
+// === LESSONHUB SUPABASE BACKUP v1.10.0 ===
+// Backup remoto auxiliar. Não é backend principal nesta versão.
+// Drive continua sendo fonte principal/sync e storage de arquivos; localStorage é cache operacional.
 (function(){
 'use strict';
 
 const SB_URL  = 'https://ezgaqcxrbticangnnryo.supabase.co';
 const SB_KEY  = 'sb_publishable_k-Ch1aS1UkRR-OlDzAbH-Q_B4a8e7kE';
+const SB_TABLE = 'lh_backups';
+const LH_STORAGE_KEY = 'lessonhub_v1_4_data';
 
 let _sbClient = null;
 let _sbEmail  = null;
 let _sbReady  = false;
 let _sbSyncTimeout = null;
 let _sbLastSaved = null;
+let _sbLastChecked = null;
+let _sbLastRemote = null;
+let _sbLastError = '';
+let _sbLastAction = 'aguardando login do professor';
+
+window.LH_LOGS = window.LH_LOGS || [];
+function lhLog(msg,type='info'){
+  const item={at:new Date().toISOString(),type,msg};
+  window.LH_LOGS.unshift(item);
+  window.LH_LOGS = window.LH_LOGS.slice(0,30);
+  console.log('[LessonHub]', msg);
+}
+window.lhLog = window.lhLog || lhLog;
 
 function getSB(){
   if(!_sbClient) _sbClient = supabase.createClient(SB_URL, SB_KEY);
   return _sbClient;
 }
 
-// Inicializa quando o email do professor estiver disponível (Drive auth já resolveu)
-function sbInit(email){
-  if(!email || _sbReady) return;
-  _sbEmail = email.toLowerCase();
-  _sbReady = true;
-  console.log('[SB Backup] pronto para', _sbEmail);
-  // Tenta restaurar do Supabase se o DB local estiver vazio
-  sbMaybePull();
+function datasetCount(d){
+  d=d||{};
+  return (d.students||[]).length+(d.lessons||[]).length+(d.materials||[]).length+(d.plannedLessons||[]).length+(d.packages||[]).length+(d.formLogs||[]).length;
+}
+function localHasData(){return datasetCount(window.DB)>0;}
+function stampVersion(){
+  if(window.DB){
+    DB.meta=DB.meta||{};
+    DB.meta.version='1.10.0';
+    DB.meta.storageAuthority='Drive principal · Supabase backup auxiliar · localStorage cache';
+  }
+}
+function saveLocalDB(data){
+  window.DB = window.normalizeDB ? normalizeDB(data) : data;
+  stampVersion();
+  try{ localStorage.setItem(LH_STORAGE_KEY, JSON.stringify(window.DB)); }catch(e){}
+  if(window.render) render();
 }
 
-// Puxa do Supabase apenas se o DB local não tiver dados ainda
-async function sbMaybePull(){
+// Inicializa quando o email do professor estiver disponível (Drive auth já resolveu).
+function sbInit(email){
+  if(!email || _sbReady) return;
+  _sbEmail = String(email).toLowerCase();
+  _sbReady = true;
+  _sbLastAction='backup pronto';
+  lhLog('Supabase Backup pronto para '+_sbEmail,'ok');
+  // Restauração automática só é permitida se o DB local estiver realmente vazio.
+  sbMaybePullEmptyOnly();
+}
+
+// Pull seguro: só restaura automaticamente quando o app local não tem dados.
+async function sbMaybePullEmptyOnly(){
   if(!_sbReady || !window.DB) return;
-  if((DB.students||[]).length > 0) return; // já tem dados locais, não sobrescreve
+  if(localHasData()) return;
+  const remote = await sbCheckRemote(false);
+  if(!remote || !remote.data || !remote.data.meta) return;
+  const remoteCount = datasetCount(remote.data);
+  if(remoteCount<=0) return;
+  const remoteTs = remote.data.meta?.updatedAt || remote.updated_at || '';
+  const localTs = DB.meta?.updatedAt || '';
+  if(remoteTs > localTs){
+    lhLog('Supabase restaurou automaticamente porque o DB local estava vazio.','warn');
+    saveLocalDB(remote.data);
+    sbShowBadge('☁ Dados restaurados do backup Supabase', 4000);
+  }
+}
+
+async function sbCheckRemote(show=true){
+  if(!_sbReady || !_sbEmail){
+    _sbLastError='Supabase ainda não inicializado.';
+    if(show) sbShowBadge('☁ Supabase ainda não inicializado',3000);
+    return null;
+  }
   try{
     const sb = getSB();
     const { data, error } = await sb
-      .from('lh_backups')
+      .from(SB_TABLE)
       .select('data, updated_at')
       .eq('user_email', _sbEmail)
       .maybeSingle();
-    if(error || !data) return;
-    const remote = data.data;
-    if(!remote || !remote.meta) return;
-    const localTs  = DB.meta?.updatedAt || '';
-    const remoteTs = remote.meta?.updatedAt || '';
-    if(remoteTs > localTs){
-      console.log('[SB Backup] restaurando do Supabase (mais recente)');
-      window.DB = window.normalizeDB ? normalizeDB(remote) : remote;
-      try{ localStorage.setItem('lessonhub_v1', JSON.stringify(DB)); }catch(e){}
-      if(window.render) render();
-      sbShowBadge('☁ Dados restaurados do backup Supabase', 4000);
-    }
-  }catch(e){ console.warn('[SB Backup] pull falhou:', e); }
+    if(error) throw error;
+    _sbLastChecked = new Date();
+    _sbLastRemote = data || null;
+    _sbLastError = '';
+    _sbLastAction = data ? 'backup remoto encontrado' : 'nenhum backup remoto encontrado';
+    if(show) sbShowBadge(data?'☁ Backup Supabase encontrado':'☁ Sem backup Supabase',3000);
+    return data || null;
+  }catch(e){
+    _sbLastError = e.message || String(e);
+    _sbLastAction = 'erro ao verificar backup';
+    lhLog('Supabase check falhou: '+_sbLastError,'error');
+    if(show) sbShowBadge('☁ Erro ao verificar Supabase',4000);
+    return null;
+  }
 }
 
-// Salva no Supabase (upsert por email)
+// Salva no Supabase (upsert por email). Backup apenas; não altera Drive nem localStorage.
 async function sbPush(){
-  if(!_sbReady || !_sbEmail || !window.DB) return;
+  if(!_sbReady || !_sbEmail || !window.DB) return false;
   try{
+    stampVersion();
     const sb = getSB();
     const payload = {
       user_email: _sbEmail,
@@ -1635,21 +1691,29 @@ async function sbPush(){
       updated_at: new Date().toISOString()
     };
     const { error } = await sb
-      .from('lh_backups')
+      .from(SB_TABLE)
       .upsert(payload, { onConflict: 'user_email' });
     if(error) throw error;
     _sbLastSaved = new Date();
-    console.log('[SB Backup] salvo no Supabase às', _sbLastSaved.toLocaleTimeString('pt-BR'));
+    _sbLastError = '';
+    _sbLastAction = 'backup salvo';
+    lhLog('Supabase Backup salvo às '+_sbLastSaved.toLocaleTimeString('pt-BR'),'ok');
     sbUpdateBadge();
-  }catch(e){ console.warn('[SB Backup] push falhou:', e); }
+    return true;
+  }catch(e){
+    _sbLastError = e.message || String(e);
+    _sbLastAction = 'erro ao salvar backup';
+    lhLog('Supabase push falhou: '+_sbLastError,'error');
+    sbShowBadge('☁ Erro ao salvar Supabase',4000);
+    return false;
+  }
 }
 
 function sbSchedule(){
   clearTimeout(_sbSyncTimeout);
-  _sbSyncTimeout = setTimeout(sbPush, 5000); // 5s depois do último save, para não sobrecarregar
+  _sbSyncTimeout = setTimeout(sbPush, 5000);
 }
 
-// Badge discreto no rodapé
 function sbShowBadge(msg, ms=3000){
   let el = document.getElementById('sb-badge');
   if(!el){
@@ -1670,29 +1734,145 @@ function sbUpdateBadge(){
   sbShowBadge('☁ Supabase: ' + t, 3000);
 }
 
-// Intercepta saveDB para disparar backup no Supabase em paralelo
+async function sbRestoreManual(){
+  const remote = await sbCheckRemote(true);
+  if(!remote || !remote.data) return false;
+  const count = datasetCount(remote.data);
+  const updated = remote.data.meta?.updatedAt || remote.updated_at || 'sem data';
+  const msg = `Restaurar backup Supabase?\n\nItens estimados: ${count}\nAtualizado em: ${updated}\n\nIsto substituirá o DB local/cache. O Drive não será apagado.`;
+  if(!confirm(msg)) return false;
+  saveLocalDB(remote.data);
+  _sbLastAction='backup restaurado manualmente';
+  sbShowBadge('☁ Backup Supabase restaurado',4000);
+  lhLog('Backup Supabase restaurado manualmente.','warn');
+  return true;
+}
+
+function sbState(){
+  return {
+    ready:_sbReady,
+    email:_sbEmail,
+    table:SB_TABLE,
+    role:'backup auxiliar; não é backend principal',
+    lastSaved:_sbLastSaved?_sbLastSaved.toISOString():null,
+    lastChecked:_sbLastChecked?_sbLastChecked.toISOString():null,
+    lastRemoteUpdated:_sbLastRemote?.updated_at || _sbLastRemote?.data?.meta?.updatedAt || null,
+    lastError:_sbLastError,
+    lastAction:_sbLastAction,
+    localHasData:localHasData(),
+    localCount:datasetCount(window.DB)
+  };
+}
+
+// Intercepta saveDB para disparar backup no Supabase em paralelo.
 const _origSaveDB = window.saveDB;
 window.saveDB = function saveDB(skip=false){
+  stampVersion();
   if(_origSaveDB) _origSaveDB.apply(this, arguments);
+  stampVersion();
+  try{ localStorage.setItem(LH_STORAGE_KEY, JSON.stringify(window.DB)); }catch(e){}
   if(_sbReady) sbSchedule();
 };
 
-// Espera o email do professor ficar disponível (Drive auth preenche window.LH_USER_EMAIL)
+// Espera o email do professor ficar disponível (Drive auth preenche window.LH_USER_EMAIL).
 const _waitEmail = setInterval(()=>{
   const email = window.LH_USER_EMAIL || window.ADMIN_EMAIL || null;
-  // Só inicializa se for o admin (não o aluno)
   if(email && !window.STUDENT_MODE){
     clearInterval(_waitEmail);
     sbInit(email);
   }
 }, 800);
 
-// Expõe para uso manual se quiser forçar backup
-window.sbPushNow = async function(){
-  await sbPush();
-  sbShowBadge('☁ Backup manual salvo!', 3000);
+window.LH_SB_BACKUP = {
+  init: sbInit,
+  push: sbPush,
+  pushNow: async()=>{const ok=await sbPush();sbShowBadge(ok?'☁ Backup manual salvo!':'☁ Falha no backup manual',3000);return ok;},
+  check: sbCheckRemote,
+  restoreManual: sbRestoreManual,
+  state: sbState
 };
+window.sbPushNow = window.LH_SB_BACKUP.pushNow;
+window.sbCheckNow = ()=>sbCheckRemote(true);
+window.sbRestoreNow = sbRestoreManual;
+})();
+</script>
 
+
+<script id="lessonhub-v110-stabilization">
+// === LESSONHUB v1.10.0 — Stability & Supabase Backup Diagnostics ===
+(function(){
+'use strict';
+const VERSION='1.10.0';
+const STORE='lessonhub_v1_4_data';
+window.LH_STORE_KEY=STORE;
+window.LH_VERSION=VERSION;
+window.LH_ARCHITECTURE='Drive principal/sync + Drive storage de arquivos · Supabase backup auxiliar · localStorage cache operacional';
+window.LH_LOGS=window.LH_LOGS||[];
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function log(msg,type='info'){
+  const item={at:new Date().toISOString(),type,msg};
+  window.LH_LOGS.unshift(item);window.LH_LOGS=window.LH_LOGS.slice(0,30);
+}
+window.lhLog=window.lhLog||log;
+function fmtIso(iso){if(!iso)return '—';try{return new Date(iso).toLocaleString('pt-BR')}catch(e){return iso}}
+function kb(){try{return Math.round(new Blob([JSON.stringify(window.DB||{})]).size/1024)+'kb'}catch(e){return '—'}}
+function count(k){return (window.DB&&Array.isArray(DB[k]))?DB[k].length:0}
+function stamp(){
+  document.title='LessonHub v1.10.0 — Stability & Supabase Backup Diagnostics';
+  document.querySelectorAll('.brand p').forEach(p=>{p.textContent='Teaching Journal · v1.10.0'});
+  const login=document.querySelector('#loginScreen p');
+  if(login && /Teaching Journal/.test(login.textContent)) login.textContent='Teaching Journal · v1.10.0';
+  if(window.DB){DB.meta=DB.meta||{};DB.meta.version=VERSION;DB.meta.storageAuthority=window.LH_ARCHITECTURE;}
+}
+function driveState(){
+  return {
+    token:!!window.LH_ACCESS_TOKEN,
+    email:window.LH_USER_EMAIL||'—',
+    mode:document.body.classList.contains('student-mode')?'aluno':'professor/local',
+    role:'fonte principal/sync + storage oficial de arquivos'
+  };
+}
+function sbState(){
+  try{return window.LH_SB_BACKUP&&window.LH_SB_BACKUP.state?window.LH_SB_BACKUP.state():{ready:false,lastAction:'script não carregado'}}catch(e){return{ready:false,lastError:e.message}}
+}
+function localState(){
+  let keys=[];try{keys=Object.keys(localStorage).filter(k=>/^lessonhub_/.test(k)).sort()}catch(e){}
+  return {key:STORE,size:kb(),updatedAt:window.DB?.meta?.updatedAt||null,version:window.DB?.meta?.version||VERSION,keys};
+}
+function row(a,b,c=''){return `<tr><td class="${c}">${esc(a)}</td><td>${esc(b)}</td></tr>`}
+function statusBadge(txt,c=''){return `<span class="badge ${c}">${esc(txt)}</span>`}
+function renderHealth110(){
+  stamp();
+  const el=document.getElementById('page-health');if(!el)return;
+  const ds=driveState(), ss=sbState(), ls=localState();
+  const alerts=[];
+  if(!ds.token) alerts.push(['AVISO','Drive sem token ativo nesta sessão.','health-warn']);
+  if(!ss.ready) alerts.push(['AVISO','Supabase Backup ainda não inicializado.','health-warn']);
+  if(ss.lastError) alerts.push(['ERRO','Supabase: '+ss.lastError,'health-bad']);
+  (DB?.students||[]).filter(s=>!s.email).forEach(s=>alerts.push(['DADO','Aluno sem e-mail de portal: '+(s.name||s.id),'health-warn']));
+  (DB?.materials||[]).filter(m=>(m.attachments||[])[0] && !(m.attachments||[])[0].driveLink).forEach(m=>alerts.push(['DADO','Material com arquivo sem driveLink: '+(m.title||m.id),'health-warn']));
+  const logRows=(window.LH_LOGS||[]).slice(0,8).map(x=>`<div class="item"><div class="item-title">${esc(new Date(x.at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}))} · ${esc(x.type)}</div><div class="meta">${esc(x.msg)}</div></div>`).join('')||'<div class="empty">Sem eventos registrados nesta sessão.</div>';
+  el.innerHTML=pageHead('Health','Diagnóstico v1.10.0: Drive principal, Supabase Backup auxiliar e cache local.',`<button class="btn" onclick="exportBackup()">backup JSON</button><button class="btn soft" onclick="window.sbCheckNow&&window.sbCheckNow()">testar Supabase</button><button class="btn soft" onclick="window.sbPushNow&&window.sbPushNow()">enviar Supabase</button><button class="btn danger" onclick="window.sbRestoreNow&&window.sbRestoreNow()">restaurar Supabase</button>`)+
+  `<div class="grid"><div class="card"><div class="num">v${VERSION}</div><div class="label">versão estabilizada</div></div><div class="card"><div class="num">${esc(ds.mode)}</div><div class="label">modo atual</div></div><div class="card"><div class="num">${esc(ls.size)}</div><div class="label">cache local JSON</div></div><div class="card"><div class="num">${alerts.length}</div><div class="label">alertas</div></div></div>`+
+  `<div class="two"><div class="panel"><div class="panel-title">Arquitetura de dados</div><table class="table"><tbody>`+
+  row('Drive',ds.role,ds.token?'health-ok':'health-warn')+row('Supabase',ss.role||'backup auxiliar; não backend principal',ss.ready?'health-ok':'health-warn')+row('localStorage','cache operacional: '+ls.key,'')+row('Export JSON','backup manual de emergência','')+
+  `</tbody></table></div><div class="panel"><div class="panel-title">Estado da sessão</div><table class="table"><tbody>`+
+  row('Usuário',ds.email,ds.email!=='—'?'health-ok':'health-warn')+row('Drive token',ds.token?'ativo':'não detectado',ds.token?'health-ok':'health-warn')+row('Supabase ação',ss.lastAction||'—',ss.lastError?'health-bad':(ss.ready?'health-ok':'health-warn'))+row('Último push SB',fmtIso(ss.lastSaved))+row('Último check SB',fmtIso(ss.lastChecked))+row('Backup remoto SB',fmtIso(ss.lastRemoteUpdated))+
+  `</tbody></table></div></div>`+
+  `<div class="two"><div class="panel"><div class="panel-title">Dados locais</div><table class="table"><tbody>`+
+  row('Alunos',count('students'))+row('Aulas',count('lessons'))+row('Materiais',count('materials'))+row('Aulas planejadas',count('plannedLessons'))+row('Pacotes',count('packages'))+row('Forms',count('formLogs'))+row('DB updatedAt',fmtIso(ls.updatedAt))+row('Storage keys',ls.keys.join(' · ')||'—')+
+  `</tbody></table></div><div class="panel"><div class="panel-title">Alertas</div><table class="table"><tbody>${alerts.map(a=>row(a[0],a[1],a[2])).join('')||row('OK','Sem alertas críticos detectados.','health-ok')}</tbody></table></div></div>`+
+  `<div class="panel"><div class="panel-title">Últimos eventos</div><div class="list">${logRows}</div></div>`;
+}
+const oldRenderHealth=window.renderHealth;
+window.renderHealth=renderHealth110;
+const oldExport=window.exportBackup;
+window.exportBackup=function exportBackup110(){stamp();if(oldExport)return oldExport.apply(this,arguments)};
+const oldSave=window.saveDB;
+window.saveDB=function saveDB110(skip=false){stamp();if(oldSave)oldSave.apply(this,arguments);stamp();try{localStorage.setItem(STORE,JSON.stringify(window.DB||{}))}catch(e){}};
+window.renderHealth110=renderHealth110;
+window.addEventListener('load',()=>{stamp();log('LessonHub v1.10.0 carregado.','ok');setTimeout(()=>{try{if(window.render)render()}catch(e){}},300)});
+setTimeout(stamp,100);
 })();
 </script>
 
