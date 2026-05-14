@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LessonHub v2.0.0-alpha.1 · Auth + RLS</title>
+<title>LessonHub v2.0.0-alpha.1.1.1 · Auth + RLS Hotfix</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#756e67;--line:rgba(24,21,18,.14);--line2:rgba(24,21,18,.07);--wash:rgba(255,253,249,.74);--shadow:0 28px 80px rgba(35,28,20,.055)}
@@ -14,7 +14,7 @@ button{font:inherit;cursor:pointer}.shell{width:min(1180px,calc(100% - 32px));ma
 <body>
 <div class="gate active" id="gate"><div><h2>Carregando LessonHub…</h2><p class="subtle" id="gateText">Verificando sessão com segurança.</p></div></div>
 <div class="shell">
-<header class="mast"><div><h1 class="logo">Lesson<br>Hub</h1><p class="kicker" style="margin-top:12px">v2.0.0-alpha.1 · Auth + RLS</p></div><p class="kicker" id="sessionMini">backend prototype</p></header>
+<header class="mast"><div><h1 class="logo">Lesson<br>Hub</h1><p class="kicker" style="margin-top:12px">v2.0.0-alpha.1.1.1 · Auth + RLS Hotfix</p></div><p class="kicker" id="sessionMini">backend prototype</p></header>
 <main id="app"></main>
 <footer class="footer"><span>Erik Azevedo (@prof.erikazevedo)</span><span id="footerMode">Supabase Auth</span></footer>
 </div>
@@ -52,5 +52,100 @@ function openMaterial(id){const all=Object.values(state.materialsByLesson).flat(
 function renderFinance(){document.getElementById("app").innerHTML=`<section class="hero"><h2>Financeiro</h2><p class="subtle">Resumo simples para o aluno.</p><div class="btn-row"><button class="btn" onclick="signOut()">sair</button></div></section>${tab("finance")}<section class="panel"><div class="panel-title"><h3>Mensalidades</h3></div><div class="list">${state.payments.map(paymentCard).join("")||empty("Sem mensalidade","Nenhuma mensalidade cadastrada ainda.")}</div></section>`}
 init();
 </script>
+
+<script id="lessonhub-alpha1-1-gate-session-hotfix">
+(function(){
+'use strict';
+
+let LH_LOADING_201 = false;
+let LH_LAST_LOAD_201 = 0;
+
+function gate201(msg, show=true){
+  const gt=document.getElementById("gate");
+  const txt=document.getElementById("gateText");
+  if(txt) txt.textContent = msg || "Carregando.";
+  if(gt) gt.classList.toggle("active", !!show);
+}
+
+async function withTimeout201(promise, label, ms=9000){
+  let timer;
+  const timeout = new Promise((_, reject)=>{
+    timer=setTimeout(()=>reject(new Error((label||"Operação")+" demorou demais. Tente F5 ou verifique Supabase/RLS.")), ms);
+  });
+  try { return await Promise.race([promise, timeout]); }
+  finally { clearTimeout(timer); }
+}
+
+async function safeLoad201(){
+  if (LH_LOADING_201) return;
+  const now=Date.now();
+  if (now - LH_LAST_LOAD_201 < 900) return;
+  LH_LOADING_201 = true;
+  LH_LAST_LOAD_201 = now;
+  try{
+    gate201("Verificando sessão…", true);
+    const sessionRes = await withTimeout201(client.auth.getSession(), "Sessão", 8000);
+    const session = sessionRes && sessionRes.data && sessionRes.data.session;
+    if(!session){
+      if(typeof renderLogin === "function") renderLogin();
+      return;
+    }
+    state.session=session;
+    state.user=session.user;
+    state.email=(session.user.email||"").toLowerCase();
+    await withTimeout201(loadRoleAndData(), "Busca de perfil", 12000);
+  }catch(e){
+    console.error("LessonHub alpha.1.1 recovery", e);
+    if(typeof renderLogin === "function"){
+      renderLogin("A sessão existe, mas o carregamento travou:\\n"+(e.message||e));
+    }
+  }finally{
+    gate201("", false);
+    LH_LOADING_201 = false;
+  }
+}
+
+window.signOut = async function signOut201(){
+  try{
+    gate201("Saindo…", true);
+    await client.auth.signOut();
+  }catch(e){
+    console.warn(e);
+  }finally{
+    state={session:null,user:null,email:"",profile:null,student:null,lessons:[],payments:[],materialsByLesson:{},adminCounts:null,adminLists:null};
+    if(typeof renderLogin === "function") renderLogin();
+    gate201("", false);
+  }
+};
+
+window.lessonHubRecoverSession201 = safeLoad201;
+
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState === "visible"){
+    const gateEl=document.getElementById("gate");
+    if(gateEl && gateEl.classList.contains("active")){
+      setTimeout(()=>safeLoad201(), 250);
+    }
+  }
+});
+
+window.addEventListener("focus", ()=>{
+  const gateEl=document.getElementById("gate");
+  if(gateEl && gateEl.classList.contains("active")){
+    setTimeout(()=>safeLoad201(), 250);
+  }
+});
+
+setInterval(()=>{
+  const gateEl=document.getElementById("gate");
+  const app=document.getElementById("app");
+  if(gateEl && gateEl.classList.contains("active") && app && app.innerHTML.trim()){
+    gate201("", false);
+  }
+}, 2500);
+
+})();
+</script>
+
 </body>
 </html>
