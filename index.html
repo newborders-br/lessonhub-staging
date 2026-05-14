@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -10,22 +9,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#181512">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>LessonHub v1.11.0 — Student Portal + Supabase JSON Backend</title>
+<title>LessonHub v1.10.2 — Cleaned Candidate</title>
 <style>
 :root{--bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#777069;--soft:#aaa19a;--line:rgba(24,21,18,.14);--line2:rgba(24,21,18,.08);--bad:#9d2d25;--ok:#28745a;--warn:#a06c1b;--blue:#315f8f;--shadow:0 28px 80px rgba(35,28,20,.055)}
 *{box-sizing:border-box;margin:0;padding:0} body{min-height:100vh;background:radial-gradient(circle at 15% -10%,rgba(190,165,126,.16),transparent 28%),radial-gradient(circle at 92% 0%,rgba(49,95,143,.08),transparent 30%),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(24,21,18,.025) 1px,transparent 1px);background-size:1px 44px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),transparent 82%)}button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}.shell{width:min(1500px,calc(100% - 48px));margin:0 auto;padding:28px 0 60px}.mast{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;border-bottom:1px solid var(--ink);padding:18px 0 20px;margin-bottom:16px}.brand h1{font-family:Georgia,serif;font-weight:400;font-size:56px;line-height:.82;letter-spacing:-.07em}.brand p,.datebox{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin-top:13px}.datebox{text-align:right;line-height:1.6}.nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px}.nav button,.linkbtn{border:0;background:transparent;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.16em;padding:0 0 4px;border-bottom:1px solid transparent}.nav button.active,.nav button:hover,.linkbtn:hover{color:var(--ink);border-bottom-color:var(--ink)}.actions{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}.page{display:none}.page.active{display:block}.page-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px}.page-title h2{font-family:Georgia,serif;font-weight:400;font-size:34px;letter-spacing:-.045em}.page-title p{color:var(--muted);margin-top:6px;font-size:14px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card,.panel,.item,.modal-box{background:rgba(255,253,249,.72);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.card{padding:22px;min-height:136px;display:flex;flex-direction:column;justify-content:space-between}.card .num{font-family:Georgia,serif;font-size:42px;letter-spacing:-.06em;font-weight:400;line-height:.9}.label{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-top:12px}.subtle{color:var(--muted);font-size:13px;line-height:1.55}.panel{padding:20px;margin-bottom:16px}.panel-title{font-family:Georgia,serif;font-size:25px;font-weight:400;letter-spacing:-.04em;border-bottom:1px solid var(--ink);padding-bottom:11px;margin-bottom:14px}.form{display:grid;gap:12px}.field{display:grid;gap:6px}.field label,.micro{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}input,textarea,select{width:100%;background:rgba(255,255,255,.64);border:1px solid var(--line);padding:10px 11px;outline:none;color:var(--ink)}textarea{min-height:86px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--ink);background:#fff}.btn{background:transparent;border:1px solid var(--ink);color:var(--ink);padding:9px 13px;text-transform:uppercase;letter-spacing:.13em;font-size:11px}.btn:hover{background:var(--ink);color:var(--paper)}.btn.soft{border-color:var(--line);color:var(--muted)}.btn.danger{border-color:var(--bad);color:var(--bad)}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}.toolbar-left,.row-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.search{max-width:460px}.list{display:grid;gap:10px}.item{padding:15px}.item-title{font-family:Georgia,serif;font-size:21px;font-weight:400;letter-spacing:-.035em}.item:hover{border-color:rgba(24,21,18,.28)}.meta{font-size:13px;color:var(--muted);line-height:1.5}.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.badge{border:1px solid var(--line);padding:3px 7px;font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);background:rgba(255,255,255,.35)}.badge.ok{color:var(--ok);border-color:rgba(40,116,90,.35)}.badge.bad{color:var(--bad);border-color:rgba(157,45,37,.35)}.badge.warn{color:var(--warn);border-color:rgba(160,108,27,.35)}.badge.blue{color:var(--blue);border-color:rgba(49,95,143,.35)}.empty{padding:34px;text-align:center;border:1px dashed var(--line);color:var(--soft);background:rgba(255,255,255,.35)}.table{width:100%;border-collapse:collapse}.table th{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);text-align:left;padding:10px;border-bottom:1px solid var(--ink);font-weight:400}.table td{padding:11px 10px;border-bottom:1px solid var(--line2);vertical-align:top;font-size:13px}.table tr:hover td{background:rgba(255,255,255,.48)}.modal{position:fixed;inset:0;background:rgba(24,21,18,.48);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:22px;z-index:30}.modal-box{width:min(860px,100%);max-height:90vh;overflow:auto;padding:24px}.modal-head{display:flex;justify-content:space-between;gap:16px;margin-bottom:14px;border-bottom:1px solid var(--ink);padding-bottom:12px}.modal-title{font-family:Georgia,serif;font-size:30px;letter-spacing:-.04em}.toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:var(--paper);padding:12px 14px;font-size:13px;display:none;z-index:40}.student-hero{border:1px solid var(--ink);padding:24px;margin-bottom:16px;background:rgba(255,253,249,.6)}.student-hero h2{font-family:Georgia,serif;font-size:44px;font-weight:400;letter-spacing:-.06em}.tabs{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0}.tabs button{border:0;background:transparent;border-bottom:1px solid transparent;padding-bottom:4px;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;font-size:11px}.tabs button.active,.tabs button:hover{color:var(--ink);border-bottom-color:var(--ink)}.checkrow{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:center;border:1px solid var(--line);padding:11px;background:rgba(255,255,255,.28)}.course-block{border-top:1px solid var(--ink);padding-top:14px;margin-top:16px}.course-title{display:flex;justify-content:space-between;gap:12px;align-items:end}.course-title h3{font-family:Georgia,serif;font-weight:400;font-size:31px;letter-spacing:-.05em}.unit-title{font-family:Georgia,serif;font-weight:400;font-size:24px;letter-spacing:-.04em;margin:14px 0 8px;border-bottom:1px solid var(--line);padding-bottom:8px}.progress{height:4px;background:rgba(24,21,18,.09);overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--ink)}.health-ok{color:var(--ok)}.health-warn{color:var(--warn)}.health-bad{color:var(--bad)}@media(max-width:980px){.shell{width:min(100% - 24px,1480px);padding-top:18px}.mast{grid-template-columns:1fr}.datebox{text-align:left}.brand h1{font-size:42px}.grid,.two,.three{grid-template-columns:1fr}.page-head{display:block}.actions{margin-left:0}.checkrow{grid-template-columns:1fr}}
-</style>
-
-<style id="lessonhub-v160-style">
 .portal-shell{display:none}body.student-mode .shell{display:none}body.student-mode .portal-shell{display:block}.student-wrap{width:min(1180px,calc(100% - 36px));margin:0 auto;padding:26px 0 60px}.student-mast{display:grid;grid-template-columns:1fr auto;gap:22px;align-items:end;border-bottom:1px solid var(--ink);padding:18px 0 20px;margin-bottom:14px}.student-mast h1{font-family:Georgia,serif;font-size:54px;line-height:.86;letter-spacing:-.07em;font-weight:400}.student-mast p{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin-top:12px}.student-nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px}.student-nav button{border:0;background:transparent;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.16em;padding:0 0 4px;border-bottom:1px solid transparent}.student-nav button.active,.student-nav button:hover{color:var(--ink);border-bottom-color:var(--ink)}.student-hero{border:1px solid var(--ink);padding:24px;margin-bottom:16px;background:rgba(255,253,249,.72);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.student-hero h2{font-family:Georgia,serif;font-size:46px;letter-spacing:-.06em;font-weight:400}.student-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.student-card{background:rgba(255,253,249,.72);border:1px solid var(--line);box-shadow:var(--shadow);padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between}.student-card .num{font-family:Georgia,serif;font-size:36px;letter-spacing:-.06em;line-height:.9}.student-two{display:grid;grid-template-columns:1.08fr .92fr;gap:16px}.student-panel{background:rgba(255,253,249,.72);border:1px solid var(--line);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}.student-panel-title{font-family:Georgia,serif;font-size:25px;font-weight:400;letter-spacing:-.04em;border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:12px}.student-lesson,.student-resource{border:1px solid var(--line);background:rgba(255,255,255,.35);padding:15px;margin-bottom:10px}.student-lesson{cursor:pointer;transition:transform .15s,border-color .15s}.student-lesson:hover{transform:translateY(-1px);border-color:rgba(24,21,18,.35)}.student-lesson-title{font-family:Georgia,serif;font-size:24px;letter-spacing:-.04em}.student-big-title{font-family:Georgia,serif;font-size:35px;font-weight:400;letter-spacing:-.055em;line-height:1}.student-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:10px}.student-actions button{border:0;background:transparent;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.15em;border-bottom:1px solid transparent;padding-bottom:3px}.student-actions button:hover{color:var(--ink);border-bottom-color:var(--ink)}.lesson-modal,.student-viewer{position:fixed;inset:0;background:rgba(24,21,18,.58);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:22px;z-index:80}.lesson-modal-box{width:min(1020px,100%);max-height:88vh;overflow:auto;background:rgba(255,253,249,.92);border:1px solid var(--line);box-shadow:var(--shadow)}.lesson-modal-head{padding:22px 24px;border-bottom:1px solid var(--ink);display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.lesson-modal-title{font-family:Georgia,serif;font-size:38px;letter-spacing:-.055em;line-height:.96;font-weight:400}.lesson-modal-body{padding:22px 24px}.lesson-popup-grid{display:grid;grid-template-columns:1fr .86fr;gap:16px}.student-section{border-top:1px solid var(--ink);padding-top:14px;margin-top:18px}.student-section-title{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:10px}.student-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border-bottom:1px solid var(--line2);padding:12px 0}.student-icon{width:38px;height:38px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:18px;background:rgba(255,255,255,.45)}.student-viewer{padding:0;align-items:stretch;justify-content:stretch;background:rgba(24,21,18,.62)}.student-viewer-box{width:100%;height:100vh;display:grid;grid-template-rows:auto 1fr;background:#ede9e1}.student-viewer-head{padding:10px 14px;min-height:48px;border-bottom:1px solid rgba(24,21,18,.18);background:rgba(251,250,247,.92);backdrop-filter:blur(14px);display:flex;justify-content:space-between;gap:12px;align-items:center}.student-viewer-title{font-family:Georgia,serif;font-size:16px;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:58vw}.student-viewer-actions{display:flex;gap:12px;align-items:center}.student-viewer-actions button{border:0;background:transparent;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.14em;border-bottom:1px solid transparent;padding-bottom:3px}.student-viewer-actions button:hover{color:var(--ink);border-bottom-color:var(--ink)}.student-viewer-frame{overflow:auto;padding:16px 10px 34px;display:flex;justify-content:center;align-items:flex-start}.student-fake-doc{width:min(760px,calc(100vw - 20px));min-height:calc(100vh - 96px);background:#fff;border:1px solid rgba(24,21,18,.12);box-shadow:0 25px 70px rgba(24,21,18,.12);padding:38px 32px}.student-fake-doc h3{font-family:Georgia,serif;font-size:32px;letter-spacing:-.04em;font-weight:400;margin-bottom:8px}.student-fake-doc .rule{border-bottom:1px solid var(--ink);margin:22px 0}.material-tabs{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}.material-tabs button{border:0;background:transparent;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;font-size:11px;border-bottom:1px solid transparent;padding-bottom:3px}.material-tabs button.active,.material-tabs button:hover{color:var(--ink);border-bottom-color:var(--ink)}.material-section{display:none}.material-section.active{display:block}.lh-details{border:1px solid var(--line);margin:8px 0;background:rgba(255,255,255,.25)}.lh-details summary{cursor:pointer;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}.lh-details-body{padding:0 12px 12px}@media(max-width:900px){.student-wrap{width:min(100% - 24px,1180px)}.student-mast,.student-grid,.student-two,.lesson-popup-grid{grid-template-columns:1fr}.student-mast h1,.student-hero h2{font-size:40px}.student-viewer-title{max-width:46vw}.student-fake-doc{width:calc(100vw - 16px);padding:30px 24px;min-height:calc(100vh - 78px)}}
-</style>
 
-<style id="lessonhub-v170-style">
-/* LessonHub v1.7.0 — usability stabilization */
 .nav{font-size:10px;gap:14px}
 .nav .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 @media(max-width:700px){
@@ -81,11 +70,7 @@
   .course-detail-head{display:block}
   .lesson-row{grid-template-columns:1fr}
 }
-</style>
 
-
-<style id="lessonhub-v180-style">
-/* LessonHub v1.8.1 — Privacy Gate + Visual Cleanup */
 #loginScreen.session-available{
   background:linear-gradient(180deg,rgba(251,250,247,.94),rgba(251,250,247,.98));
 }
@@ -123,10 +108,6 @@
   .native-scale{gap:6px}
   .native-scale label{padding:6px 8px}
 }
-</style>
-
-
-<style id="lessonhub-v181-style">
 body.lh-resolving .shell,body.lh-resolving .portal-shell,body.lh-resolving .student-wrap,body.lh-resolving main,body.lh-resolving header,body.lh-resolving nav{visibility:hidden!important}
 #lhPrivacyGate181{position:fixed;inset:0;z-index:999999;display:none;align-items:center;justify-content:center;text-align:center;padding:28px;background:var(--bg,#fbfaf7);color:var(--ink,#181512)}
 body.lh-resolving #lhPrivacyGate181{display:flex}
@@ -152,10 +133,8 @@ body.student-mode.previewing-student181 .student-preview181{display:flex}
 .lh-empty-state181 h3{font-family:Georgia,serif;font-size:27px;font-weight:400;letter-spacing:-.04em;color:var(--ink,#181512);margin-bottom:8px}
 @media(max-width:800px){.footer181{width:min(100% - 24px,1360px);font-size:10px;gap:10px}.footer181 .credit{flex-basis:100%;margin-right:0}.material-card181,.material-row{grid-template-columns:1fr!important}.material-actions181,.material-row .actions{justify-content:flex-start}}
 </style>
-
 </head>
 <body>
-
 <div id="lhPrivacyGate181"><div><h2>Carregando LessonHub…</h2><p id="lhPrivacyGateText181">Decidindo acesso com segurança. Nenhum dado sensível aparece antes disso.</p></div></div>
 <div class="student-preview181" id="studentPreview181"><span id="studentPreviewLabel181">Visualizando como aluno</span><button onclick="exitStudentPreview181()">voltar ao professor</button></div>
 
@@ -164,7 +143,7 @@ body.student-mode.previewing-student181 .student-preview181{display:flex}
 <div class="lesson-modal" id="studentLessonModal"><div class="lesson-modal-box"><div class="lesson-modal-head"><div><div class="lesson-modal-title" id="studentLessonTitle"></div><div class="subtle" id="studentLessonSub"></div></div><button class="linkbtn" onclick="studentCloseLesson()">fechar</button></div><div class="lesson-modal-body" id="studentLessonBody"></div></div></div>
 <div class="student-viewer" id="studentViewer"><div class="student-viewer-box"><div class="student-viewer-head"><div class="student-viewer-title" id="studentViewerTitle">Material</div><div class="student-viewer-actions"><button id="studentDownloadBtn" onclick="studentDownloadCurrent()">baixar</button><button onclick="studentCloseViewer()">fechar</button></div></div><div class="student-viewer-frame" id="studentViewerFrame"></div></div></div>
 
-<div class="shell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.11.0</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-student" class="page"></section><section id="page-course" class="page"></section><section id="page-lessons" class="page"></section><section id="page-materials" class="page"></section><section id="page-school" class="page"></section><section id="page-portal" class="page"></section>
+<div class="shell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.10.2</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-student" class="page"></section><section id="page-course" class="page"></section><section id="page-lessons" class="page"></section><section id="page-materials" class="page"></section><section id="page-school" class="page"></section><section id="page-portal" class="page"></section>
     <section id="page-payments" class="page"></section><section id="page-health" class="page"></section></main></div>
 <input type="file" id="backupInput" accept=".json" hidden onchange="importBackup(this.files[0])"><input type="file" id="courseCsvInput" accept=".csv,.txt" hidden onchange="importCourseCSV(this.files[0])">
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><div><div class="modal-title" id="modalTitle"></div><div class="subtle" id="modalSub"></div></div><button class="linkbtn" onclick="closeModal()">fechar</button></div><div id="modalBody"></div></div></div><div class="toast" id="toast"></div>
@@ -175,11 +154,11 @@ const PAGES=[['dashboard','Today'],['students','Students'],['course','Course Bui
 let DB=loadDB(),PAGE='dashboard',CURRENT_STUDENT=null,STUDENT_TAB='overview',LESSON_DATE_FILTER='all';
 const $=id=>document.getElementById(id);function uid(p='id'){return p+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}function today(){return new Date().toISOString().slice(0,10)}function thisMonth(){return today().slice(0,7)}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function fmtDate(d){if(!d)return '—';const [y,m,day]=String(d).slice(0,10).split('-');return day+'/'+m+'/'+y}function money(n){return (Number(n)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}function byId(a,id){return (a||[]).find(x=>x.id===id)}function studentName(id){return byId(DB.students,id)?.name||'—'}function studentLevel(id){const s=byId(DB.students,id);return s?.activeCourseLevel||s?.level||''}function courseNameFor(s){return s?.activeCourseName||s?.activeCourseLevel||s?.level||''}function slug(s){return String(s||'arquivo').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,54)||'arquivo'}function fileExt(n){const m=String(n||'').match(/\.([a-zA-Z0-9]{1,8})$/);return m?'.'+m[1].toLowerCase():''}function fmtBytes(b){b=Number(b)||0;if(b>1048576)return (b/1048576).toFixed(2)+' MB';if(b>1024)return (b/1024).toFixed(1)+' KB';return b+' B'}function dataSize(){return new Blob([JSON.stringify(DB)]).size}function addChange(){DB.meta.changesSinceBackup=(DB.meta.changesSinceBackup||0)+1}function blankDB(){return{meta:{version:'1.7.0',updatedAt:new Date().toISOString(),lastBackupAt:null,changesSinceBackup:0},students:[],courses:[],courseUnits:[],plannedLessons:[],lessons:[],materials:[],payments:[],packages:[],assessments:[],formTemplates:[],formLogs:[],studentNotes:[]}}
 function loadDB(){let raw=localStorage.getItem(STORE_KEY);if(!raw){for(const k of OLD_KEYS){if(localStorage.getItem(k)){raw=localStorage.getItem(k);break}}}try{return normalizeDB(JSON.parse(raw||'null'))}catch(e){return blankDB()}}
-function normalizeDB(d){d=d||blankDB();d.meta=d.meta||{};d.meta.version='1.10.0';d.meta.changesSinceBackup=d.meta.changesSinceBackup||0;['students','courses','courseUnits','plannedLessons','lessons','materials','payments','packages','assessments','formTemplates','formLogs','studentNotes'].forEach(k=>d[k]=Array.isArray(d[k])?d[k]:[]);d.students.forEach(s=>{s.status=s.status||'ativo';s.goal=s.goal||'';s.activeCourseLevel=s.activeCourseLevel||s.level||'';s.activeCourseName=s.activeCourseName||s.activeCourseLevel||'';s.defaultLessonValue=Number(s.defaultLessonValue)||0;s.importantNotes=s.importantNotes||'';s.strengths=s.strengths||'';s.difficulties=s.difficulties||'';s.preferences=s.preferences||'';s.placementLevel=s.placementLevel||'';s.recommendedCourse=s.recommendedCourse||''});d.plannedLessons.forEach(p=>{p.courseName=p.courseName||p.level||'';p.unit=p.unit||p.topic||'Sem unidade';p.topic=p.topic||p.unit;p.order=Number(p.order)||1;p.type=p.type||'other'});d.lessons.forEach(l=>{l.date=l.date||'';l.title=l.title||'Aula';l.level=l.level||studentLevel(l.studentId)||'';l.courseName=l.courseName||l.level||'';l.unit=l.unit||l.topic||'Sem unidade';l.topic=l.topic||l.unit;l.pedStatus=l.pedStatus||'agendada';l.finStatus=l.finStatus||'paga';l.planStatus=l.planStatus||'a planejar';l.value=Number(l.value)||0});d.materials.forEach(m=>{m.title=m.title||'Material';m.type=m.type||'material';m.globalStatus=m.globalStatus||m.status||'rascunho';m.deliveryStatus=m.deliveryStatus||'pendente';m.level=m.level||studentLevel(m.studentId)||'Sem nível';m.unit=m.unit||m.topic||'Sem unidade';m.topic=m.topic||m.unit;m.courseLesson=m.courseLesson||m.title;m.attachments=Array.isArray(m.attachments)?m.attachments:[]});d.assessments.forEach(a=>{a.date=a.date||today();a.type=a.type||'placement';a.status=a.status||'rascunho';a.attachments=Array.isArray(a.attachments)?a.attachments:[]});d.formTemplates.forEach(f=>{f.status=f.status||'ativo';f.type=f.type||'feedback mensal'});d.formLogs.forEach(f=>{f.status=f.status||'a enviar';f.date=f.date||today()});d.packages.forEach(p=>{p.month=p.month||thisMonth();p.lessonCount=Number(p.lessonCount)||4;p.amount=Number(p.amount)||0;p.status=p.status||'pendente'});ensureUnitIds(d);return d}
+function normalizeDB(d){d=d||blankDB();d.meta=d.meta||{};d.meta.version='1.10.2';d.meta.changesSinceBackup=d.meta.changesSinceBackup||0;['students','courses','courseUnits','plannedLessons','lessons','materials','payments','packages','assessments','formTemplates','formLogs','studentNotes'].forEach(k=>d[k]=Array.isArray(d[k])?d[k]:[]);d.students.forEach(s=>{s.status=s.status||'ativo';s.goal=s.goal||'';s.activeCourseLevel=s.activeCourseLevel||s.level||'';s.activeCourseName=s.activeCourseName||s.activeCourseLevel||'';s.defaultLessonValue=Number(s.defaultLessonValue)||0;s.importantNotes=s.importantNotes||'';s.strengths=s.strengths||'';s.difficulties=s.difficulties||'';s.preferences=s.preferences||'';s.placementLevel=s.placementLevel||'';s.recommendedCourse=s.recommendedCourse||''});d.plannedLessons.forEach(p=>{p.courseName=p.courseName||p.level||'';p.unit=p.unit||p.topic||'Sem unidade';p.topic=p.topic||p.unit;p.order=Number(p.order)||1;p.type=p.type||'other'});d.lessons.forEach(l=>{l.date=l.date||'';l.title=l.title||'Aula';l.level=l.level||studentLevel(l.studentId)||'';l.courseName=l.courseName||l.level||'';l.unit=l.unit||l.topic||'Sem unidade';l.topic=l.topic||l.unit;l.pedStatus=l.pedStatus||'agendada';l.finStatus=l.finStatus||'paga';l.planStatus=l.planStatus||'a planejar';l.value=Number(l.value)||0});d.materials.forEach(m=>{m.title=m.title||'Material';m.type=m.type||'material';m.globalStatus=m.globalStatus||m.status||'rascunho';m.deliveryStatus=m.deliveryStatus||'pendente';m.level=m.level||studentLevel(m.studentId)||'Sem nível';m.unit=m.unit||m.topic||'Sem unidade';m.topic=m.topic||m.unit;m.courseLesson=m.courseLesson||m.title;m.attachments=Array.isArray(m.attachments)?m.attachments:[]});d.assessments.forEach(a=>{a.date=a.date||today();a.type=a.type||'placement';a.status=a.status||'rascunho';a.attachments=Array.isArray(a.attachments)?a.attachments:[]});d.formTemplates.forEach(f=>{f.status=f.status||'ativo';f.type=f.type||'feedback mensal'});d.formLogs.forEach(f=>{f.status=f.status||'a enviar';f.date=f.date||today()});d.packages.forEach(p=>{p.month=p.month||thisMonth();p.lessonCount=Number(p.lessonCount)||4;p.amount=Number(p.amount)||0;p.status=p.status||'pendente'});ensureUnitIds(d);return d}
 function ensureUnitIds(d=DB){const existing=new Map();d.courseUnits.forEach(u=>{u.id=u.id||uid('unit');u.courseName=u.courseName||u.level;existing.set(`${u.courseName}|${u.level}|${u.unit}`,u.id)});d.plannedLessons.forEach(p=>{const key=`${p.courseName||p.level}|${p.level}|${p.unit||p.topic||'Sem unidade'}`;if(!existing.has(key)){const u={id:uid('unit'),courseName:p.courseName||p.level,level:p.level,unit:p.unit||p.topic||'Sem unidade',order:999};d.courseUnits.push(u);existing.set(key,u.id)}p.unitId=p.unitId||existing.get(key)})}
 function saveDB(skip=false){DB.meta.updatedAt=new Date().toISOString();localStorage.setItem(STORE_KEY,JSON.stringify(DB));if(!skip)render()}function toast(msg){const el=$('toast');el.textContent=msg;el.style.display='block';clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.style.display='none',3000)}function badge(t,c=''){return `<span class="badge ${c}">${esc(t)}</span>`}function pedBadge(s){return badge(s,{concluída:'ok',cancelada:'bad',reposição:'blue',pendente:'warn',agendada:''}[s]||'')}function finBadge(s){return badge(s,{paga:'ok',pendente:'bad',reposição:'blue',falta:'warn',extra:'blue'}[s]||'')}function planBadge(s){return badge(s,{preparado:'ok','a planejar':'warn'}[s]||'warn')}function matBadge(s){return badge(s,{aprovado:'ok',desatualizado:'bad',arquivado:'',rascunho:'warn'}[s]||'')}function groupBy(arr,fn){return arr.reduce((a,x)=>{const k=fn(x)||'—';(a[k]=a[k]||[]).push(x);return a},{})}
 async function openAttachDB(){return new Promise((res,rej)=>{const r=indexedDB.open('lessonhub_attachments_v1',1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains('files'))db.createObjectStore('files',{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}function canonicalName(meta,file){return `${meta.date||today()}__${slug(meta.studentName||studentName(meta.studentId)||'library')}__${slug(meta.type||'material')}__${slug(meta.title||file.name)}${fileExt(file.name)}`}async function saveAttachment(file,meta={}){if(!file)return null;const db=await openAttachDB();return new Promise((res,rej)=>{const id=uid('file'),cn=canonicalName(meta,file),tx=db.transaction('files','readwrite');tx.objectStore('files').put({id,name:file.name,canonicalName:cn,type:file.type||'application/octet-stream',size:file.size,createdAt:new Date().toISOString(),blob:file});tx.oncomplete=()=>{db.close();res({id,name:file.name,canonicalName:cn,type:file.type||'application/octet-stream',size:file.size,createdAt:new Date().toISOString()})};tx.onerror=()=>{db.close();rej(tx.error)}})}async function getAttachment(id){const db=await openAttachDB();return new Promise((res,rej)=>{const tx=db.transaction('files','readonly'),rq=tx.objectStore('files').get(id);rq.onsuccess=()=>{db.close();res(rq.result||null)};rq.onerror=()=>{db.close();rej(rq.error)}})}async function openAttachment(id){try{const f=await getAttachment(id);if(!f)return toast('Anexo não encontrado neste navegador.');const u=URL.createObjectURL(f.blob);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000)}catch(e){toast('Erro ao abrir anexo.')}}
-function init(){dateBox.innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>student portal & supabase json backend';nav.innerHTML=PAGES.map(p=>`<button data-page="${p[0]}" onclick="showPage('${p[0]}')">${p[1]}</button>`).join('')+`<div class="actions"><button class="linkbtn" onclick="exportBackup()">exportar backup</button><button class="linkbtn" onclick="backupInput.click()">importar</button></div>`;showPage('dashboard');saveDB(true)}function showPage(p){PAGE=p;if(p!=='student')CURRENT_STUDENT=null;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p).classList.add('active');document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===p||(p==='student'&&b.dataset.page==='students')));render()}function pageHead(title,sub,actions=''){return `<div class="page-head"><div class="page-title"><h2>${title}</h2><p>${sub}</p></div><div class="toolbar-left">${actions}</div></div>`}function render(){renderDashboard();renderStudents();renderCourse();renderLessons();renderMaterials();renderSchool();renderPayments();renderHealth();if(CURRENT_STUDENT)renderStudent()}
+function init(){dateBox.innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>stability & supabase backup diagnostics';nav.innerHTML=PAGES.map(p=>`<button data-page="${p[0]}" onclick="showPage('${p[0]}')">${p[1]}</button>`).join('')+`<div class="actions"><button class="linkbtn" onclick="exportBackup()">exportar backup</button><button class="linkbtn" onclick="backupInput.click()">importar</button></div>`;showPage('dashboard');saveDB(true)}function showPage(p){PAGE=p;if(p!=='student')CURRENT_STUDENT=null;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p).classList.add('active');document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===p||(p==='student'&&b.dataset.page==='students')));render()}function pageHead(title,sub,actions=''){return `<div class="page-head"><div class="page-title"><h2>${title}</h2><p>${sub}</p></div><div class="toolbar-left">${actions}</div></div>`}function render(){renderDashboard();renderStudents();renderCourse();renderLessons();renderMaterials();renderSchool();renderPayments();renderHealth();if(CURRENT_STUDENT)renderStudent()}
 function lessonRevenue(l){if(l.finStatus==='pendente')return 0;if(['paga','falta','reposição','extra'].includes(l.finStatus))return Number(l.value)||0;return 0}function monthLessons(month=thisMonth()){return DB.lessons.filter(l=>String(l.date||'').startsWith(month))}function computeStudentCredits(id){return DB.packages.filter(p=>p.studentId===id&&p.status==='pago').reduce((s,p)=>s+packageCredits(p).remaining,0)}function computeCredits(){return{totalOpenCredits:DB.students.reduce((s,st)=>s+computeStudentCredits(st.id),0)}}function packageCredits(p){const ls=DB.lessons.filter(l=>l.studentId===p.studentId&&String(l.date||'').startsWith(p.month)&&['paga','falta','reposição'].includes(l.finStatus));return{used:ls.length,absences:ls.filter(l=>l.finStatus==='falta').length,replacements:ls.filter(l=>l.finStatus==='reposição').length,remaining:Math.max(0,Number(p.lessonCount||0)-ls.length)}}function studentProgress(studentId){const s=byId(DB.students,studentId);const level=s?.activeCourseLevel||s?.level||'',cname=s?.activeCourseName||level;const planned=DB.plannedLessons.filter(p=>p.level===level&&(p.courseName||p.level)===(cname||level)).sort((a,b)=>Number(a.order)-Number(b.order));const completedIds=new Set(DB.lessons.filter(l=>l.studentId===studentId&&['concluída','reposição'].includes(l.pedStatus)&&l.plannedLessonId).map(l=>l.plannedLessonId));let last=-1;planned.forEach((p,i)=>{if(completedIds.has(p.id))last=Math.max(last,i)});const done=completedIds.size,total=planned.length,pct=total?Math.round(done/total*100):0,next=planned[last+1]||planned.find(p=>!completedIds.has(p.id));return{done,total,pct,next,message:total?`${done} de ${total} aulas únicas concluídas.`:'Curso ativo ainda não encontrou aulas planejadas compatíveis.'}}
 function renderDashboard(){const todays=DB.lessons.filter(l=>l.date===today()).sort((a,b)=>a.title.localeCompare(b.title));const toPlan=DB.lessons.filter(l=>l.planStatus==='a planejar');const ml=monthLessons(),rev=ml.reduce((s,l)=>s+lessonRevenue(l),0),credits=computeCredits().totalOpenCredits;$('page-dashboard').innerHTML=pageHead('Today','Aulas, planejamento pendente, materiais e valor cursado.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="grid"><div class="card"><div class="num">${todays.length}</div><div class="label">aulas hoje</div></div><div class="card"><div class="num">${toPlan.length}</div><div class="label">a planejar</div></div><div class="card"><div class="num">${money(rev)}</div><div class="label">valor cursado · mês</div></div><div class="card"><div class="num">${credits}</div><div class="label">créditos abertos</div></div></div><div class="two"><div class="panel"><div class="panel-title">Aulas de hoje</div><div class="list">${todays.map(lessonCard).join('')||'<div class="empty">Nenhuma aula marcada para hoje.</div>'}</div></div><div class="panel"><div class="panel-title">Aulas a planejar</div><div class="list">${toPlan.slice(0,8).map(lessonCard).join('')||'<div class="empty">Nenhuma aula lançada aguardando planejamento.</div>'}</div></div></div>`}
 function renderStudents(q=''){const rows=DB.students.filter(s=>(s.name+' '+s.level+' '+s.activeCourseLevel+' '+s.activeCourseName+' '+s.goal).toLowerCase().includes(String(q).toLowerCase())).sort((a,b)=>a.name.localeCompare(b.name));$('page-students').innerHTML=pageHead('Students','Fichas, curso ativo, bundles e progresso.',`<button class="btn" onclick="openStudentModal()">novo aluno</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar aluno..." oninput="renderStudents(this.value)"></div><div class="list">${rows.map(studentCard).join('')||'<div class="empty">Nenhum aluno cadastrado.</div>'}</div>`}function studentCard(s){const prog=studentProgress(s.id),count=DB.lessons.filter(l=>l.studentId===s.id).length;return `<div class="item" onclick="openStudent('${s.id}')" style="cursor:pointer"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.status)}${badge(courseNameFor(s),'blue')}${badge(`${prog.done}/${prog.total} curso`,'ok')}${badge(`${count} aulas reais`)}</div><div class="progress"><i style="width:${prog.pct}%"></i></div><div class="meta">${prog.message}<br>${esc(s.goal||'Sem objetivo registrado.')}</div></div>`}function openStudent(id){CURRENT_STUDENT=id;STUDENT_TAB='overview';showPage('student')}
@@ -217,7 +196,7 @@ init();
 <div id="loginScreen" style="position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px">
   <div style="text-align:center">
     <h1 style="font-family:Georgia,serif;font-size:72px;font-weight:400;letter-spacing:-.07em;line-height:.85">Lesson<br>Hub</h1>
-    <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin-top:16px">Teaching Journal · v1.11.0</p>
+    <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin-top:16px">Teaching Journal · v1.10.2</p>
   </div>
   <button id="googleSignInBtn" onclick="driveSignIn()" style="display:flex;align-items:center;gap:12px;padding:14px 28px;background:#fff;border:1px solid #dadce0;border-radius:6px;font-size:15px;color:#3c4043;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15);font-family:sans-serif">
   <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -451,7 +430,7 @@ function sanitizeEmail(email){return String(email||'').toLowerCase().replace(/[^
 function today(){return new Date().toISOString().slice(0,10)}
 function defVisible(type){type=String(type||'').toLowerCase();return !(type==='test'||type==='rubric')}
 function defDownload(type){type=String(type||'').toLowerCase();return !(type==='test'||type==='rubric'||type==='video')}
-function ensureV160DB(){if(!window.DB)return;DB.meta=DB.meta||{};DB.meta.version='1.10.0';DB.meta.adminEmails=Array.isArray(DB.meta.adminEmails)?DB.meta.adminEmails:[ADMIN_EMAIL];if(!DB.meta.adminEmails.includes(ADMIN_EMAIL))DB.meta.adminEmails.push(ADMIN_EMAIL);['students','lessons','plannedLessons','materials','packages','assessments','formLogs','formTemplates','courseUnits'].forEach(k=>DB[k]=Array.isArray(DB[k])?DB[k]:[]);DB.students.forEach(s=>{s.email=(s.email||s.loginEmail||'').toLowerCase();s.phone=s.phone||s.whatsapp||'';s.studentPortalEnabled=s.studentPortalEnabled!==false});DB.lessons.forEach(l=>{l.startTime=l.startTime||l.time||'';l.materialsStatus=l.materialsStatus||'pendente';l.studentPortalVisible=l.studentPortalVisible!==false});DB.materials.forEach(m=>{m.materialScope=m.materialScope||(m.studentId?'student':(m.plannedLessonId?'curricular':'standalone'));m.studentVisible=typeof m.studentVisible==='boolean'?m.studentVisible:defVisible(m.type);m.downloadAllowed=typeof m.downloadAllowed==='boolean'?m.downloadAllowed:defDownload(m.type);m.attachments=Array.isArray(m.attachments)?m.attachments:[]});DB.assessments.forEach(a=>{a.studentVisible=!!a.studentVisible;a.studentFeedback=a.studentFeedback||'';a.internalNotes=a.internalNotes||a.notes||''});DB.formLogs.forEach(f=>{f.studentVisible=f.studentVisible!==false})}
+function ensureV160DB(){if(!window.DB)return;DB.meta=DB.meta||{};DB.meta.version='1.10.2';DB.meta.adminEmails=Array.isArray(DB.meta.adminEmails)?DB.meta.adminEmails:[ADMIN_EMAIL];if(!DB.meta.adminEmails.includes(ADMIN_EMAIL))DB.meta.adminEmails.push(ADMIN_EMAIL);['students','lessons','plannedLessons','materials','packages','assessments','formLogs','formTemplates','courseUnits'].forEach(k=>DB[k]=Array.isArray(DB[k])?DB[k]:[]);DB.students.forEach(s=>{s.email=(s.email||s.loginEmail||'').toLowerCase();s.phone=s.phone||s.whatsapp||'';s.studentPortalEnabled=s.studentPortalEnabled!==false});DB.lessons.forEach(l=>{l.startTime=l.startTime||l.time||'';l.materialsStatus=l.materialsStatus||'pendente';l.studentPortalVisible=l.studentPortalVisible!==false});DB.materials.forEach(m=>{m.materialScope=m.materialScope||(m.studentId?'student':(m.plannedLessonId?'curricular':'standalone'));m.studentVisible=typeof m.studentVisible==='boolean'?m.studentVisible:defVisible(m.type);m.downloadAllowed=typeof m.downloadAllowed==='boolean'?m.downloadAllowed:defDownload(m.type);m.attachments=Array.isArray(m.attachments)?m.attachments:[]});DB.assessments.forEach(a=>{a.studentVisible=!!a.studentVisible;a.studentFeedback=a.studentFeedback||'';a.internalNotes=a.internalNotes||a.notes||''});DB.formLogs.forEach(f=>{f.studentVisible=f.studentVisible!==false})}
 function studentName(id){return by(DB.students,id)?.name||'—'}
 function plannedOf(l){return by(DB.plannedLessons,l?.plannedLessonId)}
 function lessonTitle(l){const st=by(DB.students,l.studentId);return `${st?.name||'Aluno'} — ${fmt(l.date)}${l.startTime?' · '+l.startTime:''}`}
@@ -560,7 +539,7 @@ function materialOrigin170(m){
 function defaultVisible170(type){type=String(type||'').toLowerCase();return !(type==='test'||type==='rubric')}
 function defaultDownload170(type){type=String(type||'').toLowerCase();return !(type==='test'||type==='rubric'||type==='video')}
 function normalize170(){
- DB.meta=DB.meta||{};DB.meta.version='1.10.0';DB.meta.adminEmails=DB.meta.adminEmails||[ADMIN_EMAIL_170];if(!DB.meta.adminEmails.includes(ADMIN_EMAIL_170))DB.meta.adminEmails.push(ADMIN_EMAIL_170);
+ DB.meta=DB.meta||{};DB.meta.version='1.10.2';DB.meta.adminEmails=DB.meta.adminEmails||[ADMIN_EMAIL_170];if(!DB.meta.adminEmails.includes(ADMIN_EMAIL_170))DB.meta.adminEmails.push(ADMIN_EMAIL_170);
  ['lessonMaterialLinks','portalSnapshots'].forEach(k=>{if(!DB[k])DB[k]=k==='lessonMaterialLinks'?[]:{}});
  (DB.students||[]).forEach(s=>{s.email=s.email||s.loginEmail||'';s.phone=s.phone||s.whatsapp||'';s.status=s.status||'ativo'});
  (DB.lessons||[]).forEach(l=>{l.startTime=l.startTime||l.time||'';l.materialsStatus=l.materialsStatus||'pendente';l.studentPortalVisible=l.studentPortalVisible!==false;l.contentDone=l.contentDone||'';l.afterNotes=l.afterNotes||'';l.homeworkDefined=l.homeworkDefined||''});
@@ -963,7 +942,7 @@ function toast180(msg){if(typeof toast==='function')toast(msg);else alert(msg)}
 
 function ensureDB180(){
  if(!window.DB)return;
- DB.meta=DB.meta||{};DB.meta.version='1.10.0';
+ DB.meta=DB.meta||{};DB.meta.version='1.10.2';
  admins180();
  ['students','lessons','plannedLessons','materials','packages','assessments','formLogs','formTemplates','courseUnits','nativeFormTemplates','nativeFormAssignments','nativeFormResponses','lessonMaterialLinks'].forEach(k=>{if(!Array.isArray(DB[k]))DB[k]=[]});
  DB.students.forEach(s=>{s.email=normEmail180(s.email||s.loginEmail);s.phone=s.phone||s.whatsapp||''});
@@ -1262,35 +1241,16 @@ window.openNativeResponseTeacher180=function(assignId){
  const a=by180(DB.nativeFormAssignments,assignId), f=nativeTemplate180(a?.formId), r=nativeResponse180(assignId);
  if(!a||!f||!r)return toast180('Ainda não há resposta.');
  const body=(f.questions||[]).map(q=>`<div class="native-response-card"><div class="native-form-title" style="font-size:18px">${esc180(q.label)}</div><p class="subtle">${esc180(Array.isArray(r.answers[q.id])?r.answers[q.id].join(', '):r.answers[q.id]||'—')}</p></div>`).join('');
- const w=window.open('','_blank'); w.document.write(`<html><head><title>${esc180(f.title)}</title><style>body{font-family:system-ui;padding:24px;background:#fbfaf7;color:#181512}.native-response-card{border:1px solid #ddd;padding:14px;margin:10px 0;background:#fff}.native-form-title{font-family:Georgia,serif;font-size:24px}</style>
-<style id="lessonhub-v181-style">
-body.lh-resolving .shell,body.lh-resolving .portal-shell,body.lh-resolving .student-wrap,body.lh-resolving main,body.lh-resolving header,body.lh-resolving nav{visibility:hidden!important}
-#lhPrivacyGate181{position:fixed;inset:0;z-index:999999;display:none;align-items:center;justify-content:center;text-align:center;padding:28px;background:var(--bg,#fbfaf7);color:var(--ink,#181512)}
-body.lh-resolving #lhPrivacyGate181{display:flex}
-#lhPrivacyGate181 h2{font-family:Georgia,serif;font-size:clamp(36px,8vw,58px);line-height:.9;letter-spacing:-.06em;font-weight:400;margin:0 0 14px}
-#lhPrivacyGate181 p{max-width:540px;margin:0 auto;color:var(--muted,#756e67);font-size:13px;line-height:1.55}
-.badges,.status-line{display:none!important}
-.icon,.student-icon{display:none!important}
-.info-strip181{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px 14px;border-top:1px solid var(--line2,rgba(24,21,18,.07));padding-top:10px}
-.info-strip181 div{font-size:12px;color:var(--muted,#756e67);line-height:1.4}.info-strip181 b{font-weight:500;color:var(--ink,#181512)}
-.material-card181{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line2,rgba(24,21,18,.07));background:transparent}
-.material-title181{font-family:Georgia,serif;font-size:22px;font-weight:400;letter-spacing:-.04em;line-height:1.05}
-.material-meta181{margin-top:5px;color:var(--muted,#756e67);font-size:13px;line-height:1.45}
-.material-actions181{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.material-actions181 button,.footer181 button,.footer181 a,.student-preview181 button{border:0;background:transparent;color:var(--muted,#756e67);font-size:10px;text-transform:uppercase;letter-spacing:.13em;border-bottom:1px solid transparent;padding:0 0 3px;cursor:pointer;text-decoration:none}
-.material-actions181 button:hover,.footer181 button:hover,.footer181 a:hover,.student-preview181 button:hover{color:var(--ink,#181512);border-bottom-color:var(--ink,#181512)}
-.material-row{grid-template-columns:1fr auto!important;padding:12px 0!important}.material-row .actions{justify-content:flex-end}
-.health-mini,#healthMini170,#reconnectDrive180{display:none!important}
-.footer181{width:min(1360px,calc(100% - 44px));margin:18px auto 0;padding:14px 0 26px;border-top:1px solid var(--line,rgba(24,21,18,.14));display:flex;gap:12px;flex-wrap:wrap;align-items:center;color:var(--muted,#756e67);font-size:11px;line-height:1.5}
-.footer181 .credit{margin-right:auto}
-.student-preview181{display:none;position:sticky;top:0;z-index:80;background:rgba(255,253,249,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line,rgba(24,21,18,.14));padding:10px 14px;justify-content:space-between;gap:12px;align-items:center;font-size:11px;color:var(--muted,#756e67);text-transform:uppercase;letter-spacing:.14em}
-body.student-mode.previewing-student181 .student-preview181{display:flex}
-.lh-empty-state181{border:1px dashed var(--line,rgba(24,21,18,.14));padding:30px;text-align:center;color:var(--muted,#756e67);background:rgba(255,255,255,.32)}
-.lh-empty-state181 h3{font-family:Georgia,serif;font-size:27px;font-weight:400;letter-spacing:-.04em;color:var(--ink,#181512);margin-bottom:8px}
-@media(max-width:800px){.footer181{width:min(100% - 24px,1360px);font-size:10px;gap:10px}.footer181 .credit{flex-basis:100%;margin-right:0}.material-card181,.material-row{grid-template-columns:1fr!important}.material-actions181,.material-row .actions{justify-content:flex-start}}
-</style>
+ const w=window.open('','_blank'); w.document.write(`<html><head><title>${esc180(f.title)}</title>
 
-</head><body><h1>${esc180(f.title)}</h1><p>${esc180(by180(DB.students,a.studentId)?.name||'Aluno')} · ${fmt180(r.submittedAt)}</p>${body}</body></html>`);
+
+</head><body><h1>${esc180(f.title)}</h1><p>${esc180(by180(DB.students,a.studentId)?.name||'Aluno')} · ${fmt180(r.submittedAt)}</p>${body}
+
+
+/* removed misplaced nested v1101 hotfix script; valid copy kept later */
+
+
+</body></html>`);
 };
 
 /* Override Forms page to include native forms */
@@ -1367,7 +1327,7 @@ populateDatalists180();
 
 
 <footer class="footer181" id="footer181">
-  <span class="credit">LessonHub v1.11.0 · criado e mantido por Erik Azevedo (@prof.erikazevedo)</span>
+  <span class="credit">LessonHub v1.8.1 · criado e mantido por Erik Azevedo (@prof.erikazevedo)</span>
   <button onclick="downloadBackup181()">backup</button>
   <button onclick="openSystem181()">sistema</button>
   <button onclick="logout181()">logout</button>
@@ -1611,7 +1571,7 @@ function localHasData(){return datasetCount(window.DB)>0;}
 function stampVersion(){
   if(window.DB){
     DB.meta=DB.meta||{};
-    DB.meta.version='1.10.0';
+    DB.meta.version='1.10.2';
     DB.meta.storageAuthority='Drive principal · Supabase backup auxiliar · localStorage cache';
   }
 }
@@ -1819,9 +1779,9 @@ function kb(){try{return Math.round(new Blob([JSON.stringify(window.DB||{})]).si
 function count(k){return (window.DB&&Array.isArray(DB[k]))?DB[k].length:0}
 function stamp(){
   document.title='LessonHub v1.10.0 — Stability & Supabase Backup Diagnostics';
-  document.querySelectorAll('.brand p').forEach(p=>{p.textContent='Teaching Journal · v1.11.0'});
+  document.querySelectorAll('.brand p').forEach(p=>{p.textContent='Teaching Journal · v1.10.2'});
   const login=document.querySelector('#loginScreen p');
-  if(login && /Teaching Journal/.test(login.textContent)) login.textContent='Teaching Journal · v1.11.0';
+  if(login && /Teaching Journal/.test(login.textContent)) login.textContent='Teaching Journal · v1.10.2';
   if(window.DB){DB.meta=DB.meta||{};DB.meta.version=VERSION;DB.meta.storageAuthority=window.LH_ARCHITECTURE;}
 }
 function driveState(){
@@ -1876,102 +1836,135 @@ setTimeout(stamp,100);
 })();
 </script>
 
-<script id="lessonhub-v111-student-supabase-backend">
-// === LESSONHUB v1.11.0 — Student usability + Supabase JSON backend bridge ===
-// Objetivo: manter Drive como storage de arquivos, usar Supabase como backend JSON de dados/portais,
-// e proteger cache local contra overwrite vazio. Patch final e isolado: não toca Forms/templates antigos.
+<script id="lessonhub-v1101-hotfix">
+// === LESSONHUB v1.10.1 — Hotfix: safe Drive merge, Health nav, footer, student fallback ===
 (function(){
 'use strict';
-const VERSION='1.11.0';
+const VERSION='1.10.1';
 const STORE='lessonhub_v1_4_data';
-const SAFE_STORE='lessonhub_v1_11_safe_cache';
-const SB_URL='https://ezgaqcxrbticangnnryo.supabase.co';
-const SB_KEY='sb_publishable_k-Ch1aS1UkRR-OlDzAbH-Q_B4a8e7kE';
-const SB_TABLE='lh_backups';
-const ADMIN_EMAIL='zruc04@gmail.com';
-let sbClient=null, sbEmail='', sbLastError='', sbLastAction='aguardando login', sbLastPush=null, sbLastPull=null, sbLastPortalPush=null, saveTimer=null;
 window.LH_VERSION=VERSION;
-window.LH_STORE_KEY=STORE;
-window.LH_ARCHITECTURE='Supabase backend JSON para dados e portais · Drive storage oficial de arquivos · localStorage cache seguro';
+window.LH_ARCHITECTURE='Drive principal/sync + Drive storage de arquivos · Supabase backup auxiliar · localStorage cache operacional';
 window.LH_LOGS=window.LH_LOGS||[];
-function log(msg,type='info'){try{window.LH_LOGS.unshift({at:new Date().toISOString(),type,msg});window.LH_LOGS=window.LH_LOGS.slice(0,60);console.log('[LessonHub '+VERSION+']',msg)}catch(e){}}
-window.lhLog=log;
+function log(msg,type='info'){
+  try{window.LH_LOGS.unshift({at:new Date().toISOString(),type,msg});window.LH_LOGS=window.LH_LOGS.slice(0,40);console.log('[LessonHub]',msg)}catch(e){}
+}
+window.lhLog=window.lhLog||log;
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function normEmail(e){return String(e||'').trim().toLowerCase()}
-function isAdmin(e){return normEmail(e)===ADMIN_EMAIL}
-function sb(){if(!sbClient){if(!window.supabase)throw new Error('Supabase lib não carregou');sbClient=window.supabase.createClient(SB_URL,SB_KEY)}return sbClient}
-function dataCount(d){d=d||{};return ['students','lessons','materials','plannedLessons','courseUnits','packages','assessments','formLogs','formTemplates','studentNotes','lessonMaterialLinks','nativeFormTemplates','nativeFormAssignments'].reduce((n,k)=>n+(Array.isArray(d[k])?d[k].length:0),0)}
-function updated(d){return d?.meta?.updatedAt||d?.updated_at||''}
-function normalize(d){try{return window.normalizeDB?normalizeDB(d):d}catch(e){return d}}
-function readKey(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
-function writeKey(k,d){try{localStorage.setItem(k,JSON.stringify(d||{}))}catch(e){}}
-function stamp(){try{document.title='LessonHub v1.11.0 — Student Portal + Supabase JSON Backend';document.querySelectorAll('.brand p').forEach(p=>p.textContent='Teaching Journal · v1.11.0');const login=document.querySelector('#loginScreen p');if(login&&/Teaching Journal/.test(login.textContent))login.textContent='Teaching Journal · v1.11.0';document.querySelectorAll('.footer181 .credit,#footer181 .credit').forEach(x=>x.textContent='LessonHub v1.11.0 · criado e mantido por Erik Azevedo (@prof.erikazevedo)');if(window.DB){DB.meta=DB.meta||{};DB.meta.version=VERSION;DB.meta.storageAuthority=window.LH_ARCHITECTURE;}}catch(e){}}
-function bestDB(list){let best=null;for(const raw of list){if(!raw)continue;const d=raw.data?raw.data:raw;const c=dataCount(d);if(!best){best=d;continue}const bc=dataCount(best);if(c>bc){best=d;continue}if(c===bc && String(updated(d))>String(updated(best)))best=d;}return best}
-function persist(d,renderIt=true){const nd=normalize(d||{});window.DB=nd;stamp();writeKey(STORE,nd);writeKey(SAFE_STORE,nd);if(renderIt&&window.render)try{render()}catch(e){console.warn(e)}return nd}
-function safeCurrent(){const best=bestDB([window.DB,readKey(STORE),readKey(SAFE_STORE)]);if(best && best!==window.DB)persist(best,false);return best||window.DB}
-async function sbRead(email){email=normEmail(email);if(!email)return null;try{const {data,error}=await sb().from(SB_TABLE).select('data,updated_at').eq('user_email',email).maybeSingle();if(error)throw error;sbLastPull=new Date();sbLastError='';sbLastAction=data?'leitura Supabase OK':'sem registro Supabase';return data||null}catch(e){sbLastError=e.message||String(e);sbLastAction='erro leitura Supabase';log('Supabase read falhou: '+sbLastError,'error');return null}}
-async function sbWrite(email,data,kind='db'){email=normEmail(email);if(!email||!data)return false;try{const payload={user_email:email,data,updated_at:new Date().toISOString()};const {error}=await sb().from(SB_TABLE).upsert(payload,{onConflict:'user_email'});if(error)throw error;if(kind==='portal')sbLastPortalPush=new Date();else sbLastPush=new Date();sbLastError='';sbLastAction=kind==='portal'?'portal salvo no Supabase':'DB salvo no Supabase';log(sbLastAction+' · '+email,'ok');return true}catch(e){sbLastError=e.message||String(e);sbLastAction='erro ao salvar Supabase';log('Supabase write falhou: '+sbLastError,'error');return false}}
-async function sbMergeForAdmin(email){const local=safeCurrent();const remote=await sbRead(email);const remoteDB=remote?.data||null;const chosen=bestDB([local,remoteDB]);if(chosen){persist(chosen,true);const lc=dataCount(local), rc=dataCount(remoteDB), cc=dataCount(chosen);log(`Merge seguro: local ${lc} · Supabase ${rc} · escolhido ${cc}`,'ok');if(chosen===local && lc>0)sbWrite(email,chosen,'db');}return chosen}
-function scheduleSB(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{const d=safeCurrent();if(sbEmail&&isAdmin(sbEmail)&&dataCount(d)>0)sbWrite(sbEmail,d,'db');},2200)}
-window.safeCurrent111=safeCurrent;
-window.sbMergeForAdmin111=sbMergeForAdmin;
-const originalSave=window.saveDB;
-window.saveDB=function saveDB111(skip=false){stamp();if(originalSave)originalSave.apply(this,arguments);stamp();const d=safeCurrent();if(!d?.meta)d.meta={};d.meta.updatedAt=new Date().toISOString();d.meta.version=VERSION;writeKey(STORE,d);writeKey(SAFE_STORE,d);if(sbEmail&&isAdmin(sbEmail))scheduleSB();};
-// Drive safety: prevent blank remote/local from winning after refresh.
-const originalDriveSetup=window.driveSetup;
-if(originalDriveSetup){window.driveSetup=async function driveSetup111(){const before=safeCurrent();const beforeCount=dataCount(before);try{await originalDriveSetup.apply(this,arguments)}catch(e){log('Drive setup erro: '+(e.message||e),'error')}const after=window.DB;const chosen=bestDB([before,after,readKey(STORE),readKey(SAFE_STORE)]);if(chosen && (beforeCount>0 || dataCount(chosen)>dataCount(after))){persist(chosen,true);log('Drive safe-merge preservou cache/DB mais completo.','warn')}return window.DB;};}
-const originalDriveSync=window.driveSync;
-if(originalDriveSync){window.driveSync=async function driveSync111(){const d=safeCurrent();if(dataCount(d)<=0 && dataCount(readKey(SAFE_STORE))>0){persist(readKey(SAFE_STORE),false)}return originalDriveSync.apply(this,arguments);};}
-function sanitizeEmail(email){return normEmail(email).replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')||'student'}
-function by(arr,id){return (arr||[]).find(x=>x.id===id)}
-function studentByEmail(email){email=normEmail(email);return (DB.students||[]).find(s=>normEmail(s.email||s.loginEmail)===email)}
-function studentLessons(id){return (DB.lessons||[]).filter(l=>l.studentId===id&&l.studentPortalVisible!==false).sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')))}
-function lessonMats(l){const cur=(DB.materials||[]).filter(m=>m.studentVisible!==false&&l.plannedLessonId&&m.plannedLessonId===l.plannedLessonId&&!m.studentId);const ind=(DB.materials||[]).filter(m=>m.studentVisible!==false&&m.studentId===l.studentId&&(m.lessonId===l.id||(!m.lessonId&&!m.plannedLessonId)));const links=(DB.lessonMaterialLinks||[]).filter(x=>x.lessonId===l.id).map(x=>by(DB.materials||[],x.materialId)).filter(m=>m&&m.studentVisible!==false);const seen=new Set();return [...cur,...ind,...links].filter(m=>!seen.has(m.id)&&seen.add(m.id));}
-function packCredits(p){const ls=(DB.lessons||[]).filter(l=>l.studentId===p.studentId&&String(l.date||'').startsWith(p.month||'')&&['paga','falta','reposição'].includes(l.finStatus));return{used:ls.length,remaining:Math.max(0,Number(p.lessonCount||0)-ls.length)}}
-function finance(id){const packs=(DB.packages||[]).filter(p=>p.studentId===id).sort((a,b)=>String(b.month||'').localeCompare(String(a.month||'')));const current=packs[0];const pending=(DB.lessons||[]).filter(l=>l.studentId===id&&l.finStatus==='pendente').reduce((s,l)=>s+(Number(l.value)||0),0);const credits=packs.filter(p=>p.status==='pago').reduce((s,p)=>s+packCredits(p).remaining,0);return{packs,current,pendingValue:pending,credits,status:pending>0||current?.status==='pendente'?'pendente':'em dia'}}
-function makePortalSnapshot(studentId){const st=by(DB.students||[],studentId);if(!st||!st.email)return null;const lessons=studentLessons(st.id);return{meta:{kind:'student_portal',version:VERSION,generatedAt:new Date().toISOString(),studentEmail:normEmail(st.email)},student:{id:st.id,name:st.name,email:normEmail(st.email),course:st.activeCourseName||st.activeCourseLevel||st.level||'',level:st.activeCourseLevel||st.level||''},lessons:lessons.map(l=>({id:l.id,studentId:st.id,date:l.date,startTime:l.startTime,title:l.title,level:l.level,unit:l.unit,notes:l.notes||'',materialsStatus:l.materialsStatus,materials:lessonMats(l).map(m=>({id:m.id,title:m.title,type:m.type,downloadAllowed:m.downloadAllowed,studentVisible:m.studentVisible,attachments:(m.attachments||[]).map(a=>({id:a.id,name:a.name,type:a.type,driveId:a.driveId,driveLink:a.driveLink}))}))})),forms:(DB.formLogs||[]).filter(f=>f.studentId===st.id&&f.studentVisible!==false&&f.status!=='rascunho'&&f.status!=='arquivado'),tests:(DB.assessments||[]).filter(a=>a.studentId===st.id&&a.studentVisible&&a.status!=='rascunho'),finance:finance(st.id)} }
-async function publishPortal(studentId){const snap=makePortalSnapshot(studentId);if(!snap)return false;const email=snap.student.email;const ok=await sbWrite(email,snap,'portal');try{if(window.uploadJsonFile)await window.uploadJsonFile('portal_'+sanitizeEmail(email)+'.json',snap)}catch(e){}return ok;}
-window.publishStudentPortal111=publishPortal;
-window.publishAllStudentPortals111=async function(){let ok=0,fail=0;for(const s of (DB.students||[]).filter(x=>x.email)){(await publishPortal(s.id))?ok++:fail++;}alert(`Portais publicados no Supabase: ${ok}${fail?` · falhas: ${fail}`:''}`);return ok;};
-const oldRelease=window.releaseLessonMaterialsV170||window.releaseLessonMaterials;
-window.releaseLessonMaterialsV170=window.releaseLessonMaterials=async function releaseLessonMaterials111(lessonId){let ret;if(oldRelease)try{ret=await oldRelease.apply(this,arguments)}catch(e){log('release antigo falhou: '+(e.message||e),'error')}const l=by(DB.lessons||[],lessonId);if(l)await publishPortal(l.studentId);return ret;};
-function applyPortalSnapshot(snap){const st={id:snap.student?.id||'student',name:snap.student?.name||'Aluno',email:snap.student?.email||'',activeCourseName:snap.student?.course||'',activeCourseLevel:snap.student?.level||''};const mats=[];const lessons=(snap.lessons||[]).map(l=>{(l.materials||[]).forEach(m=>mats.push({id:m.id,title:m.title,type:m.type,studentVisible:true,downloadAllowed:m.downloadAllowed,lessonId:l.id,studentId:st.id,attachments:m.attachments||[]}));return{id:l.id,studentId:st.id,date:l.date,startTime:l.startTime,title:l.title,level:l.level,unit:l.unit,notes:l.notes||'',materialsStatus:l.materialsStatus,studentPortalVisible:true}});window.DB={meta:{version:VERSION,portalOnly:true},students:[st],lessons,plannedLessons:[],materials:mats,formLogs:snap.forms||[],assessments:snap.tests||[],packages:[],portalFinance:snap.finance||{}};window.CURRENT_STUDENT_PORTAL=st;writeKey('lessonhub_portal_cache_'+sanitizeEmail(st.email),window.DB);}
-async function loadStudentFromSupabase(email){const remote=await sbRead(email);const snap=remote?.data||null;if(snap?.meta?.kind==='student_portal'||snap?.student){applyPortalSnapshot(snap);return true}return false;}
-function unauthorized(email){document.body.classList.add('student-mode');window.STUDENT_MODE=true;window.CURRENT_STUDENT_PORTAL=null;const root=document.getElementById('studentApp');if(root)root.innerHTML=`<section class="student-hero"><h2>Acesso não autorizado</h2><p class="subtle" style="margin-top:10px">O e-mail ${esc(email||'')} não está cadastrado ou ainda não teve o portal publicado.</p><div class="student-actions"><button onclick="logout181&&logout181()">trocar login</button></div></section>`;const box=document.getElementById('studentEmailBox');if(box)box.innerHTML='acesso não autorizado<br>'+esc(email||'');}
-const previousAuth=window.lhAfterGoogleAuth;
-window.lhAfterGoogleAuth=async function lhAfterGoogleAuth111(resp,ctx){window.LH_ACCESS_TOKEN=resp.access_token;let email='';try{const r=await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+resp.access_token}});if(r.ok){const u=await r.json();email=normEmail(u.email);window.LH_USER_EMAIL=email;sbEmail=email;}}catch(e){}
-  if(ctx?.hideLogin)ctx.hideLogin();
-  if(email && !isAdmin(email)){
-    try{if(ctx?.showDriveBar)ctx.showDriveBar('Carregando portal do aluno…','Supabase');}catch(e){}
-    if(await loadStudentFromSupabase(email)){document.body.classList.add('student-mode');window.STUDENT_MODE=true;if(window.studentRender)studentRender();try{hideDriveBar&&hideDriveBar()}catch(e){};return;}
-    try{if(window.loadStudentPortalFromDrive && await loadStudentPortalFromDrive(email)){document.body.classList.add('student-mode');window.STUDENT_MODE=true;if(window.studentRender)studentRender();try{hideDriveBar&&hideDriveBar()}catch(e){};return;}}catch(e){log('Drive portal aluno falhou: '+(e.message||e),'warn')}
-    const cached=readKey('lessonhub_portal_cache_'+sanitizeEmail(email));if(cached){window.DB=cached;window.CURRENT_STUDENT_PORTAL=(cached.students||[])[0];document.body.classList.add('student-mode');window.STUDENT_MODE=true;if(window.studentRender)studentRender();return;}
-    unauthorized(email);try{hideDriveBar&&hideDriveBar()}catch(e){};return;
+function countData(d){d=d||{};return ['students','lessons','materials','plannedLessons','courseUnits','packages','assessments','formLogs','formTemplates','studentNotes'].reduce((n,k)=>n+(Array.isArray(d[k])?d[k].length:0),0)}
+function normDB(d){return window.normalizeDB?normalizeDB(d):d}
+function localDB(){try{return JSON.parse(localStorage.getItem(STORE)||'null')}catch(e){return null}}
+function saveLocal(d){window.DB=normDB(d||{});stamp1101();try{localStorage.setItem(STORE,JSON.stringify(window.DB))}catch(e){};if(window.render)render()}
+function stamp1101(){
+  try{
+    document.title='LessonHub v1.10.1 — Student Portal & Drive Safety Hotfix';
+    document.querySelectorAll('.brand p').forEach(p=>p.textContent='Teaching Journal · v1.10.1');
+    const login=document.querySelector('#loginScreen p'); if(login&&/Teaching Journal/.test(login.textContent)) login.textContent='Teaching Journal · v1.10.1';
+    document.querySelectorAll('.footer181 .credit,#footer181 .credit').forEach(x=>x.textContent='LessonHub v1.10.1 · criado e mantido por Erik Azevedo (@prof.erikazevedo)');
+    if(window.DB){DB.meta=DB.meta||{};DB.meta.version=VERSION;DB.meta.storageAuthority=window.LH_ARCHITECTURE;}
+  }catch(e){}
+}
+function ensureHealthNav(){
+  const nav=document.getElementById('nav'); if(!nav)return;
+  if(!nav.querySelector('[data-page="health"]')){
+    const btn=document.createElement('button');btn.dataset.page='health';btn.textContent='Health';btn.onclick=function(){showPage('health')};
+    const actions=nav.querySelector('.actions'); nav.insertBefore(btn,actions||null);
   }
-  // Professor/admin: carrega Drive, depois merge com Supabase e cache seguro.
-  sbEmail=email||ADMIN_EMAIL;try{if(ctx?.showDriveBar)ctx.showDriveBar('Carregando dados do professor…','Drive + Supabase');}catch(e){}
-  if(ctx?.driveSetup)await window.driveSetup();
-  await sbMergeForAdmin(sbEmail);
-  document.body.classList.remove('student-mode','previewing-student181');window.STUDENT_MODE=false;window.CURRENT_STUDENT_PORTAL=null;stamp();if(window.render)render();try{hideDriveBar&&hideDriveBar()}catch(e){};
+  nav.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===window.PAGE));
+}
+function renderUnauthorized1101(email){
+  const root=document.getElementById('studentApp'); if(!root)return;
+  const shown=email||window.LH_USER_EMAIL||'este e-mail';
+  root.innerHTML=`<section class="student-hero"><h2>Acesso não autorizado</h2><p class="subtle" style="margin-top:10px">O e-mail ${esc(shown)} não está cadastrado como aluno no LessonHub.</p><div class="student-actions"><button onclick="logout181&&logout181()">trocar login</button></div></section>`;
+  const box=document.getElementById('studentEmailBox'); if(box) box.innerHTML='acesso não autorizado<br>'+esc(shown);
+}
+window.studentRenderUnauthorized=function(email){renderUnauthorized1101(email)};
+function fillBlankStudentIfNeeded(){
+  if(!document.body.classList.contains('student-mode'))return;
+  const root=document.getElementById('studentApp');
+  if(root && !root.textContent.trim()) renderUnauthorized1101(window.LH_USER_EMAIL||'');
+}
+setInterval(fillBlankStudentIfNeeded,1500);
+
+// Safer Drive setup: never let an empty/older Drive JSON overwrite useful local data.
+if(typeof window.driveSetup==='function'){
+  const originalDriveSetup=window.driveSetup;
+  window.driveSetup=async function driveSetup1101(){
+    try{
+      if(typeof showDriveBar==='function')showDriveBar('Procurando pasta LessonHub…','safe merge v1.10.1');
+      driveFolderId=await driveEnsureFolder(DRIVE_FOLDER);
+      driveDataFileId=await driveEnsureJsonFile(DRIVE_DATA_FILE,driveFolderId);
+      const remoteRaw=await driveReadJson(driveDataFileId);
+      const localRaw=localDB()||window.DB||{};
+      const remote=remoteRaw&&typeof remoteRaw==='object'?normDB(remoteRaw):null;
+      const local=localRaw&&typeof localRaw==='object'?normDB(localRaw):normDB({});
+      const rc=countData(remote), lc=countData(local);
+      const rt=remote?.meta?.updatedAt||'';
+      const lt=local?.meta?.updatedAt||'';
+      let action='mantendo cache local';
+      if(remote && rc>0 && (lc===0 || rt>lt)){
+        window.DB=remote; action='Drive aplicado ao cache local';
+      }else{
+        window.DB=local; action=(rc===0&&lc>0)?'Drive vazio ignorado; cache local preservado':'cache local preservado';
+      }
+      stamp1101();
+      try{localStorage.setItem(STORE,JSON.stringify(window.DB))}catch(e){}
+      driveReady=true;
+      const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+      if(typeof showDriveBar==='function')showDriveBar('✓ Drive sincronizado',action+' · '+t);
+      log('Drive setup safe merge: '+action+` (local ${lc}, remote ${rc})`,'ok');
+      if(window.render)render();
+      if(rc===0 && lc>0 && typeof driveWriteJson==='function'){
+        setTimeout(()=>{try{driveWriteJson(driveDataFileId,window.DB);log('Drive vazio recebeu cópia do cache local.','ok')}catch(e){log('Falha ao preencher Drive vazio: '+e.message,'error')}},1200);
+      }
+      setTimeout(()=>{try{hideDriveBar()}catch(e){}},3000);
+    }catch(e){
+      log('driveSetup1101 falhou; fallback original: '+(e.message||e),'error');
+      try{return await originalDriveSetup.apply(this,arguments)}catch(err){if(typeof showDriveBar==='function')showDriveBar('⚠ Erro no Drive — dados locais ativos','');console.error(err)}
+    }
+  };
+}
+
+// Safer Drive sync: do not upload an empty DB by accident if localStorage has useful data.
+if(typeof window.driveSync==='function'){
+  const originalDriveSync=window.driveSync;
+  window.driveSync=async function driveSync1101(){
+    const live=countData(window.DB), local=countData(localDB());
+    if(live===0 && local>0){
+      log('Sync bloqueado: DB em memória vazio, cache local tem dados. Restaurando cache local.','warn');
+      saveLocal(localDB());
+      return false;
+    }
+    return originalDriveSync.apply(this,arguments);
+  };
+}
+
+// Add delete student action without restructuring renderStudent.
+window.deleteStudentSafe1101=function(id){
+  const s=(DB.students||[]).find(x=>x.id===id); if(!s)return;
+  const linked=['lessons','materials','packages','assessments','formLogs','studentNotes'].reduce((n,k)=>n+(DB[k]||[]).filter(x=>x.studentId===id).length,0);
+  if(!confirm(`Excluir aluno ${s.name||''}?\n\nItens vinculados encontrados: ${linked}.\nA exclusão removerá a ficha e os itens vinculados do LessonHub local/Drive JSON. Arquivos no Drive não serão apagados.`))return;
+  DB.students=(DB.students||[]).filter(x=>x.id!==id);
+  ['lessons','materials','packages','assessments','formLogs','studentNotes'].forEach(k=>{DB[k]=(DB[k]||[]).filter(x=>x.studentId!==id)});
+  if(window.addChange)addChange(); if(window.saveDB)saveDB(); if(window.toast)toast('Aluno excluído.'); if(window.showPage)showPage('students');
 };
-// Health/nav + portal admin usability
-function ensureNav(){const nav=document.getElementById('nav');if(!nav)return;if(!nav.querySelector('[data-page="health"]')){const b=document.createElement('button');b.dataset.page='health';b.textContent='Health';b.onclick=()=>showPage('health');const actions=nav.querySelector('.actions');nav.insertBefore(b,actions||null)}}
-function renderHealth111(){stamp();const el=document.getElementById('page-health');if(!el)return;const count=dataCount(window.DB), logs=(window.LH_LOGS||[]).slice(0,10).map(x=>`<div class="item"><div class="item-title">${esc(new Date(x.at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}))} · ${esc(x.type)}</div><div class="meta">${esc(x.msg)}</div></div>`).join('')||'<div class="empty">Sem logs.</div>';el.innerHTML=pageHead('Health','v1.11.0 · Supabase como backend JSON, Drive como storage de arquivos.',`<button class="btn" onclick="window.publishAllStudentPortals111&&publishAllStudentPortals111()">publicar portais</button><button class="btn soft" onclick="window.sbPushNow&&window.sbPushNow()">enviar backup</button><button class="btn soft" onclick="window.exportBackup&&exportBackup()">backup JSON</button>`)+`<div class="grid"><div class="card"><div class="num">v${VERSION}</div><div class="label">versão</div></div><div class="card"><div class="num">${count}</div><div class="label">itens no DB</div></div><div class="card"><div class="num">${(DB.students||[]).filter(s=>s.email).length}</div><div class="label">portais possíveis</div></div><div class="card"><div class="num">${esc(sbLastAction||'—')}</div><div class="label">Supabase</div></div></div><div class="two"><div class="panel"><div class="panel-title">Arquitetura</div><table class="table"><tbody><tr><td class="health-ok">Supabase</td><td>backend JSON para dados do professor e snapshots do aluno</td></tr><tr><td class="health-ok">Drive</td><td>storage/preview de arquivos; continua obrigatório para anexos</td></tr><tr><td>localStorage</td><td>cache seguro espelhado em ${STORE} e ${SAFE_STORE}</td></tr><tr><td>Usuário</td><td>${esc(window.LH_USER_EMAIL||'—')}</td></tr><tr><td>Último push DB</td><td>${sbLastPush?sbLastPush.toLocaleString('pt-BR'):'—'}</td></tr><tr><td>Último portal</td><td>${sbLastPortalPush?sbLastPortalPush.toLocaleString('pt-BR'):'—'}</td></tr><tr><td class="${sbLastError?'health-bad':'health-ok'}">Erro Supabase</td><td>${esc(sbLastError||'sem erro registrado')}</td></tr></tbody></table></div><div class="panel"><div class="panel-title">Ações</div><div class="list"><button class="btn" onclick="publishAllStudentPortals111()">Publicar todos os portais no Supabase</button><button class="btn soft" onclick="window.safeCurrent111&&safeCurrent111(); alert('Cache preservado. Itens: '+${count})">Preservar cache local</button><button class="btn soft" onclick="window.sbMergeForAdmin111&&sbMergeForAdmin111(window.LH_USER_EMAIL||'${ADMIN_EMAIL}')">Merge Supabase agora</button></div></div></div><div class="panel"><div class="panel-title">Logs</div><div class="list">${logs}</div></div>`;}
-window.renderHealth=renderHealth111;
-const previousRender=window.render;
-window.render=function render111(){stamp();if(previousRender)previousRender();ensureNav();renderHealth111();};
-const previousShow=window.showPage;
-window.showPage=function showPage111(p){if(previousShow)previousShow(p);ensureNav();if(p==='health')renderHealth111();};
-// Student/admin portal page with explicit publish buttons.
-const previousPortal=window.renderPortalAdmin;
-window.renderPortalAdmin=function renderPortalAdmin111(){const el=document.getElementById('page-portal');if(!el){if(previousPortal)return previousPortal();return}const rows=(DB.students||[]).filter(s=>s.email);el.innerHTML=pageHead('Student Portal','Portais do aluno publicados no Supabase; arquivos continuam no Drive.',`<button class="btn" onclick="publishAllStudentPortals111()">publicar todos</button>`)+`<div class="panel"><div class="panel-title">Alunos com portal</div><div class="list">${rows.map(s=>`<div class="item"><div class="item-title">${esc(s.name)}</div><div class="meta">${esc(s.email)} · ${studentLessons(s.id).length} aula(s)</div><div class="row-actions"><button class="linkbtn" onclick="previewStudentPortal&&previewStudentPortal('${s.id}')">ver como aluno</button><button class="linkbtn" onclick="publishStudentPortal111('${s.id}').then(ok=>alert(ok?'Portal publicado no Supabase':'Falha ao publicar portal'))">publicar Supabase</button></div></div>`).join('')||'<div class="empty">Cadastre e-mail no aluno para ativar o portal.</div>'}</div></div>`;};
-// Delete student button, without rewriting student page logic.
-const previousRenderStudent=window.renderStudent;
-window.renderStudent=function renderStudent111(){if(previousRenderStudent)previousRenderStudent();try{if(!window.CURRENT_STUDENT)return;const tabs=document.querySelector('#page-student .tabs');if(tabs&&!tabs.querySelector('[data-delete-student111]')){const b=document.createElement('button');b.dataset.deleteStudent111='1';b.textContent='excluir aluno';b.onclick=function(){const s=by(DB.students||[],CURRENT_STUDENT);if(!s)return;if(!confirm('Excluir aluno '+(s.name||'')+' e dados vinculados?'))return;['lessons','materials','packages','assessments','formLogs','studentNotes'].forEach(k=>{DB[k]=(DB[k]||[]).filter(x=>x.studentId!==CURRENT_STUDENT)});DB.students=(DB.students||[]).filter(x=>x.id!==CURRENT_STUDENT);CURRENT_STUDENT=null;saveDB();showPage('students');};tabs.appendChild(b);}}catch(e){}};
-window.addEventListener('load',()=>{stamp();safeCurrent();ensureNav();setTimeout(()=>{try{render()}catch(e){console.warn(e)}},500);log('v1.11.0 carregada.','ok')});
-setTimeout(()=>{stamp();ensureNav();},300);
+function injectStudentDelete(){
+  try{
+    if(window.PAGE!=='student'||!window.CURRENT_STUDENT)return;
+    const tabs=document.querySelector('#page-student .tabs'); if(!tabs||tabs.querySelector('[data-delete-student1101]'))return;
+    const b=document.createElement('button');b.textContent='excluir aluno';b.dataset.deleteStudent1101='1';b.onclick=()=>deleteStudentSafe1101(window.CURRENT_STUDENT);tabs.appendChild(b);
+  }catch(e){}
+}
+
+const oldRender=window.render;
+window.render=function render1101(){ if(oldRender)oldRender.apply(this,arguments); stamp1101(); ensureHealthNav(); injectStudentDelete(); };
+const oldShowPage=window.showPage;
+window.showPage=function showPage1101(p){ if(oldShowPage)oldShowPage.apply(this,arguments); stamp1101(); ensureHealthNav(); injectStudentDelete(); if(p==='health'&&window.renderHealth1101)renderHealth1101(); };
+const oldSave=window.saveDB;
+window.saveDB=function saveDB1101(skip=false){ stamp1101(); if(oldSave)oldSave.apply(this,arguments); stamp1101(); try{localStorage.setItem(STORE,JSON.stringify(window.DB||{}))}catch(e){} };
+
+window.addEventListener('load',()=>{stamp1101();ensureHealthNav();setTimeout(()=>{stamp1101();ensureHealthNav();fillBlankStudentIfNeeded();},800);log('LessonHub v1.10.1 hotfix carregado.','ok')});
+setTimeout(()=>{stamp1101();ensureHealthNav();injectStudentDelete();},300);
 })();
 </script>
-
 </body>
 </html>
