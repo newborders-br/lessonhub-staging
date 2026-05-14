@@ -1290,7 +1290,140 @@ body.student-mode.previewing-student181 .student-preview181{display:flex}
 @media(max-width:800px){.footer181{width:min(100% - 24px,1360px);font-size:10px;gap:10px}.footer181 .credit{flex-basis:100%;margin-right:0}.material-card181,.material-row{grid-template-columns:1fr!important}.material-actions181,.material-row .actions{justify-content:flex-start}}
 </style>
 
-</head><body><h1>${esc180(f.title)}</h1><p>${esc180(by180(DB.students,a.studentId)?.name||'Aluno')} · ${fmt180(r.submittedAt)}</p>${body}</body></html>`);
+</head><body><h1>${esc180(f.title)}</h1><p>${esc180(by180(DB.students,a.studentId)?.name||'Aluno')} · ${fmt180(r.submittedAt)}</p>${body}
+
+<script id="lessonhub-v1101-hotfix">
+// === LESSONHUB v1.10.1 — Hotfix: safe Drive merge, Health nav, footer, student fallback ===
+(function(){
+'use strict';
+const VERSION='1.10.1';
+const STORE='lessonhub_v1_4_data';
+window.LH_VERSION=VERSION;
+window.LH_ARCHITECTURE='Drive principal/sync + Drive storage de arquivos · Supabase backup auxiliar · localStorage cache operacional';
+window.LH_LOGS=window.LH_LOGS||[];
+function log(msg,type='info'){
+  try{window.LH_LOGS.unshift({at:new Date().toISOString(),type,msg});window.LH_LOGS=window.LH_LOGS.slice(0,40);console.log('[LessonHub]',msg)}catch(e){}
+}
+window.lhLog=window.lhLog||log;
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function countData(d){d=d||{};return ['students','lessons','materials','plannedLessons','courseUnits','packages','assessments','formLogs','formTemplates','studentNotes'].reduce((n,k)=>n+(Array.isArray(d[k])?d[k].length:0),0)}
+function normDB(d){return window.normalizeDB?normalizeDB(d):d}
+function localDB(){try{return JSON.parse(localStorage.getItem(STORE)||'null')}catch(e){return null}}
+function saveLocal(d){window.DB=normDB(d||{});stamp1101();try{localStorage.setItem(STORE,JSON.stringify(window.DB))}catch(e){};if(window.render)render()}
+function stamp1101(){
+  try{
+    document.title='LessonHub v1.10.1 — Student Portal & Drive Safety Hotfix';
+    document.querySelectorAll('.brand p').forEach(p=>p.textContent='Teaching Journal · v1.10.1');
+    const login=document.querySelector('#loginScreen p'); if(login&&/Teaching Journal/.test(login.textContent)) login.textContent='Teaching Journal · v1.10.1';
+    document.querySelectorAll('.footer181 .credit,#footer181 .credit').forEach(x=>x.textContent='LessonHub v1.10.1 · criado e mantido por Erik Azevedo (@prof.erikazevedo)');
+    if(window.DB){DB.meta=DB.meta||{};DB.meta.version=VERSION;DB.meta.storageAuthority=window.LH_ARCHITECTURE;}
+  }catch(e){}
+}
+function ensureHealthNav(){
+  const nav=document.getElementById('nav'); if(!nav)return;
+  if(!nav.querySelector('[data-page="health"]')){
+    const btn=document.createElement('button');btn.dataset.page='health';btn.textContent='Health';btn.onclick=function(){showPage('health')};
+    const actions=nav.querySelector('.actions'); nav.insertBefore(btn,actions||null);
+  }
+  nav.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===window.PAGE));
+}
+function renderUnauthorized1101(email){
+  const root=document.getElementById('studentApp'); if(!root)return;
+  const shown=email||window.LH_USER_EMAIL||'este e-mail';
+  root.innerHTML=`<section class="student-hero"><h2>Acesso não autorizado</h2><p class="subtle" style="margin-top:10px">O e-mail ${esc(shown)} não está cadastrado como aluno no LessonHub.</p><div class="student-actions"><button onclick="logout181&&logout181()">trocar login</button></div></section>`;
+  const box=document.getElementById('studentEmailBox'); if(box) box.innerHTML='acesso não autorizado<br>'+esc(shown);
+}
+window.studentRenderUnauthorized=function(email){renderUnauthorized1101(email)};
+function fillBlankStudentIfNeeded(){
+  if(!document.body.classList.contains('student-mode'))return;
+  const root=document.getElementById('studentApp');
+  if(root && !root.textContent.trim()) renderUnauthorized1101(window.LH_USER_EMAIL||'');
+}
+setInterval(fillBlankStudentIfNeeded,1500);
+
+// Safer Drive setup: never let an empty/older Drive JSON overwrite useful local data.
+if(typeof window.driveSetup==='function'){
+  const originalDriveSetup=window.driveSetup;
+  window.driveSetup=async function driveSetup1101(){
+    try{
+      if(typeof showDriveBar==='function')showDriveBar('Procurando pasta LessonHub…','safe merge v1.10.1');
+      driveFolderId=await driveEnsureFolder(DRIVE_FOLDER);
+      driveDataFileId=await driveEnsureJsonFile(DRIVE_DATA_FILE,driveFolderId);
+      const remoteRaw=await driveReadJson(driveDataFileId);
+      const localRaw=localDB()||window.DB||{};
+      const remote=remoteRaw&&typeof remoteRaw==='object'?normDB(remoteRaw):null;
+      const local=localRaw&&typeof localRaw==='object'?normDB(localRaw):normDB({});
+      const rc=countData(remote), lc=countData(local);
+      const rt=remote?.meta?.updatedAt||'';
+      const lt=local?.meta?.updatedAt||'';
+      let action='mantendo cache local';
+      if(remote && rc>0 && (lc===0 || rt>lt)){
+        window.DB=remote; action='Drive aplicado ao cache local';
+      }else{
+        window.DB=local; action=(rc===0&&lc>0)?'Drive vazio ignorado; cache local preservado':'cache local preservado';
+      }
+      stamp1101();
+      try{localStorage.setItem(STORE,JSON.stringify(window.DB))}catch(e){}
+      driveReady=true;
+      const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+      if(typeof showDriveBar==='function')showDriveBar('✓ Drive sincronizado',action+' · '+t);
+      log('Drive setup safe merge: '+action+` (local ${lc}, remote ${rc})`,'ok');
+      if(window.render)render();
+      if(rc===0 && lc>0 && typeof driveWriteJson==='function'){
+        setTimeout(()=>{try{driveWriteJson(driveDataFileId,window.DB);log('Drive vazio recebeu cópia do cache local.','ok')}catch(e){log('Falha ao preencher Drive vazio: '+e.message,'error')}},1200);
+      }
+      setTimeout(()=>{try{hideDriveBar()}catch(e){}},3000);
+    }catch(e){
+      log('driveSetup1101 falhou; fallback original: '+(e.message||e),'error');
+      try{return await originalDriveSetup.apply(this,arguments)}catch(err){if(typeof showDriveBar==='function')showDriveBar('⚠ Erro no Drive — dados locais ativos','');console.error(err)}
+    }
+  };
+}
+
+// Safer Drive sync: do not upload an empty DB by accident if localStorage has useful data.
+if(typeof window.driveSync==='function'){
+  const originalDriveSync=window.driveSync;
+  window.driveSync=async function driveSync1101(){
+    const live=countData(window.DB), local=countData(localDB());
+    if(live===0 && local>0){
+      log('Sync bloqueado: DB em memória vazio, cache local tem dados. Restaurando cache local.','warn');
+      saveLocal(localDB());
+      return false;
+    }
+    return originalDriveSync.apply(this,arguments);
+  };
+}
+
+// Add delete student action without restructuring renderStudent.
+window.deleteStudentSafe1101=function(id){
+  const s=(DB.students||[]).find(x=>x.id===id); if(!s)return;
+  const linked=['lessons','materials','packages','assessments','formLogs','studentNotes'].reduce((n,k)=>n+(DB[k]||[]).filter(x=>x.studentId===id).length,0);
+  if(!confirm(`Excluir aluno ${s.name||''}?\n\nItens vinculados encontrados: ${linked}.\nA exclusão removerá a ficha e os itens vinculados do LessonHub local/Drive JSON. Arquivos no Drive não serão apagados.`))return;
+  DB.students=(DB.students||[]).filter(x=>x.id!==id);
+  ['lessons','materials','packages','assessments','formLogs','studentNotes'].forEach(k=>{DB[k]=(DB[k]||[]).filter(x=>x.studentId!==id)});
+  if(window.addChange)addChange(); if(window.saveDB)saveDB(); if(window.toast)toast('Aluno excluído.'); if(window.showPage)showPage('students');
+};
+function injectStudentDelete(){
+  try{
+    if(window.PAGE!=='student'||!window.CURRENT_STUDENT)return;
+    const tabs=document.querySelector('#page-student .tabs'); if(!tabs||tabs.querySelector('[data-delete-student1101]'))return;
+    const b=document.createElement('button');b.textContent='excluir aluno';b.dataset.deleteStudent1101='1';b.onclick=()=>deleteStudentSafe1101(window.CURRENT_STUDENT);tabs.appendChild(b);
+  }catch(e){}
+}
+
+const oldRender=window.render;
+window.render=function render1101(){ if(oldRender)oldRender.apply(this,arguments); stamp1101(); ensureHealthNav(); injectStudentDelete(); };
+const oldShowPage=window.showPage;
+window.showPage=function showPage1101(p){ if(oldShowPage)oldShowPage.apply(this,arguments); stamp1101(); ensureHealthNav(); injectStudentDelete(); if(p==='health'&&window.renderHealth1101)renderHealth1101(); };
+const oldSave=window.saveDB;
+window.saveDB=function saveDB1101(skip=false){ stamp1101(); if(oldSave)oldSave.apply(this,arguments); stamp1101(); try{localStorage.setItem(STORE,JSON.stringify(window.DB||{}))}catch(e){} };
+
+window.addEventListener('load',()=>{stamp1101();ensureHealthNav();setTimeout(()=>{stamp1101();ensureHealthNav();fillBlankStudentIfNeeded();},800);log('LessonHub v1.10.1 hotfix carregado.','ok')});
+setTimeout(()=>{stamp1101();ensureHealthNav();injectStudentDelete();},300);
+})();
+</script>
+
+</body></html>`);
 };
 
 /* Override Forms page to include native forms */
@@ -1873,6 +2006,139 @@ window.saveDB=function saveDB110(skip=false){stamp();if(oldSave)oldSave.apply(th
 window.renderHealth110=renderHealth110;
 window.addEventListener('load',()=>{stamp();log('LessonHub v1.10.0 carregado.','ok');setTimeout(()=>{try{if(window.render)render()}catch(e){}},300)});
 setTimeout(stamp,100);
+})();
+</script>
+
+
+
+<script id="lessonhub-v1101-hotfix">
+// === LESSONHUB v1.10.1 — Hotfix: safe Drive merge, Health nav, footer, student fallback ===
+(function(){
+'use strict';
+const VERSION='1.10.1';
+const STORE='lessonhub_v1_4_data';
+window.LH_VERSION=VERSION;
+window.LH_ARCHITECTURE='Drive principal/sync + Drive storage de arquivos · Supabase backup auxiliar · localStorage cache operacional';
+window.LH_LOGS=window.LH_LOGS||[];
+function log(msg,type='info'){
+  try{window.LH_LOGS.unshift({at:new Date().toISOString(),type,msg});window.LH_LOGS=window.LH_LOGS.slice(0,40);console.log('[LessonHub]',msg)}catch(e){}
+}
+window.lhLog=window.lhLog||log;
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function countData(d){d=d||{};return ['students','lessons','materials','plannedLessons','courseUnits','packages','assessments','formLogs','formTemplates','studentNotes'].reduce((n,k)=>n+(Array.isArray(d[k])?d[k].length:0),0)}
+function normDB(d){return window.normalizeDB?normalizeDB(d):d}
+function localDB(){try{return JSON.parse(localStorage.getItem(STORE)||'null')}catch(e){return null}}
+function saveLocal(d){window.DB=normDB(d||{});stamp1101();try{localStorage.setItem(STORE,JSON.stringify(window.DB))}catch(e){};if(window.render)render()}
+function stamp1101(){
+  try{
+    document.title='LessonHub v1.10.1 — Student Portal & Drive Safety Hotfix';
+    document.querySelectorAll('.brand p').forEach(p=>p.textContent='Teaching Journal · v1.10.1');
+    const login=document.querySelector('#loginScreen p'); if(login&&/Teaching Journal/.test(login.textContent)) login.textContent='Teaching Journal · v1.10.1';
+    document.querySelectorAll('.footer181 .credit,#footer181 .credit').forEach(x=>x.textContent='LessonHub v1.10.1 · criado e mantido por Erik Azevedo (@prof.erikazevedo)');
+    if(window.DB){DB.meta=DB.meta||{};DB.meta.version=VERSION;DB.meta.storageAuthority=window.LH_ARCHITECTURE;}
+  }catch(e){}
+}
+function ensureHealthNav(){
+  const nav=document.getElementById('nav'); if(!nav)return;
+  if(!nav.querySelector('[data-page="health"]')){
+    const btn=document.createElement('button');btn.dataset.page='health';btn.textContent='Health';btn.onclick=function(){showPage('health')};
+    const actions=nav.querySelector('.actions'); nav.insertBefore(btn,actions||null);
+  }
+  nav.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===window.PAGE));
+}
+function renderUnauthorized1101(email){
+  const root=document.getElementById('studentApp'); if(!root)return;
+  const shown=email||window.LH_USER_EMAIL||'este e-mail';
+  root.innerHTML=`<section class="student-hero"><h2>Acesso não autorizado</h2><p class="subtle" style="margin-top:10px">O e-mail ${esc(shown)} não está cadastrado como aluno no LessonHub.</p><div class="student-actions"><button onclick="logout181&&logout181()">trocar login</button></div></section>`;
+  const box=document.getElementById('studentEmailBox'); if(box) box.innerHTML='acesso não autorizado<br>'+esc(shown);
+}
+window.studentRenderUnauthorized=function(email){renderUnauthorized1101(email)};
+function fillBlankStudentIfNeeded(){
+  if(!document.body.classList.contains('student-mode'))return;
+  const root=document.getElementById('studentApp');
+  if(root && !root.textContent.trim()) renderUnauthorized1101(window.LH_USER_EMAIL||'');
+}
+setInterval(fillBlankStudentIfNeeded,1500);
+
+// Safer Drive setup: never let an empty/older Drive JSON overwrite useful local data.
+if(typeof window.driveSetup==='function'){
+  const originalDriveSetup=window.driveSetup;
+  window.driveSetup=async function driveSetup1101(){
+    try{
+      if(typeof showDriveBar==='function')showDriveBar('Procurando pasta LessonHub…','safe merge v1.10.1');
+      driveFolderId=await driveEnsureFolder(DRIVE_FOLDER);
+      driveDataFileId=await driveEnsureJsonFile(DRIVE_DATA_FILE,driveFolderId);
+      const remoteRaw=await driveReadJson(driveDataFileId);
+      const localRaw=localDB()||window.DB||{};
+      const remote=remoteRaw&&typeof remoteRaw==='object'?normDB(remoteRaw):null;
+      const local=localRaw&&typeof localRaw==='object'?normDB(localRaw):normDB({});
+      const rc=countData(remote), lc=countData(local);
+      const rt=remote?.meta?.updatedAt||'';
+      const lt=local?.meta?.updatedAt||'';
+      let action='mantendo cache local';
+      if(remote && rc>0 && (lc===0 || rt>lt)){
+        window.DB=remote; action='Drive aplicado ao cache local';
+      }else{
+        window.DB=local; action=(rc===0&&lc>0)?'Drive vazio ignorado; cache local preservado':'cache local preservado';
+      }
+      stamp1101();
+      try{localStorage.setItem(STORE,JSON.stringify(window.DB))}catch(e){}
+      driveReady=true;
+      const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+      if(typeof showDriveBar==='function')showDriveBar('✓ Drive sincronizado',action+' · '+t);
+      log('Drive setup safe merge: '+action+` (local ${lc}, remote ${rc})`,'ok');
+      if(window.render)render();
+      if(rc===0 && lc>0 && typeof driveWriteJson==='function'){
+        setTimeout(()=>{try{driveWriteJson(driveDataFileId,window.DB);log('Drive vazio recebeu cópia do cache local.','ok')}catch(e){log('Falha ao preencher Drive vazio: '+e.message,'error')}},1200);
+      }
+      setTimeout(()=>{try{hideDriveBar()}catch(e){}},3000);
+    }catch(e){
+      log('driveSetup1101 falhou; fallback original: '+(e.message||e),'error');
+      try{return await originalDriveSetup.apply(this,arguments)}catch(err){if(typeof showDriveBar==='function')showDriveBar('⚠ Erro no Drive — dados locais ativos','');console.error(err)}
+    }
+  };
+}
+
+// Safer Drive sync: do not upload an empty DB by accident if localStorage has useful data.
+if(typeof window.driveSync==='function'){
+  const originalDriveSync=window.driveSync;
+  window.driveSync=async function driveSync1101(){
+    const live=countData(window.DB), local=countData(localDB());
+    if(live===0 && local>0){
+      log('Sync bloqueado: DB em memória vazio, cache local tem dados. Restaurando cache local.','warn');
+      saveLocal(localDB());
+      return false;
+    }
+    return originalDriveSync.apply(this,arguments);
+  };
+}
+
+// Add delete student action without restructuring renderStudent.
+window.deleteStudentSafe1101=function(id){
+  const s=(DB.students||[]).find(x=>x.id===id); if(!s)return;
+  const linked=['lessons','materials','packages','assessments','formLogs','studentNotes'].reduce((n,k)=>n+(DB[k]||[]).filter(x=>x.studentId===id).length,0);
+  if(!confirm(`Excluir aluno ${s.name||''}?\n\nItens vinculados encontrados: ${linked}.\nA exclusão removerá a ficha e os itens vinculados do LessonHub local/Drive JSON. Arquivos no Drive não serão apagados.`))return;
+  DB.students=(DB.students||[]).filter(x=>x.id!==id);
+  ['lessons','materials','packages','assessments','formLogs','studentNotes'].forEach(k=>{DB[k]=(DB[k]||[]).filter(x=>x.studentId!==id)});
+  if(window.addChange)addChange(); if(window.saveDB)saveDB(); if(window.toast)toast('Aluno excluído.'); if(window.showPage)showPage('students');
+};
+function injectStudentDelete(){
+  try{
+    if(window.PAGE!=='student'||!window.CURRENT_STUDENT)return;
+    const tabs=document.querySelector('#page-student .tabs'); if(!tabs||tabs.querySelector('[data-delete-student1101]'))return;
+    const b=document.createElement('button');b.textContent='excluir aluno';b.dataset.deleteStudent1101='1';b.onclick=()=>deleteStudentSafe1101(window.CURRENT_STUDENT);tabs.appendChild(b);
+  }catch(e){}
+}
+
+const oldRender=window.render;
+window.render=function render1101(){ if(oldRender)oldRender.apply(this,arguments); stamp1101(); ensureHealthNav(); injectStudentDelete(); };
+const oldShowPage=window.showPage;
+window.showPage=function showPage1101(p){ if(oldShowPage)oldShowPage.apply(this,arguments); stamp1101(); ensureHealthNav(); injectStudentDelete(); if(p==='health'&&window.renderHealth1101)renderHealth1101(); };
+const oldSave=window.saveDB;
+window.saveDB=function saveDB1101(skip=false){ stamp1101(); if(oldSave)oldSave.apply(this,arguments); stamp1101(); try{localStorage.setItem(STORE,JSON.stringify(window.DB||{}))}catch(e){} };
+
+window.addEventListener('load',()=>{stamp1101();ensureHealthNav();setTimeout(()=>{stamp1101();ensureHealthNav();fillBlankStudentIfNeeded();},800);log('LessonHub v1.10.1 hotfix carregado.','ok')});
+setTimeout(()=>{stamp1101();ensureHealthNav();injectStudentDelete();},300);
 })();
 </script>
 
