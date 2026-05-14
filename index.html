@@ -3,18 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LessonHub v2.0.0-alpha.2.2.2 · Session Core</title>
+<title>LessonHub v2.0.0-alpha.2.3.2 · Session Core</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#756e67;--line:rgba(24,21,18,.14);--line2:rgba(24,21,18,.07);--wash:rgba(255,253,249,.78);--shadow:0 28px 80px rgba(35,28,20,.055);--danger:#9d2d25;--ok:#28745a}
 *{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:radial-gradient(circle at 12% -8%,rgba(190,165,126,.14),transparent 28%),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 button,input,select,textarea{font:inherit}button{cursor:pointer}textarea{min-height:96px;resize:vertical}.shell{width:min(1260px,calc(100% - 32px));margin:0 auto;padding:30px 0 70px}.mast{border-bottom:1px solid var(--ink);padding:18px 0 20px;margin-bottom:16px;display:flex;justify-content:space-between;gap:20px;align-items:end}.logo{font-family:Georgia,serif;font-size:54px;line-height:.82;letter-spacing:-.075em;font-weight:400}.kicker{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted)}.subtle{font-size:13px;color:var(--muted);line-height:1.55}.hero,.panel,.card,.item,.modal-box{background:var(--wash);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.hero{border-color:var(--ink);padding:24px;margin-bottom:18px}.hero h2{font-family:Georgia,serif;font-size:44px;line-height:.92;letter-spacing:-.06em;font-weight:400;margin-bottom:10px}.btn{border:1px solid var(--ink);background:transparent;padding:10px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.14em}.btn:hover{background:var(--ink);color:var(--paper)}.btn.soft{border-color:var(--line);color:var(--muted)}.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.card{min-height:112px;padding:20px;display:flex;flex-direction:column;justify-content:space-between}.num{font-family:Georgia,serif;font-size:38px;letter-spacing:-.06em;line-height:.9;word-break:break-word}.label{font-size:10px;text-transform:uppercase;letter-spacing:.17em;color:var(--muted)}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.panel{padding:20px;margin-bottom:16px}.panel-title{display:flex;justify-content:space-between;gap:14px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:14px}.panel-title h3{font-family:Georgia,serif;font-weight:400;font-size:27px;letter-spacing:-.04em}.list{display:grid;gap:10px}.item{padding:16px}.item-title{font-family:Georgia,serif;font-size:24px;font-weight:400;letter-spacing:-.045em}.meta{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.45}.info{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px 14px;border-top:1px solid var(--line2);padding-top:10px}.info div{font-size:12px;color:var(--muted);line-height:1.4}.info b{font-weight:500;color:var(--ink)}.actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:12px}.actions button{border:0;background:transparent;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.13em;border-bottom:1px solid transparent;padding:0 0 3px}.actions button:hover{color:var(--ink);border-bottom-color:var(--ink)}.tabs{display:flex;gap:15px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px;margin:18px 0 20px}.tabs button{border:0;background:transparent;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.15em;padding:0 0 4px;border-bottom:1px solid transparent}.tabs button.active,.tabs button:hover{color:var(--ink);border-bottom-color:var(--ink)}.empty{border:1px dashed var(--line);padding:28px;text-align:center;color:var(--muted);background:rgba(255,255,255,.32)}.empty h3{font-family:Georgia,serif;font-size:27px;font-weight:400;letter-spacing:-.04em;color:var(--ink);margin-bottom:8px}.footer{border-top:1px solid var(--line);padding:14px 0 26px;margin-top:22px;display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px}.status{white-space:pre-wrap;margin-top:12px;font-size:12px;color:var(--muted);line-height:1.5}.bad{color:var(--danger)}.good{color:var(--ok)}.gate{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;align-items:center;justify-content:center;text-align:center;padding:24px}.gate.active{display:flex}.gate h2{font-family:Georgia,serif;font-size:44px;font-weight:400;letter-spacing:-.06em;margin-bottom:10px}.modal{position:fixed;inset:0;background:rgba(24,21,18,.38);z-index:80;display:none;align-items:center;justify-content:center;padding:18px}.modal.active{display:flex}.modal-box{width:min(920px,100%);max-height:92vh;overflow:auto;padding:26px}.modal-head{display:flex;justify-content:space-between;gap:18px;border-bottom:1px solid var(--ink);padding-bottom:12px;margin-bottom:16px}.modal-head h2{font-family:Georgia,serif;font-size:34px;font-weight:400;letter-spacing:-.05em}.x{border:0;background:transparent;text-transform:uppercase;letter-spacing:.14em;font-size:10px;color:var(--muted)}.field{display:grid;gap:6px;margin-bottom:12px}.field label{font-size:10px;text-transform:uppercase;letter-spacing:.17em;color:var(--muted)}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.72);padding:11px 12px;color:var(--ink)}@media(max-width:820px){.shell{width:min(100% - 24px,1260px);padding-top:22px}.mast,.two,.three,.grid{grid-template-columns:1fr;display:grid}.logo{font-size:44px}.hero h2{font-size:36px}.modal{align-items:flex-start}.modal-box{margin-top:12px}}
 </style>
+
+<style id="lessonhub-alpha2-3-no-gate-css">
+#gate{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.session-pill{display:inline-flex;gap:6px;align-items:center;font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);border:1px solid var(--line);padding:6px 8px;background:rgba(255,255,255,.35)}
+</style>
+
 </head>
 <body>
 <div class="gate active" id="gate"><div><h2>Carregando LessonHub…</h2><p class="subtle" id="gateText">Verificando sessão com segurança.</p></div></div>
 <div class="shell">
-<header class="mast"><div><h1 class="logo">Lesson<br>Hub</h1><p class="kicker" style="margin-top:12px">v2.0.0-alpha.2.2.2 · Session Core</p></div><p class="kicker" id="sessionMini">backend staging</p></header>
+<header class="mast"><div><h1 class="logo">Lesson<br>Hub</h1><p class="kicker" style="margin-top:12px">v2.0.0-alpha.2.3.2 · Session Core</p></div><p class="kicker" id="sessionMini">backend staging</p></header>
 <main id="app"></main>
 <footer class="footer"><span>Erik Azevedo (@prof.erikazevedo)</span><span id="footerMode">Supabase</span></footer>
 </div>
@@ -148,5 +154,41 @@ function openMaterial(id){const all=Object.values(state.materialsByLesson).flat(
 function renderFinance(){document.getElementById("app").innerHTML=`<section class="hero"><h2>Financeiro</h2><p class="subtle">Resumo simples para o aluno.</p></section>${studentTab("finance")}<section class="panel"><div class="panel-title"><h3>Mensalidades</h3></div><div class="list">${state.payments.map(paymentCard).join("")||empty("Sem mensalidade","Nenhuma mensalidade cadastrada ainda.")}</div></section>`}
 init();
 </script>
+
+<script id="lessonhub-alpha2-3-no-gate-session">
+(function(){
+'use strict';
+
+// Make the old blocking gate harmless. It can update text, but never overlay the UI.
+window.gate = function gateNoOverlay(msg, show=true){
+  const txt=document.getElementById("gateText");
+  if(txt) txt.textContent = msg || "";
+  const g=document.getElementById("gate");
+  if(g) g.classList.remove("active");
+  const mini=document.getElementById("sessionMini");
+  if(mini && msg && show) mini.textContent = msg.replace("…","").toLowerCase();
+};
+
+// If some old code activates the gate, remove it immediately.
+setInterval(()=>{
+  const g=document.getElementById("gate");
+  if(g && g.classList.contains("active")) g.classList.remove("active");
+}, 350);
+
+// Remove any gate when returning to the tab. Do NOT reload data on tab return.
+document.addEventListener("visibilitychange", ()=>{
+  const g=document.getElementById("gate");
+  if(g) g.classList.remove("active");
+});
+window.addEventListener("pageshow", ()=>{
+  const g=document.getElementById("gate");
+  if(g) g.classList.remove("active");
+});
+
+// Re-run session restore only when user explicitly clicks retry in the fallback UI.
+// No automatic focus/visibility reload.
+})();
+</script>
+
 </body>
 </html>
