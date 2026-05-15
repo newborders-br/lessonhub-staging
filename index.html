@@ -225,12 +225,13 @@ function previewStudent(id){const snap=snapshotForStudent(id);if(!snap)return to
 function showStudentPage(p){STATE.studentPage=p;document.querySelectorAll('[data-spage]').forEach(b=>b.classList.toggle('active',b.dataset.spage===p));renderStudent()}
 function renderStudent(){const snap=STATE.studentPortal;if(!snap)return;if(snap.unauthorized){$('studentEmailBox').innerHTML=`não autorizado<br>${esc(snap.email||'')}`;$('studentApp').innerHTML=`<div class="student-panel"><div class="student-panel-title">Acesso não autorizado</div><p class="subtle">O e-mail ${esc(snap.email||'')} não está vinculado a um aluno publicado.</p></div>`;return}const st=snap.student,lessons=(snap.lessons||[]).sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))),mats=snap.materials||[],next=lessons.find(l=>!l.date||l.date>=today())||lessons[lessons.length-1],fin=snap.finance||{};$('studentEmailBox').innerHTML=`aluno conectado<br>${esc(st.email||'')}`;let html=`<section class="student-hero"><h2>Olá, ${esc(st.name)}.</h2><p class="subtle" style="margin-top:10px">Acesse suas aulas, materiais e informações publicadas.</p><div class="badges">${badge(st.course||st.level||'curso','blue')}${badge(fin.status||'financeiro')}</div></section>`;if(STATE.studentPage==='today'){html+=`<div class="student-grid"><div class="student-card"><div class="num">${next?fmtShort(next.date):'—'}</div><div class="label">próxima aula</div></div><div class="student-card"><div class="num">${next?.startTime||'—'}</div><div class="label">horário</div></div><div class="student-card"><div class="num">${mats.length}</div><div class="label">materiais</div></div><div class="student-card"><div class="num">${fin.status||'—'}</div><div class="label">financeiro</div></div></div><div class="student-panel"><div class="student-panel-title">Próxima aula</div>${next?studentLessonCard(next,mats):'<div class="empty">Sem aulas publicadas.</div>'}</div>`}else if(STATE.studentPage==='lessons'){html+=`<div class="student-panel"><div class="student-panel-title">Aulas</div>${lessons.map(l=>studentLessonCard(l,mats)).join('')||'<div class="empty">Sem aulas.</div>'}</div>`}else if(STATE.studentPage==='materials'){html+=`<div class="student-panel"><div class="student-panel-title">Materiais</div>${mats.map(studentMaterialCard).join('')||'<div class="empty">Sem materiais liberados.</div>'}</div>`}else{html+=`<div class="student-grid"><div class="student-card"><div class="num">${fin.status||'—'}</div><div class="label">status</div></div><div class="student-card"><div class="num">${fin.pending?money(fin.pending):money(0)}</div><div class="label">pendente</div></div></div>`}$('studentApp').innerHTML=html}
 function studentLessonCard(l,mats){const lm=mats.filter(m=>m.lessonId===l.id||!m.lessonId);return `<div class="student-lesson"><div class="student-lesson-title">${esc(fmtDate(l.date))}${l.startTime?' · '+esc(l.startTime):''}</div><div class="badges">${badge(l.title,'blue')}${badge(lm.length+' materiais','ok')}</div><p class="subtle" style="margin-top:8px">${esc(l.notes||'')}</p>${lm.slice(0,4).map(studentMaterialCard).join('')}</div>`}
-function studentMaterialCard(m){const att=m.attachments?.[0];const hasFile=att&&att.driveLink;return `<div class="student-resource"><div class="item-title">${esc(m.title)}</div><div class="badges">${badge(m.type||'material','blue')}${badge(hasFile?'arquivo disponível':'arquivo a caminho',hasFile?'ok':'warn')}</div>${m.notes?`<div class="meta">${esc(m.notes)}</div>`:''}<div class="row-actions">${hasFile?`<button class="linkbtn" onclick="window.open('${esc(att.driveLink)}','_blank')">abrir</button>`:`<span class="subtle">A professora está preparando o arquivo.</span>`}</div></div>`}
+function studentMaterialCard(m){const att=m.attachments?.[0];const hasFile=att&&att.driveLink;return `<div class="student-resource"><div class="item-title">${esc(m.title)}</div><div class="badges">${badge(m.type||'material','blue')}${badge(hasFile?'arquivo disponível':'arquivo a caminho',hasFile?'ok':'warn')}</div>${m.notes?`<div class="meta">${esc(m.notes)}</div>`:''}<div class="row-actions">${hasFile?`<button class="linkbtn" onclick="openStudentMaterial('${m.id}')">abrir</button>`:`<span class="subtle">A professora está preparando o arquivo.</span>`}</div></div>`}
+function openStudentMaterial(id){const snap=STATE.studentPortal;if(!snap)return;const m=(snap.materials||[]).find(x=>x.id===id);if(!m)return;const att=m.attachments?.[0];if(!att?.driveLink){toast('Arquivo ainda não disponível.');return}$('viewerTitle').textContent=m.title;$('viewerSub').textContent=att.name||'';const src=String(att.driveLink).replace('/view','/preview').replace(/[\?&]usp=[^&]*/g,'').replace(/\?$/,'');$('viewerFrame').innerHTML=`<iframe src="${esc(src)}" allow="autoplay" allowfullscreen></iframe>`;$('viewerModal').style.display='flex'}
 
 function exportBackup(){saveLocal();const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_11_2_alpha_backup_'+today()+'.json';a.click();URL.revokeObjectURL(a.href);toast('Backup exportado.')}
 function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{DB=normalizeDB(JSON.parse(r.result));saveLocal();scheduleSave();toast('Backup importado.')}catch(e){toast('Erro ao importar.')}};r.readAsText(file)}
 
-Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,deleteItem,closeViewer,closeModal,showPage,showStudentPage,publishPortal,publishAllPortals,previewStudent,releaseLesson,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn});
+Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,publishPortal,publishAllPortals,previewStudent,releaseLesson,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn});
 function boot(){
   document.title='LessonHub v1.11.4-alpha — Auto Portal + Materials Fix';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
@@ -241,8 +242,9 @@ function boot(){
     STATE.source='local session';
     DB=loadLocal();
     showAdmin();
-    status('Sessão local restaurada. Reconecte o Drive quando precisar enviar/abrir arquivos.',4500);
+    status('Sessão local restaurada. Reconectando o Drive…',4500);
     log('Sessão local restaurada para '+sess.email,'ok');
+    STATE.pendingDriveReconnect=true;
   }else if(sess.email&&sess.role==='student'){
     const cached=loadCachedStudentPortal(sess.email);
     if(cached&&cached.student){
@@ -272,6 +274,10 @@ function boot(){
       if(STATE.mode==='login') $('loginMsg').textContent='Pronto para entrar.';
       if(sess.email&&sess.role==='student'&&STATE.mode!=='student'){
         try{STATE.tokenClient.requestAccessToken({prompt:''})}catch(e){if(STATE.mode!=='student')showLogin('Entre com Google para abrir o portal do aluno.')}
+      }
+      if(STATE.pendingDriveReconnect&&STATE.mode==='admin'){
+        STATE.pendingDriveReconnect=false;
+        try{STATE.tokenClient.requestAccessToken({prompt:''})}catch(e){log('Reconexão automática do Drive falhou. Use o botão conectar Drive.','warn')}
       }
     }
   },200);
