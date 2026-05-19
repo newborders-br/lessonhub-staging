@@ -456,34 +456,43 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 @media(max-width:700px){
   #pdfToolbar{
     position:fixed;
-    top:50%;
-    left:6px;
-    transform:translateY(-50%);
-    height:auto;
-    width:44px;
-    flex-direction:column;
-    padding:8px 0;
-    border-bottom:none;
-    border:1px solid var(--line);
-    background:var(--paper2);
-    box-shadow:0 2px 12px rgba(26,23,20,.12);
-    border-radius:6px;
-    overflow-x:visible;
-    overflow-y:auto;
-    max-height:90vh;
-    z-index:50;
-    gap:0;
-  }
-  #pdfToolbar .tb-group{
+    bottom:70px;
+    right:12px;
+    top:auto;left:auto;transform:none;
+    height:auto;width:44px;
     flex-direction:column;
     padding:4px 0;
-    border-right:none;
-    border-bottom:1px solid var(--line2);
-    width:100%;
-    align-items:center;
-    gap:1px;
+    border:1px solid var(--line);
+    background:var(--paper2);
+    box-shadow:0 2px 16px rgba(26,23,20,.16);
+    border-radius:8px;
+    overflow-y:auto;
+    max-height:70vh;
+    z-index:50;gap:0;
+    /* recolhido por padrão: esconde o conteúdo, mostra só o toggle */
+    display:none;
   }
-  #pdfToolbar .tb-group:last-child{border-bottom:none;margin-left:0;margin-top:0}
+  #pdfToolbar.tb-open{display:flex}
+  #pdfToolbar .tb-group{
+    flex-direction:column;padding:4px 0;
+    border-right:none;border-bottom:1px solid var(--line2);
+    width:44px;align-items:center;gap:1px;
+  }
+  #pdfToolbar .tb-group:last-child{border-bottom:none}
+  #pdfToolbarToggle{
+    display:flex;
+    position:fixed;bottom:18px;right:12px;
+    width:44px;height:44px;
+    background:var(--ink);color:var(--paper);
+    border:none;border-radius:50%;
+    align-items:center;justify-content:center;
+    z-index:51;
+    box-shadow:0 2px 10px rgba(26,23,20,.25);
+    font-size:18px;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:background .12s;
+  }
+  #pdfToolbarToggle.tb-open{background:var(--rust)}
   #pdfPageLabel{display:none}
 }
 .tb-btn{height:36px;min-width:36px;padding:0 8px;border:0;background:transparent;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--muted);transition:background .1s,color .1s;gap:5px;-webkit-tap-highlight-color:transparent}
@@ -567,8 +576,8 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
   .viewer-bar{grid-template-columns:auto 1fr;gap:10px}
   .vb-actions{display:none}
   .vb-title b{font-size:14px}
-  #pdfScrollArea{padding:8px 0 60px 56px}
-  .pdf-page-wrap{max-width:calc(100vw - 64px)}
+  #pdfScrollArea{padding:8px 0 80px}
+  .pdf-page-wrap{max-width:calc(100vw - 8px)}
 }
 .ficha-head{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:48px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:28px;margin-bottom:36px}
 .ficha-head h1{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(52px,8vw,96px);line-height:.85;letter-spacing:-.04em;font-weight:400}
@@ -826,7 +835,7 @@ function showStudent(){STATE.mode='student';document.body.classList.add('student
 function showLogin(msg=''){STATE.mode='login';$('privacyGate').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginMsg').textContent=msg}
 function openModal(title,sub,body){$('modalTitle').textContent=title;$('modalSub').textContent=sub||'';$('modalBody').innerHTML=body;$('modal').style.display='flex'}
 function closeModal(){$('modal').style.display='none'}
-function closeViewer(){const s=$('viewerScreen');if(s){s.style.display='none';const f=$('viewerFrame');if(f)f.innerHTML=''}document.body.style.overflow=''}
+function closeViewer(){const s=$('viewerScreen');if(s){s.style.display='none';const f=$('viewerFrame');if(f)f.innerHTML=''}document.body.style.overflow='';const tbt=$('pdfToolbarToggle');if(tbt)tbt.remove();}
 function youtubeEmbedSrc(url){const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1&autoplay=1':null}
 function buildViewerHtml(att,title,downloadAllowed){
   const ytSrc=youtubeEmbedSrc(att?.youtubeUrl||att?.driveLink||'');
@@ -1002,6 +1011,11 @@ function renderPdfViewer(url,materialId){
         PDF_STATE.textAnnots[pageNum]=(PDF_STATE.textAnnots[pageNum]||[]).filter(x=>x!==ta);
       }
       pdfDebouncedSave();
+      // No mobile: voltar pro cursor automaticamente ao fechar teclado
+      if(window.innerWidth<=700 && PDF_STATE.mode==='textnote'){
+        // Pequeno delay pra não conflitar com o touchend que ativou o campo
+        setTimeout(()=>{ if(PDF_STATE.mode==='textnote') setMode('cursor'); },150);
+      }
     });
     el.addEventListener('keydown',e=>{
       if(e.key==='Escape'){el.blur();}
@@ -1081,13 +1095,18 @@ function renderPdfViewer(url,materialId){
     document.querySelectorAll('.tb-btn[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));
     document.querySelectorAll('.pdf-annot').forEach(c=>{
       c.className='pdf-annot mode-'+m;
-      // No modo cursor, o canvas fica invisível aos cliques para que os campos de texto sejam clicáveis
       c.style.pointerEvents=(m==='cursor')?'none':'auto';
     });
-    // Campos de texto: mostrar mais visíveis no modo textnote
     document.querySelectorAll('.pdf-text-annot').forEach(el=>{
       el.classList.toggle('mode-cursor-visible',m==='cursor');
     });
+    // Mobile: fechar toolbar após escolher ferramenta
+    if(window.innerWidth<=700){
+      const tb=document.getElementById('pdfToolbar');
+      const tbt=document.getElementById('pdfToolbarToggle');
+      if(tb)tb.classList.remove('tb-open');
+      if(tbt)tbt.classList.remove('tb-open');
+    }
   }
   function setZoom(z){
     PDF_STATE.zoom=Math.max(0.5,Math.min(3,z));
@@ -1137,7 +1156,43 @@ function renderPdfViewer(url,materialId){
         <button class="tb-btn" title="Limpar anotações de caneta" onclick="if(confirm('Apagar todas as marcações de caneta/marcador? As notas de texto ficam.'))pdfClearAnnots()" style="color:var(--bad)">✕</button>
       </div>`;
     document.querySelectorAll('.tb-btn[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===PDF_STATE.mode));
-  }
+
+    // Mobile: botão flutuante pra abrir/fechar toolbar
+    let tbToggle=document.getElementById('pdfToolbarToggle');
+    if(!tbToggle){
+      tbToggle=document.createElement('button');
+      tbToggle.id='pdfToolbarToggle';
+      tbToggle.innerHTML='<svg width="18" height="18" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2l3 3-7 7H2v-3z"/></svg>';
+      tbToggle.title='Ferramentas';
+      document.getElementById('viewerScreen')?.appendChild(tbToggle);
+    }
+    function updateToggleVisibility(){
+      tbToggle.style.display=window.innerWidth<=700?'flex':'none';
+    }
+    updateToggleVisibility();
+    window.removeEventListener('resize',updateToggleVisibility);
+    window.addEventListener('resize',updateToggleVisibility);
+    tbToggle.onclick=()=>{
+      const tb=document.getElementById('pdfToolbar');
+      const open=tb.classList.toggle('tb-open');
+      tbToggle.classList.toggle('tb-open',open);
+      // Fechar ao clicar fora
+      if(open){
+        setTimeout(()=>{
+          function outsideClick(e){
+            if(!tb.contains(e.target)&&e.target!==tbToggle){
+              tb.classList.remove('tb-open');
+              tbToggle.classList.remove('tb-open');
+              document.removeEventListener('touchstart',outsideClick);
+              document.removeEventListener('mousedown',outsideClick);
+            }
+          }
+          document.addEventListener('touchstart',outsideClick,{once:false});
+          document.addEventListener('mousedown',outsideClick,{once:false});
+        },10);
+      }
+    };
+  } // end if(toolbar)
 
   function doRender(){
     const scroll=document.getElementById('pdfScrollArea');
