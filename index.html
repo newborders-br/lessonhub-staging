@@ -449,7 +449,7 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 #pdfViewerSplit{display:grid;grid-template-columns:1fr 340px;min-height:calc(100vh - 40px);align-items:start;gap:0}
 #pdfViewerSplit.notebook-collapsed{grid-template-columns:1fr 0}
 #pdfViewerSplit.notebook-collapsed #pdfNotebook{display:none}
-#pdfViewerWrap{background:var(--paper2);min-height:100vh;position:relative;border-right:1px solid var(--line);overflow:hidden}
+#pdfViewerWrap{background:var(--paper2);min-height:100vh;position:relative;border-right:1px solid var(--line)}
 #pdfToolbar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:0;padding:0 12px;height:44px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #pdfToolbar::-webkit-scrollbar{display:none}
 #pdfToolbar .tb-group{display:flex;align-items:center;gap:2px;padding:0 8px;border-right:1px solid var(--line2);flex-shrink:0}
@@ -521,42 +521,41 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 /* Inline text annotation — só letras, sem underline */
 .pdf-page-wrap .pdf-text-annot{
   position:absolute;
-  background:rgba(255,255,250,.92);
-  border:1px solid rgba(154,70,38,.3);
-  outline:none;
-  padding:4px 6px 4px 4px;
-  font-size:13px;
-  font-family:'Geist',sans-serif;
-  color:#1a3a6b;
-  min-width:80px;
+  background:transparent;
+  border:1px solid transparent;
+  padding:2px 4px 2px 2px;
+  min-width:60px;
   z-index:10;
   cursor:default;
-  line-height:1.45;
   display:flex;
-  flex-direction:column;
-  gap:3px;
+  flex-direction:row;
+  align-items:flex-start;
+  gap:2px;
   border-radius:2px;
+  transition:border-color .12s;
 }
-.pdf-text-annot.editing{border-color:var(--rust);box-shadow:0 2px 8px rgba(154,70,38,.2)}
+.pdf-text-annot:hover,.pdf-text-annot.editing{border-color:rgba(154,70,38,.35)}
+.pdf-text-annot.editing{background:rgba(255,252,248,.92)}
 .pdf-text-handle{
-  font-size:12px;color:var(--muted);cursor:grab;
-  user-select:none;line-height:1;padding:0 2px;
-  display:flex;align-items:center;gap:4px;flex-shrink:0;
+  font-size:11px;color:var(--soft);cursor:grab;
+  user-select:none;line-height:1.5;padding:0 1px;
+  opacity:0;transition:opacity .12s;flex-shrink:0;margin-top:1px;
 }
+.pdf-text-annot:hover .pdf-text-handle,
+.pdf-text-annot.editing .pdf-text-handle{opacity:1}
 .pdf-text-handle:active{cursor:grabbing}
-.pdf-text-size{
-  font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.08em;
-  border:0;border-bottom:1px solid var(--line);background:transparent;
-  color:var(--muted);padding:0;outline:none;cursor:pointer;width:52px;
-}
 .pdf-text-content{
-  outline:none;min-width:60px;min-height:16px;
+  outline:none;min-width:40px;min-height:1em;
   white-space:pre-wrap;word-break:break-word;
-  color:inherit;font-size:inherit;
+  font-size:13px;font-family:'Geist',sans-serif;color:#1a3a6b;
+  line-height:1.45;
 }
-.pdf-text-content:empty:before{content:attr(data-placeholder);color:var(--soft);font-style:italic}
-.pdf-text-annot.mode-cursor-visible .pdf-text-handle{opacity:.4}
-.pdf-text-annot.mode-cursor-visible .pdf-text-size{display:none}ht:1.4;
+.pdf-text-content:empty:before{content:attr(data-placeholder);color:var(--soft);font-style:italic;font-size:12px}
+.pdf-text-annot.mode-cursor-visible .pdf-text-handle{display:none}
+/* Tamanho no toolbar - grupo texto */
+#pdfTextSizeGroup{display:none;align-items:center;gap:4px;padding:0 8px;border-right:1px solid var(--line2)}
+#pdfTextSizeGroup.visible{display:flex}
+#pdfTextSizeSelect{font-family:'Geist Mono',monospace;font-size:11px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--muted);padding:2px 0;outline:none;cursor:pointer;width:36px}ht:1.4;
   white-space:nowrap;
   overflow:hidden;
   resize:none;
@@ -896,7 +895,7 @@ function buildViewerHtml(att,title,downloadAllowed){
   return `<div style="padding:80px;text-align:center"><p style="font-family:'Newsreader',serif;font-size:18px;color:var(--muted);font-style:italic">Sem arquivo disponível para visualização.</p></div>`;
 }
 /* ── PDF Viewer: zoom + anotações ── */
-const PDF_STATE={doc:null,zoom:1,mode:'cursor',color:'#9a4626',size:3,annots:{},textAnnots:{},annotKey:'',materialId:'',notebookDebounce:null,annotDebounce:null};
+const PDF_STATE={doc:null,zoom:1,mode:'cursor',color:'#9a4626',size:3,textFontSize:13,annots:{},textAnnots:{},annotKey:'',materialId:'',notebookDebounce:null,annotDebounce:null};
 
 /* ── Identificação do contexto: quem é o usuário atual e qual material ── */
 function pdfCurrentEmail(){
@@ -1033,35 +1032,20 @@ function renderPdfViewer(url,materialId){
     el.className='pdf-text-annot';
     el.style.left=(ta.x*100)+'%';
     el.style.top=(ta.y*100)+'%';
-    if(ta.fontSize)el.style.fontSize=ta.fontSize+'px';
-    // handle de drag
+    // handle de drag — só aparece no hover via CSS
     const handle=document.createElement('div');
     handle.className='pdf-text-handle';
     handle.textContent='⠿';
     el.appendChild(handle);
-    // seletor de tamanho
-    const sizeSelect=document.createElement('select');
-    sizeSelect.className='pdf-text-size';
-    [10,12,14,16,20,24].forEach(sz=>{
-      const o=document.createElement('option');
-      o.value=sz;o.textContent=sz+'px';
-      if(sz===(ta.fontSize||13))o.selected=true;
-      sizeSelect.appendChild(o);
-    });
-    sizeSelect.addEventListener('mousedown',e=>e.stopPropagation());
-    sizeSelect.addEventListener('change',e=>{
-      ta.fontSize=Number(e.target.value);
-      textEl.style.fontSize=ta.fontSize+'px';
-      pdfDebouncedSave();e.stopPropagation();
-    });
-    el.appendChild(sizeSelect);
-    // área editável
+    // área editável — tamanho vem do toolbar (PDF_STATE.textFontSize)
     const textEl=document.createElement('div');
     textEl.className='pdf-text-content';
     textEl.contentEditable='true';
     textEl.setAttribute('data-placeholder','…');
     if(ta.text)textEl.textContent=ta.text;
-    if(ta.fontSize)textEl.style.fontSize=ta.fontSize+'px';
+    const fs=ta.fontSize||PDF_STATE.textFontSize||13;
+    ta.fontSize=fs;
+    textEl.style.fontSize=fs+'px';
     el.appendChild(textEl);
     // drag via handle
     handle.addEventListener('mousedown',e=>{
@@ -1082,7 +1066,14 @@ function renderPdfViewer(url,materialId){
       document.addEventListener('mousemove',onMove);
       document.addEventListener('mouseup',onUp);
     });
-    textEl.addEventListener('focus',()=>{el.classList.remove('mode-cursor-visible');el.classList.add('editing')});
+    // atualizar tamanho quando toolbar muda (enquanto editando)
+    textEl.addEventListener('focus',()=>{
+      el.classList.remove('mode-cursor-visible');
+      el.classList.add('editing');
+      // sincronizar toolbar com tamanho atual
+      const szSel=document.getElementById('pdfTextSizeSelect');
+      if(szSel)szSel.value=ta.fontSize||13;
+    });
     textEl.addEventListener('blur',()=>{
       ta.text=textEl.textContent||'';
       el.classList.remove('editing');
@@ -1091,7 +1082,12 @@ function renderPdfViewer(url,materialId){
       if(window.innerWidth<=700&&PDF_STATE.mode==='textnote')setTimeout(()=>{if(PDF_STATE.mode==='textnote')setMode('cursor');},150);
     });
     textEl.addEventListener('keydown',e=>{if(e.key==='Escape'){textEl.blur();}e.stopPropagation();});
-    el.addEventListener('click',e=>{if(PDF_STATE.mode==='cursor'){e.stopPropagation();textEl.focus();}});
+    // clicar no elemento no modo cursor abre edição
+    el.addEventListener('click',e=>{
+      if(PDF_STATE.mode==='cursor'||PDF_STATE.mode==='textnote'){e.stopPropagation();textEl.focus();}
+    });
+    // mudança de tamanho do toolbar atualiza textEl focado
+    el._updateSize=(sz)=>{ta.fontSize=sz;textEl.style.fontSize=sz+'px';pdfDebouncedSave();};
     wrap.appendChild(el);
     if(!ta.text)requestAnimationFrame(()=>textEl.focus());
   }
@@ -1157,18 +1153,29 @@ function renderPdfViewer(url,materialId){
     canvas.className='pdf-annot mode-'+PDF_STATE.mode;
   }
   function setMode(m){
+    // toggle: clicar em textnote quando já ativo volta pro cursor
+    if(m==='textnote'&&PDF_STATE.mode==='textnote') m='cursor';
     PDF_STATE.mode=m;
     document.querySelectorAll('.tb-btn[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));
     document.querySelectorAll('.pdf-annot').forEach(c=>{
       c.className='pdf-annot mode-'+m;
       c.style.pointerEvents=(m==='cursor')?'none':'auto';
-      // No modo cursor, liberar touch-action pra o scroll nativo do celular funcionar
       c.style.touchAction=(m==='cursor')?'auto':'none';
     });
     document.querySelectorAll('.pdf-text-annot').forEach(el=>{
       el.classList.toggle('mode-cursor-visible',m==='cursor');
     });
-    // Mobile: fechar toolbar após escolher ferramenta
+    // mostrar/esconder grupo de tamanho de texto
+    const szGroup=document.getElementById('pdfTextSizeGroup');
+    if(szGroup)szGroup.classList.toggle('visible',m==='textnote');
+    // click-outside para desativar modo texto
+    if(m==='textnote'){
+      const offHandler=e=>{
+        const inPdf=e.target.closest('.pdf-page-wrap,.pdf-text-annot,#pdfToolbar');
+        if(!inPdf){setMode('cursor');document.removeEventListener('click',offHandler,true);}
+      };
+      setTimeout(()=>document.addEventListener('click',offHandler,true),100);
+    }
     if(window.innerWidth<=700){
       const tb=document.getElementById('pdfToolbar');
       const tbt=document.getElementById('pdfToolbarToggle');
@@ -1214,6 +1221,11 @@ function renderPdfViewer(url,materialId){
         <button class="tb-btn" data-mode="eraser" title="Borracha" onclick="window.__pdfSetMode('eraser')">
           <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="10" height="6" rx="1"/><line x1="5" y1="5" x2="5" y2="11"/></svg>
         </button>
+      </div>
+      <div class="tb-group" id="pdfTextSizeGroup">
+        <select id="pdfTextSizeSelect" title="Tamanho do texto" onchange="PDF_STATE.textFontSize=Number(this.value);document.querySelectorAll('.pdf-text-annot.editing').forEach(el=>{if(el._updateSize)el._updateSize(PDF_STATE.textFontSize)})">
+          ${[10,12,13,14,16,20,24].map(sz=>`<option value="${sz}" ${sz===13?'selected':''}>${sz}</option>`).join('')}
+        </select>
       </div>
       <div class="tb-group" id="pdfColorGroup">
         ${COLORS.map(c=>`<button class="annot-color-btn ${c===PDF_STATE.color?'active':''}" style="background:${c}" title="${c}" onclick="PDF_STATE.color='${c}';document.querySelectorAll('.annot-color-btn').forEach(b=>b.classList.toggle('active',b.style.background==='${c}' || b.style.backgroundColor==='${c}'))"></button>`).join('')}
@@ -2269,7 +2281,7 @@ async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lesson
 function toggleUnitBlock(unitId){const el=document.getElementById('unit-'+unitId);if(el)el.classList.toggle('open')}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
 function boot(){
-  document.title='LessonHub v1.17.1-alpha — Supabase Storage + PDF Viewer';
+  document.title='LessonHub v1.17.2-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
