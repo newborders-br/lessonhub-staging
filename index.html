@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.16.5-alpha — New Borders</title>
+<title>LessonHub v1.16.6-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -1355,10 +1355,10 @@ function renderStudent(){
         </div>
       </div>`;
     }).join('');
-    $('studentApp').innerHTML=`<div class="hero" style="margin-bottom:28px"><h1>Aulas &amp;<br><em>materiais.</em></h1><p class="lede">Tudo que Erik já te mandou, em ordem de quando aconteceu.</p></div><div class="timeline">${lessonItems||'<div class="empty">Sem aulas publicadas.</div>'}</div>`;
+    $('studentApp').innerHTML=`<div class="hero" style="margin-bottom:28px"><h1>Aulas &amp;<br><em>materiais.</em></h1><p class="lede">Tudo que Erik já te mandou, da mais recente pra mais antiga.</p></div><div class="timeline">${lessonItems||'<div class="empty">Sem aulas publicadas.</div>'}</div>`;
   } else if(STATE.studentPage==='materials'){
     const allMats=[...mats].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
-    $('studentApp').innerHTML=`<div class="hero" style="margin-bottom:28px"><h1>Materiais</h1><p class="lede">${allMats.length} material${allMats.length!==1?'is':''} disponível${allMats.length!==1?'is':''}.</p></div><div>${allMats.map(m=>studentMaterialCard(m)).join('')||'<div class="empty">Sem materiais liberados.</div>'}</div>`;
+    $('studentApp').innerHTML=`<div class="hero" style="margin-bottom:28px"><h1>Materiais</h1><p class="lede">${allMats.length} ${allMats.length===1?'material disponível':'materiais disponíveis'}.</p></div><div>${allMats.map(m=>studentMaterialCard(m)).join('')||'<div class="empty">Sem materiais liberados.</div>'}</div>`;
   } else {
     $('studentApp').innerHTML=studentFinancePage(fin);
   }
@@ -1409,7 +1409,7 @@ function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planSta
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
 function boot(){
-  document.title='LessonHub v1.16.5-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.16.6-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
