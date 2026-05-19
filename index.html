@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.16.8-alpha — New Borders</title>
+<title>LessonHub v1.16.9-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -346,10 +346,6 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
   border:0;background:white;
 }
 @media(max-width:700px){
-  #viewerModal .modal-box{width:100%!important;height:100vh;max-height:100vh;border-radius:0;margin:0;display:flex;flex-direction:column}
-  #viewerModal .modal-head{flex-shrink:0;padding:12px 16px}
-  #viewerModal .viewer-frame{flex:1;overflow:hidden;display:flex;flex-direction:column}
-  #viewerModal .viewer-frame iframe{width:100%!important;height:100%!important;flex:1}
 }
 
 /* ---------- misc ---------- */
@@ -431,7 +427,27 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .lesson-list .lmat{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
 .lesson-list .ledit{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--soft);text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0}
 .lesson-list .ledit:hover{color:var(--rust)}
-/* ---------- ficha do aluno (bloco 7) ---------- */
+/* ---------- viewer cinema (bloco 12) ---------- */
+.viewer-bar{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;padding:0 0 16px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.vb-back{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;cursor:pointer;background:transparent;border:0;padding:0;white-space:nowrap}
+.vb-back:hover{color:var(--ink)}
+.vb-title b{font-family:'Newsreader',Georgia,serif;font-size:19px;font-weight:400;letter-spacing:-.01em;display:block}
+.vb-title small{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:3px;display:block}
+.vb-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+.vb-dl{padding:7px 12px;border:1px solid var(--line);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer;background:transparent;line-height:1}
+.vb-dl:hover{border-color:var(--ink);color:var(--ink)}
+.cinema-frame{background:#141210;color:#e7decd;position:relative;min-height:82vh;display:flex;align-items:flex-start;justify-content:center;overflow:hidden;padding:0}
+.cinema-frame iframe{width:100%;height:82vh;border:0;display:block}
+.cinema-frame .yt-wrap{width:100%;max-width:880px;aspect-ratio:16/9;margin:40px auto}
+.cinema-frame .yt-wrap iframe{width:100%;height:100%;border:0}
+.cinema-top{position:absolute;top:0;left:0;right:0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;color:rgba(231,222,205,.5);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;pointer-events:none;z-index:2;transition:opacity .25s;background:linear-gradient(rgba(20,18,16,.6),transparent)}
+.cinema-frame:hover .cinema-top{color:rgba(231,222,205,.9)}
+.cinema-bottom{position:absolute;bottom:0;left:0;right:0;padding:16px 24px;display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(231,222,205,.4);z-index:2;background:linear-gradient(transparent,rgba(20,18,16,.6))}
+@media(max-width:700px){
+  .viewer-bar{grid-template-columns:auto 1fr;gap:12px}
+  .vb-actions{display:none}
+  .vb-title b{font-size:15px}
+}
 .ficha-head{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:48px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:28px;margin-bottom:36px}
 .ficha-head h1{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(52px,8vw,96px);line-height:.85;letter-spacing:-.04em;font-weight:400}
 .ficha-head h1 em{font-style:italic;color:var(--rust)}
@@ -593,7 +609,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <input type="file" id="backupInput" accept=".json" class="hidden" onchange="importBackup(this.files[0])">
 <input type="file" id="materialFileInput" class="hidden" onchange="attachFileToCurrentMaterial(this.files[0])">
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><div><div class="modal-title" id="modalTitle"></div><div class="subtle" id="modalSub"></div></div><button class="linkbtn" onclick="closeModal()">fechar</button></div><div id="modalBody"></div></div></div>
-<div class="modal" id="viewerModal"><div class="modal-box" style="width:min(1100px,100%);"><div class="modal-head"><div><div class="modal-title" id="viewerTitle">Material</div><div class="subtle" id="viewerSub"></div></div><button class="linkbtn" onclick="closeViewer()">fechar</button></div><div class="viewer-frame" id="viewerFrame"></div></div></div>
+<div id="viewerScreen" style="display:none;position:fixed;inset:0;z-index:90;background:var(--paper);overflow-y:auto"><div style="padding:28px 48px 0;max-width:1400px;margin:0 auto"><div class="viewer-bar"><button class="vb-back" onclick="closeViewer()">← voltar</button><div class="vb-title"><b id="viewerTitle">Material</b><small id="viewerSub"></small></div><div class="vb-actions"><button class="vb-dl" id="viewerDlBtn" style="display:none">↓ baixar</button></div></div></div><div id="viewerFrame" style="max-width:1400px;margin:0 auto"></div></div>
 <div class="toast" id="toast"></div><div class="statusbar" id="statusbar"></div>
 
 <script>
@@ -686,7 +702,21 @@ function showStudent(){STATE.mode='student';document.body.classList.add('student
 function showLogin(msg=''){STATE.mode='login';$('privacyGate').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginMsg').textContent=msg}
 function openModal(title,sub,body){$('modalTitle').textContent=title;$('modalSub').textContent=sub||'';$('modalBody').innerHTML=body;$('modal').style.display='flex'}
 function closeModal(){$('modal').style.display='none'}
-function closeViewer(){$('viewerModal').style.display='none';$('viewerFrame').innerHTML=''}
+function closeViewer(){const s=$('viewerScreen');if(s){s.style.display='none';const f=$('viewerFrame');if(f)f.innerHTML=''}document.body.style.overflow=''}
+function youtubeEmbedSrc(url){const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1&autoplay=1':null}
+function buildViewerHtml(att,title,downloadAllowed){
+  const ytSrc=youtubeEmbedSrc(att?.youtubeUrl||att?.driveLink||'');
+  if(ytSrc){
+    return `<div class="cinema-frame"><div class="cinema-top"><span>${esc(title)}</span><span>YouTube</span></div><div style="width:100%;max-width:880px;aspect-ratio:16/9;margin:40px auto;padding:0 40px"><iframe src="${ytSrc}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0;display:block;aspect-ratio:16/9"></iframe></div><div class="cinema-bottom"><span>${esc(title)}</span><span>vídeo</span></div></div>`;
+  }
+  if(att?.driveLink){
+    const fileId=String(att.driveId||att.driveLink).match(/[-\w]{25,}/)?.[0]||'';
+    const src=fileId?`https://drive.google.com/file/d/${fileId}/preview?rm=minimal`:String(att.driveLink).replace('/view','/preview').replace(/[\?&]usp=[^&]*/g,'').replace(/\?$/,'');
+    return `<div class="cinema-frame"><div class="cinema-top"><span>${esc(title)}</span><span>Drive · ${downloadAllowed?'download liberado':'só visualização'}</span></div><iframe src="${esc(src)}" allow="autoplay" allowfullscreen></iframe><div class="cinema-bottom"><span>${esc(att.name||title)}</span><span>setas do teclado pra navegar</span></div></div>`;
+  }
+  return `<div style="padding:80px;text-align:center"><p style="font-family:'Newsreader',serif;font-size:18px;color:var(--muted);font-style:italic">Sem arquivo disponível para visualização.</p></div>`;
+}
+function openMaterialViewer(id){const m=byId(DB.materials,id);if(!m)return;const att=m.attachments?.[0];const t=$('viewerTitle');const s=$('viewerSub');const f=$('viewerFrame');const dl=$('viewerDlBtn');const screen=$('viewerScreen');if(!t||!s||!f||!screen)return;t.textContent=m.title;s.textContent=[m.type,att?.name].filter(Boolean).join(' · ');f.innerHTML=buildViewerHtml(att,m.title,m.downloadAllowed!==false);if(dl){if(att?.driveLink&&m.downloadAllowed!==false){dl.style.display='block';dl.onclick=()=>window.open(att.driveLink,'_blank')}else{dl.style.display='none'}}screen.style.display='block';document.body.style.overflow='hidden';screen.scrollTop=0}
 
 function sb(){if(!STATE.sb)STATE.sb=supabase.createClient(CONFIG.SB_URL,CONFIG.SB_KEY);return STATE.sb}
 async function sbRead(email){try{const {data,error}=await sb().from(CONFIG.SB_TABLE).select('data,updated_at').eq('user_email',String(email).toLowerCase()).maybeSingle();if(error)throw error;return data?.data||null}catch(e){STATE.lastError=e.message||String(e);log('Supabase read falhou: '+STATE.lastError,'error');return null}}
@@ -1497,8 +1527,6 @@ async function saveMaterial(id=''){const existing=byId(DB.materials,id);const is
 function replaceMaterial(id){STATE.currentMaterialId=id;$('materialFileInput').click()}
 async function attachFileToCurrentMaterial(file){const m=byId(DB.materials,STATE.currentMaterialId);if(!file||!m)return;if(!STATE.driveReady){toast('Conecte o Google Drive primeiro (botão no topo) e tente novamente.');return}const att=await driveUploadFile(file,m.studentId);if(att){m.attachments=[att];if(m.studentId&&m.studentVisible){const st=byId(DB.students,m.studentId);if(st?.email&&att.driveId){if(await driveShare(att.driveId,st.email,true)){att.sharedWith=[st.email];}}}scheduleSave();toast('Arquivo enviado ao Drive.');}else{toast('Falha no upload. Tente reconectar o Drive.');}}
 function toggleMaterial(id){const m=byId(DB.materials,id);if(!m)return;m.studentVisible=!m.studentVisible;scheduleSave()}
-function youtubeEmbedSrc(url){const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1':null}function buildViewerHtml(att,title){const ytSrc=youtubeEmbedSrc(att?.youtubeUrl||att?.driveLink||'');if(ytSrc){return `<iframe src="${ytSrc}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0"></iframe>`}if(att?.driveLink){const fileId=String(att.driveId||att.driveLink).match(/[-\w]{25,}/)?.[0]||'';const src=fileId?`https://drive.google.com/file/d/${fileId}/preview?rm=minimal`:String(att.driveLink).replace('/view','/preview').replace(/[\?&]usp=[^&]*/g,'').replace(/\?$/,'');return `<iframe src="${esc(src)}" style="width:100%;height:100%;min-height:75vh;border:0" allow="autoplay" allowfullscreen></iframe>`}return '<div class="empty">Sem arquivo disponível.</div>'}
-function openMaterialViewer(id){const m=byId(DB.materials,id);if(!m)return;const att=m.attachments?.[0];$('viewerTitle').textContent=m.title;$('viewerSub').textContent=att?.name||'sem arquivo';$('viewerFrame').innerHTML=buildViewerHtml(att,m.title);$('viewerModal').style.display='flex'}
 function deleteItem(k,id){if(!confirm('Excluir item do LessonHub? Arquivos no Drive não serão apagados.'))return;if(k==='lessons'){DB.materials=DB.materials.filter(m=>m.lessonId!==id);}DB[k]=DB[k].filter(x=>x.id!==id);scheduleSave();toast('Excluído.')}
 function previewStudent(id){const snap=snapshotForStudent(id);if(!snap)return toast('Aluno sem e-mail.');STATE.studentPortal=snap;showStudent()}
 
@@ -1609,7 +1637,8 @@ function studentFinancePage(fin){
 function studentFinancePage(fin){const pays=(fin.pays||[]).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));const paid=pays.filter(p=>p.paid);const pending=pays.filter(p=>!p.paid);const future=fin.futureLinked||[];const aCobrar=fin.aCobrar||[];const paymentBlock=p=>{const linkedLessons=(fin.linkedLessons||[]).filter(l=>p.lessonIds.includes(l.id)).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999')));return `<div class="item"><div class="item-title">${money(p.valor)}${p.method?' · '+esc(p.method):''}</div><div class="badges">${badge(p.paid?'pago em '+fmtDate(p.paidAt):'pendente',p.paid?'ok':'warn')}${badge(p.lessonIds.length+' aula(s)')}</div>${linkedLessons.length?`<div class="meta">Aulas cobertas:<ul style="margin:6px 0 0 18px;padding:0">${linkedLessons.map(l=>`<li>${l.date?fmtDate(l.date):'sem data'}${l.startTime?' '+l.startTime:''} · ${esc(l.title)}${l.status==='dada'?'':l.status==='cancelada'&&!l.cancelNoticeOk?' <span style="color:#a63a2a">(falta paga)</span>':' <span style="color:#777">(a realizar)</span>'}</li>`).join('')}</ul></div>`:''}</div>`};const aCobrarBlock=aCobrar.length?`<div class="student-panel"><div class="student-panel-title">Aulas a cobrar</div><div class="meta">Estas aulas foram dadas e ainda não estão em um pagamento. Aguarde o registro.</div><div class="list">${aCobrar.map(l=>`<div class="item"><div class="item-title">${l.date?fmtDate(l.date):'sem data'}${l.startTime?' '+l.startTime:''}</div><div class="meta">${esc(l.title)}</div></div>`).join('')}</div></div>`:'';return `<div class="student-grid"><div class="student-card"><div class="num">${fin.status||'—'}</div><div class="label">status</div></div><div class="student-card"><div class="num">${future.length}</div><div class="label">aulas pagas a realizar</div></div><div class="student-card"><div class="num">${money(fin.ltv||0)}</div><div class="label">total investido</div></div><div class="student-card"><div class="num">${money(fin.pending||0)}</div><div class="label">pendente</div></div></div>${aCobrarBlock}${pending.length?`<div class="student-panel"><div class="student-panel-title">Pagamentos pendentes</div><div class="list">${pending.map(paymentBlock).join('')}</div></div>`:''}${paid.length?`<div class="student-panel"><div class="student-panel-title">Pagamentos quitados</div><div class="list">${paid.map(paymentBlock).join('')}</div></div>`:''}`}
 function studentLessonCard(l,mats){const lm=mats.filter(m=>m.lessonId===l.id||!m.lessonId);return `<div class="student-lesson"><div class="student-lesson-title">${esc(fmtDate(l.date))}${l.startTime?' · '+esc(l.startTime):''}</div><div class="badges">${badge(l.title,'blue')}${badge(lm.length+' materiais','ok')}</div>${l.studentNotes?`<div class="student-panel" style="margin-top:10px;padding:10px;background:var(--paper-2,#f8f5f0);border-radius:4px"><div class="meta subtle" style="margin-bottom:4px"><b>Anotações da professora</b></div><div>${esc(l.studentNotes).replace(/\n/g,'<br>')}</div></div>`:''}${lm.slice(0,4).map(studentMaterialCard).join('')}</div>`}
 function studentMaterialCard(m){const att=m.attachments?.[0];const hasFile=att&&(att.driveLink||att.youtubeUrl);return `<div class="student-resource"><div class="item-title">${esc(m.title)}</div><div class="badges">${badge(m.type||'material','blue')}${badge(hasFile?'arquivo disponível':'arquivo a caminho',hasFile?'ok':'warn')}</div>${m.notes?`<div class="meta">${esc(m.notes)}</div>`:''}<div class="row-actions">${hasFile?`<button class="linkbtn" onclick="openStudentMaterial('${m.id}')">abrir</button>`:`<span class="subtle">A professora está preparando o arquivo.</span>`}</div></div>`}
-function openStudentMaterial(id){const snap=STATE.studentPortal;if(!snap)return;const m=(snap.materials||[]).find(x=>x.id===id);if(!m)return;const att=m.attachments?.[0];if(!att?.driveLink&&!att?.youtubeUrl){toast('Arquivo ainda não disponível.');return}$('viewerTitle').textContent=m.title;$('viewerSub').textContent=att.name||'';$('viewerFrame').innerHTML=buildViewerHtml(att,m.title);$('viewerModal').style.display='flex'}
+function openStudentMaterial(id){const snap=STATE.studentPortal;if(!snap)return;const m=(snap.materials||[]).find(x=>x.id===id);if(!m)return;const att=m.attachments?.[0];if(!att?.driveLink&&!att?.youtubeUrl){toast('Arquivo ainda não disponível.');return}openMaterialViewer_raw(att,m.title,m.downloadAllowed!==false)}
+function openMaterialViewer_raw(att,title,downloadAllowed){const t=$('viewerTitle');const s=$('viewerSub');const f=$('viewerFrame');const dl=$('viewerDlBtn');const screen=$('viewerScreen');if(!t||!s||!f||!screen)return;t.textContent=title;s.textContent=att?.name||'';f.innerHTML=buildViewerHtml(att,title,downloadAllowed);if(dl){if(att?.driveLink&&downloadAllowed){dl.style.display='block';dl.onclick=()=>window.open(att.driveLink,'_blank')}else{dl.style.display='none'}}screen.style.display='block';document.body.style.overflow='hidden';screen.scrollTop=0}
 
 function exportBackup(){saveLocal();const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_11_2_alpha_backup_'+today()+'.json';a.click();URL.revokeObjectURL(a.href);toast('Backup exportado.')}
 function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{DB=normalizeDB(JSON.parse(r.result));saveLocal();scheduleSave();toast('Backup importado.')}catch(e){toast('Erro ao importar.')}};r.readAsText(file)}
@@ -1617,9 +1646,9 @@ function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()
 function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planStatus=l.planStatus==='preparada'?'a planejar':'preparada';scheduleSave();toast('Marcada como '+l.planStatus+'.')}
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 function toggleUnitBlock(unitId){const el=document.getElementById('unit-'+unitId);if(el)el.classList.toggle('open')}
-Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
+Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
 function boot(){
-  document.title='LessonHub v1.16.8-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.16.9-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
