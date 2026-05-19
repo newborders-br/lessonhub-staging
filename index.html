@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.16-alpha — New Borders</title>
+<title>LessonHub v1.16.1-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -355,7 +355,56 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 /* ---------- misc ---------- */
 .danger-note{border-left:2px solid var(--bad);padding-left:12px;color:var(--bad)}
 
-/* ---------- responsive ---------- */
+/* ---------- hero (bloco 5 Today) ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:64px;align-items:end;margin-bottom:44px;padding-bottom:32px;border-bottom:1px solid var(--line)}
+.hero h1{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:72px;line-height:.9;letter-spacing:-.035em}
+.hero h1 em{font-style:italic;color:var(--rust)}
+.hero .lede{font-family:'Newsreader',Georgia,serif;font-size:18px;line-height:1.45;color:var(--ink2);max-width:46ch}
+.hero .lede strong{font-weight:500;color:var(--ink)}
+.cols-2{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:48px}
+.section-title{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:baseline}
+.section-title .count{color:var(--soft)}
+/* lesson-row */
+.lesson-row{display:grid;grid-template-columns:104px 1fr auto;gap:24px;padding:18px 0;border-bottom:1px solid var(--line);align-items:start}
+.lesson-row:last-child{border-bottom:0}
+.lesson-time{font-family:'Instrument Serif',Georgia,serif;font-size:38px;line-height:.9;letter-spacing:-.025em}
+.lesson-time .ampm{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;color:var(--muted);letter-spacing:.14em;display:block;margin-top:4px;text-transform:uppercase}
+.lesson-body .name{font-family:'Newsreader',Georgia,serif;font-size:22px;line-height:1.1;letter-spacing:-.015em;margin-bottom:4px}
+.lesson-body .course{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.lesson-body .topic{font-size:14px;color:var(--ink2);max-width:48ch;line-height:1.5}
+.lesson-meta{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:130px}
+.lesson-meta .val{font-family:'Geist Mono',ui-monospace,monospace;font-size:12px;color:var(--muted)}
+/* sidebar metrics */
+.side-stack{display:flex;flex-direction:column;gap:24px}
+.metric{border-top:1px solid var(--ink);padding-top:14px}
+.metric .num{font-family:'Instrument Serif',Georgia,serif;font-size:58px;line-height:.9;letter-spacing:-.03em}
+.metric .num em{font-style:italic;color:var(--rust)}
+.metric .lbl{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.metric .delta{font-size:13px;color:var(--ink2);margin-top:4px}
+/* bloco 6 students list */
+.students-toolbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+.student-row{display:grid;grid-template-columns:1.6fr 1.4fr 1fr 1fr 40px;gap:24px;padding:18px 0;border-bottom:1px solid var(--line);align-items:center;cursor:pointer;transition:background .12s}
+.student-row:hover{background:rgba(154,70,38,.03)}
+.student-row.head{cursor:default;border-bottom:1px solid var(--ink);padding:10px 0;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.student-row.head:hover{background:transparent}
+.s-name{font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.1;letter-spacing:-.015em}
+.s-name small{display:block;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:3px}
+.s-course{font-size:13.5px;color:var(--ink2)}
+.s-course em{font-style:normal;color:var(--muted);font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.08em;display:block;margin-top:2px}
+.s-next{font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;color:var(--ink);letter-spacing:.04em}
+.s-next small{color:var(--muted);display:block;margin-top:2px;letter-spacing:.14em;text-transform:uppercase;font-size:9.5px}
+.s-fin{font-family:'Geist Mono',ui-monospace,monospace;font-size:11.5px;color:var(--ink)}
+.s-fin small{display:block;font-size:9.5px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
+.s-fin.warn{color:var(--rust)}
+.s-arrow{text-align:right;font-family:'Instrument Serif',Georgia,serif;font-size:22px;color:var(--soft);transition:color .12s,transform .12s}
+.student-row:hover .s-arrow{color:var(--rust);transform:translateX(3px)}
+@media(max-width:1000px){
+  .hero,.cols-2{grid-template-columns:1fr;gap:28px}
+  .hero h1{font-size:52px}
+  .student-row{grid-template-columns:1fr 1fr;gap:12px}
+  .student-row.head{display:none}
+  .s-next,.s-fin,.s-arrow{display:none}
+}
 @media(max-width:1000px){
   #adminShell,.student-shell{grid-template-columns:1fr}
   .rail{position:static;height:auto;flex-direction:row;align-items:center;justify-content:space-between;padding:18px 22px;border-right:0;border-bottom:1px solid var(--line)}
@@ -374,7 +423,7 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 </head>
 <body>
 <div id="privacyGate" class="privacy-gate"><div><h2>Carregando LessonHub…</h2><p id="privacyText">Aguardando autenticação. Nenhum dado sensível aparece antes do login.</p></div></div>
-<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.16-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
+<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.16.1-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
 
 <div class="shell hidden" id="adminShell">
   <aside class="rail">
@@ -571,8 +620,103 @@ function buildNav(){
 function showPage(p){STATE.page=p;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p)?.classList.add('active');document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===p));render()}
 function pageHead(title,sub,actions=''){return `<div class="page-head"><div class="page-title"><h2>${title}</h2><p>${sub}</p></div><div class="toolbar-left">${actions}</div></div>`}
 function render(){if(STATE.mode!=='admin')return;buildNav();document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===STATE.page));renderDashboard();renderStudents();renderLessons();renderCourses();renderMaterials();renderFinanceAdmin();renderPortalAdmin();renderHealth()}
-function renderDashboard(){const todayLessons=DB.lessons.filter(l=>l.date===today());const toPlan=DB.lessons.filter(l=>l.planStatus==='a planejar');$('page-dashboard').innerHTML=pageHead('Today','Núcleo consolidado: alunos, aulas, materiais, portal e sincronização.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="grid"><div class="card"><div class="num">${DB.students.length}</div><div class="label">alunos</div></div><div class="card"><div class="num">${todayLessons.length}</div><div class="label">aulas hoje</div></div><div class="card"><div class="num">${toPlan.length}</div><div class="label">a planejar</div></div><div class="card"><div class="num">${STATE.source}</div><div class="label">fonte carregada</div></div></div><div class="two"><div class="panel"><div class="panel-title">Aulas de hoje</div><div class="list">${todayLessons.map(lessonCard).join('')||'<div class="empty">Nenhuma aula hoje.</div>'}</div></div><div class="panel"><div class="panel-title">Últimos logs</div>${logList()}</div></div>`}
-function renderStudents(q=''){const query=String(q).toLowerCase();const rows=DB.students.filter(s=>(s.name+' '+s.email+' '+s.activeCourseName).toLowerCase().includes(query)).sort((a,b)=>a.name.localeCompare(b.name));$('page-students').innerHTML=pageHead('Students','Cadastro essencial, e-mail do portal e curso ativo.',`<button class="btn" onclick="openStudentModal()">novo aluno</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar aluno..." oninput="renderStudents(this.value)"></div><div class="list">${rows.map(studentCard).join('')||'<div class="empty">Nenhum aluno cadastrado.</div>'}</div>`}
+function renderDashboard(){
+  const tod=today();
+  const todayLessons=DB.lessons.filter(l=>l.date===tod).sort((a,b)=>String(a.startTime).localeCompare(String(b.startTime)));
+  const weekLessons=DB.lessons.filter(l=>l.date>=tod&&l.date<=tod.slice(0,8)+'6');
+  const toPlan=DB.lessons.filter(l=>l.planStatus==='a planejar'&&l.date>=tod);
+  const ativos=DB.students.filter(s=>s.status==='ativo').length;
+  const ym=tod.slice(0,7);
+  const recebido=DB.payments.filter(p=>p.paid&&String(p.paidAt).slice(0,7)===ym).reduce((s,p)=>s+(Number(p.valor)||0),0);
+  const aCobrar=DB.students.filter(s=>s.status==='ativo').reduce((s,st)=>s+financeForStudent(st.id).aCobrar.length,0);
+
+  const hora=new Date().getHours();
+  const greeting=hora<12?'Bom dia':hora<18?'Boa tarde':'Boa noite';
+
+  const lessonRows=todayLessons.map(l=>{
+    const st=byId(DB.students,l.studentId);
+    const course=l.courseId?byId(DB.courses,l.courseId):null;
+    const time=l.startTime||'—';
+    const hh=time.slice(0,5);
+    const period=Number(time.slice(0,2))<12?'manhã':Number(time.slice(0,2))<18?'tarde':'noite';
+    const stateClass=l.planStatus==='preparada'?'ok':l.planStatus==='a planejar'?'todo':'';
+    const stateLabel=l.planStatus==='preparada'?'preparada':'a planejar';
+    return `<div class="lesson-row">
+      <div class="lesson-time">${esc(hh)}<span class="ampm">${period}</span></div>
+      <div class="lesson-body">
+        <div class="name">${esc(st?.name||'Aluno')}</div>
+        <div class="course">${esc(course?.name||st?.activeCourseName||'sem curso')}${l.level?' · '+esc(l.level):''}</div>
+        ${l.unit?`<div class="topic">${esc(l.unit)}</div>`:''}
+      </div>
+      <div class="lesson-meta">
+        <span class="tag-state ${stateClass}">${stateLabel}</span>
+        <span class="val">${money(l.value||byId(DB.students,l.studentId)?.defaultLessonValue||0)}</span>
+        <button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  $('page-dashboard').innerHTML=`
+    <div class="hero">
+      <h1>${greeting},<br><em>Erik.</em></h1>
+      <p class="lede">${todayLessons.length>0?`${todayLessons.length} aula${todayLessons.length>1?'s':''} hoje.`:'Nenhuma aula hoje.'}${toPlan.length>0?` <strong>${toPlan.length} a planejar.</strong>`:''}</p>
+    </div>
+    <div class="cols-2">
+      <div>
+        <div class="section-title">Aulas de hoje <span class="count">${todayLessons.length}</span></div>
+        ${lessonRows||`<div class="empty">Nenhuma aula hoje.</div>`}
+      </div>
+      <aside class="side-stack">
+        <div class="metric"><div class="num">${ativos}</div><div class="lbl">Alunos ativos</div></div>
+        <div class="metric"><div class="num"><em>R$</em>${money(recebido).replace('R$','').trim()}</div><div class="lbl">Recebido em ${ym.slice(5)=='05'?'maio':ym}</div>${aCobrar>0?`<div class="delta">${aCobrar} aula${aCobrar>1?'s':''} a cobrar</div>`:''}</div>
+        <div class="metric"><div class="num">${toPlan.length}</div><div class="lbl">A planejar</div>${weekLessons.length>0?`<div class="delta">esta semana: ${weekLessons.length} aulas</div>`:''}</div>
+        <div style="border-top:1px solid var(--line);padding-top:16px;font-size:12px;color:var(--muted)">
+          <div style="font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);margin-bottom:8px">Sync</div>
+          Supabase <span style="color:${STATE.lastError?'var(--rust)':'var(--ok)'};font-family:'Geist Mono',monospace;font-size:11px">${STATE.lastError?'● erro':'● ok'}</span><br>
+          Drive <span style="color:${STATE.driveReady?'var(--ok)':'var(--muted)'};font-family:'Geist Mono',monospace;font-size:11px">${STATE.driveReady?'● conectado':'● desconectado'}</span>
+        </div>
+      </aside>
+    </div>`;
+}
+function renderStudents(q=''){
+  const query=String(q||'').toLowerCase();
+  const rows=DB.students.filter(s=>!query||(s.name+' '+s.email+' '+s.activeCourseName).toLowerCase().includes(query)).sort((a,b)=>a.name.localeCompare(b.name));
+  const tableRows=rows.map(s=>{
+    const fin=financeForStudent(s.id);
+    const course=s.courseId?byId(DB.courses,s.courseId):null;
+    const allLessons=DB.lessons.filter(l=>l.studentId===s.id);
+    const next=allLessons.filter(l=>l.date>=today()).sort((a,b)=>String(a.date).localeCompare(String(b.date)))[0];
+    const sinceDate=s.createdAt?new Date(s.createdAt).toLocaleDateString('pt-BR',{month:'short',year:'numeric'}):'';
+    const nextStr=next?`${fmtShort(next.date)}${next.startTime?' · '+next.startTime.slice(0,5):''}`:'-';
+    const nextState=next?(next.planStatus==='preparada'?'preparada':'a planejar'):'';
+    const finStr=fin.aCobrar.length>0?`${fin.aCobrar.length} a cobrar`:(fin.pending>0?money(fin.pending)+' pendente':'em dia');
+    const finWarn=fin.aCobrar.length>0||fin.pending>0;
+    const courseStr=course?.name||s.activeCourseName||'—';
+    const levelStr=s.activeCourseLevel||'';
+    const aulas=allLessons.length;
+    return `<div class="student-row" onclick="openStudentModal('${s.id}')">
+      <div class="s-name">${esc(s.name)}<small>${sinceDate?'desde '+sinceDate:''}</small></div>
+      <div class="s-course">${esc(courseStr)}<em>${levelStr?levelStr+' · ':''} ${aulas} aula${aulas!==1?'s':''}</em></div>
+      <div class="s-next">${esc(nextStr)}<small>${esc(nextState)}</small></div>
+      <div class="s-fin${finWarn?' warn':''}">${esc(finStr)}<small>LTV ${money(fin.ltv)}</small></div>
+      <div class="s-arrow">→</div>
+    </div>`;
+  }).join('');
+
+  $('page-students').innerHTML=`
+    <div class="hero" style="margin-bottom:28px">
+      <h1>Students</h1>
+      <p class="lede">${rows.length} aluno${rows.length!==1?'s':''} encontrado${rows.length!==1?'s':''}. Clique numa linha pra editar.</p>
+    </div>
+    <div class="students-toolbar">
+      <input type="text" class="search" placeholder="buscar por nome, curso ou e-mail…" oninput="renderStudents(this.value)" value="${esc(q)}" style="min-width:280px">
+      <button class="btn" onclick="openStudentModal()">+ novo aluno</button>
+    </div>
+    <div class="student-row head">
+      <div>Aluno</div><div>Curso</div><div>Próxima aula</div><div>Financeiro</div><div></div>
+    </div>
+    ${tableRows||'<div class="empty">Nenhum aluno cadastrado.</div>'}`;
+}
 function studentCard(s){const lessons=DB.lessons.filter(l=>l.studentId===s.id);const next=lessons.filter(l=>!l.date||l.date>=today()).sort((a,b)=>String(a.date).localeCompare(String(b.date)))[0];const fin=financeForStudent(s.id);const course=s.courseId?byId(DB.courses,s.courseId):null;const courseBadge=course?`<span class="badge" style="background:${esc(course.color||'#8b3a1f')}22;color:${esc(course.color||'#8b3a1f')};border-color:${esc(course.color||'#8b3a1f')}44">${esc(course.name)}</span>`:badge('sem curso','warn');return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.status)}${badge(s.email||'sem e-mail',s.email?'ok':'warn')}${courseBadge}${badge(`${lessons.length} aulas`)}${badge('LTV '+money(fin.ltv),'ok')}${fin.aCobrar.length>0?badge(fin.aCobrar.length+' a cobrar','warn'):''}</div><div class="meta">${next?`Próxima: ${fmtDate(next.date)} ${esc(next.startTime||'')}`:'Sem próxima aula.'}<br>${esc(s.goal||'Sem objetivo registrado.')}</div><div class="row-actions"><button class="linkbtn" onclick="openStudentModal('${s.id}')">editar</button><button class="linkbtn" onclick="openLessonModal('${s.id}')">nova aula</button><button class="linkbtn" onclick="openPaymentModal('${s.id}')">novo pagamento</button><button class="linkbtn" onclick="previewStudent('${s.id}')">preview</button><button class="linkbtn" onclick="deleteStudent('${s.id}')">excluir</button></div></div>`}
 function renderLessons(q='',periodo='todas'){
   const query=String(q||'').toLowerCase();
@@ -1000,7 +1144,7 @@ function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planSta
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
 function boot(){
-  document.title='LessonHub v1.16-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.16.1-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
