@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-<title>LessonHub v1.17.2-alpha — New Borders</title>
+<title>LessonHub v1.17.3-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -427,7 +427,7 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .lesson-list .lmat{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
 .lesson-list .ledit{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--soft);text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0}
 .lesson-list .ledit:hover{color:var(--rust)}
-/* ---------- viewer cinema (bloco 12) ---------- */
+/* ---------- viewer (bloco 12) ---------- */
 .viewer-bar{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;padding:0 0 16px;border-bottom:1px solid var(--line);margin-bottom:20px}
 .vb-back{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px;cursor:pointer;background:transparent;border:0;padding:0;white-space:nowrap}
 .vb-back:hover{color:var(--ink)}
@@ -436,17 +436,39 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .vb-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end}
 .vb-dl{padding:7px 12px;border:1px solid var(--line);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer;background:transparent;line-height:1}
 .vb-dl:hover{border-color:var(--ink);color:var(--ink)}
+
+/* cinema: YouTube e Drive continuam com fundo escuro */
 .cinema-frame{background:#141210;color:#e7decd;position:relative;min-height:82vh;display:flex;align-items:flex-start;justify-content:center;overflow:hidden;padding:0}
 .cinema-frame iframe{width:100%;height:82vh;border:0;display:block}
-.cinema-frame .yt-wrap{width:100%;max-width:880px;aspect-ratio:16/9;margin:40px auto}
-.cinema-frame .yt-wrap iframe{width:100%;height:100%;border:0}
 .cinema-top{position:absolute;top:0;left:0;right:0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;color:rgba(231,222,205,.5);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;pointer-events:none;z-index:2;transition:opacity .25s;background:linear-gradient(rgba(20,18,16,.6),transparent)}
 .cinema-frame:hover .cinema-top{color:rgba(231,222,205,.9)}
 .cinema-bottom{position:absolute;bottom:0;left:0;right:0;padding:16px 24px;display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(231,222,205,.4);z-index:2;background:linear-gradient(transparent,rgba(20,18,16,.6))}
+
+/* PDF viewer moderno */
+#pdfViewerWrap{background:var(--paper2);min-height:calc(100vh - 120px);position:relative}
+#pdfToolbar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:0;padding:0 24px;height:44px;flex-wrap:nowrap}
+#pdfToolbar .tb-group{display:flex;align-items:center;gap:2px;padding:0 10px;border-right:1px solid var(--line2)}
+#pdfToolbar .tb-group:last-child{border-right:0;margin-left:auto}
+.tb-btn{height:30px;min-width:30px;padding:0 8px;border:0;background:transparent;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--muted);transition:background .1s,color .1s;gap:5px}
+.tb-btn:hover{background:var(--line2);color:var(--ink)}
+.tb-btn.active{background:var(--ink);color:var(--paper)}
+.tb-btn svg{width:14px;height:14px;flex-shrink:0}
+#pdfZoomLabel{font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted);min-width:40px;text-align:center}
+#pdfPageLabel{font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap}
+#pdfScrollArea{overflow-y:auto;padding:32px 0 80px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.pdf-page-wrap{position:relative;box-shadow:0 2px 12px rgba(26,23,20,.10),0 0 0 1px rgba(26,23,20,.07);background:#fff;display:block;line-height:0}
+.pdf-page-wrap canvas.pdf-render{display:block;width:100%;height:auto}
+.pdf-page-wrap canvas.pdf-annot{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:none}
+.pdf-page-wrap canvas.pdf-annot.mode-cursor{cursor:default}
+.pdf-page-wrap canvas.pdf-annot.mode-eraser{cursor:cell}
+.annot-color-btn{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:border-color .1s}
+.annot-color-btn.active{border-color:var(--ink)}
 @media(max-width:700px){
   .viewer-bar{grid-template-columns:auto 1fr;gap:12px}
   .vb-actions{display:none}
   .vb-title b{font-size:15px}
+  #pdfToolbar{padding:0 10px;gap:0}
+  #pdfToolbar .tb-group{padding:0 6px}
 }
 .ficha-head{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:48px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:28px;margin-bottom:36px}
 .ficha-head h1{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(52px,8vw,96px);line-height:.85;letter-spacing:-.04em;font-weight:400}
@@ -609,7 +631,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <input type="file" id="backupInput" accept=".json" class="hidden" onchange="importBackup(this.files[0])">
 <input type="file" id="materialFileInput" class="hidden" onchange="attachFileToCurrentMaterial(this.files[0])">
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><div><div class="modal-title" id="modalTitle"></div><div class="subtle" id="modalSub"></div></div><button class="linkbtn" onclick="closeModal()">fechar</button></div><div id="modalBody"></div></div></div>
-<div id="viewerScreen" style="display:none;position:fixed;inset:0;z-index:90;background:var(--paper);overflow-y:auto"><div style="padding:28px 48px 0;max-width:1400px;margin:0 auto"><div class="viewer-bar"><button class="vb-back" onclick="closeViewer()">← voltar</button><div class="vb-title"><b id="viewerTitle">Material</b><small id="viewerSub"></small></div><div class="vb-actions"><button class="vb-dl" id="viewerDlBtn" style="display:none">↓ baixar</button></div></div></div><div id="viewerFrame" style="max-width:1400px;margin:0 auto"></div></div>
+<div id="viewerScreen" style="display:none;position:fixed;inset:0;z-index:90;background:var(--paper);overflow-y:auto"><div style="padding:28px 48px 0;max-width:1400px;margin:0 auto"><div class="viewer-bar"><button class="vb-back" onclick="closeViewer()">← voltar</button><div class="vb-title"><b id="viewerTitle">Material</b><small id="viewerSub"></small></div><div class="vb-actions"><button class="vb-dl" id="viewerDlBtn" style="display:none">↓ baixar</button></div></div></div><div id="viewerFrame"></div></div>
 <div class="toast" id="toast"></div><div class="statusbar" id="statusbar"></div>
 
 <script>
@@ -714,7 +736,7 @@ function buildViewerHtml(att,title,downloadAllowed){
     const isPdf=String(att.name||att.storageUrl).toLowerCase().endsWith('.pdf')||String(att.type||'').includes('pdf');
     if(isPdf){
       // Sem <script> no innerHTML — renderPdfViewer() é chamado externamente após setar o HTML
-      return `<div class="cinema-frame" id="pdfViewerFrame"><div class="cinema-top"><span>${esc(title)}</span><span>PDF · ${downloadAllowed?'download liberado':'só visualização'}</span></div><div id="pdfContainer" style="max-width:880px;margin:0 auto;padding:0 40px 40px"><div style="text-align:center;padding:60px;color:#888;font-family:monospace;font-size:12px">carregando PDF…</div></div><div class="cinema-bottom"><span>${esc(att.name||title)}</span><span id="pdfPageInfo">carregando…</span></div></div>`;
+      return `<div id="pdfViewerWrap"><div id="pdfToolbar"></div><div id="pdfScrollArea" style="overflow-y:auto;padding:32px 0 80px;display:flex;flex-direction:column;align-items:center;gap:16px;min-height:calc(100vh - 160px)"><div style="text-align:center;padding:60px;color:var(--muted);font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.1em">carregando PDF…</div></div></div>`;
     }
     const isImage=/\.(png|jpe?g|gif|webp|svg)$/i.test(att.name||att.storageUrl)||String(att.type||'').startsWith('image/');
     if(isImage){
@@ -729,31 +751,170 @@ function buildViewerHtml(att,title,downloadAllowed){
   }
   return `<div style="padding:80px;text-align:center"><p style="font-family:'Newsreader',serif;font-size:18px;color:var(--muted);font-style:italic">Sem arquivo disponível para visualização.</p></div>`;
 }
+/* ── PDF Viewer: zoom + anotações ── */
+const PDF_STATE={doc:null,zoom:1,mode:'cursor',color:'#9a4626',size:3,annots:{},annotKey:'',tool:'pen'};
+function pdfAnnotKey(url){return'lh_annot_'+btoa(url.slice(-60)).replace(/[^a-z0-9]/gi,'_')}
+function pdfSaveAnnots(){try{localStorage.setItem(PDF_STATE.annotKey,JSON.stringify(PDF_STATE.annots))}catch(e){}}
+function pdfLoadAnnots(){try{const d=localStorage.getItem(PDF_STATE.annotKey);return d?JSON.parse(d):{}}catch(e){return{}}}
+function pdfClearAnnots(){PDF_STATE.annots={};pdfSaveAnnots();renderPdfViewer._redrawAll&&renderPdfViewer._redrawAll();}
+window.pdfClearAnnots=pdfClearAnnots;
+
 function renderPdfViewer(url){
-  function doRender(){
-    const container=document.getElementById('pdfContainer');
-    const info=document.getElementById('pdfPageInfo');
-    if(!container){log('PDF viewer: container não encontrado','warn');return;}
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    window.pdfjsLib.getDocument(url).promise.then(doc=>{
-      container.innerHTML='';
-      if(info)info.textContent=doc.numPages+' página'+(doc.numPages>1?'s':'');
-      for(let i=1;i<=doc.numPages;i++){
-        (function(pageNum){
-          const canvas=document.createElement('canvas');
-          canvas.style='display:block;width:100%;margin-bottom:8px;border:1px solid rgba(26,23,20,.08)';
-          container.appendChild(canvas);
-          doc.getPage(pageNum).then(pg=>{
-            const vp=pg.getViewport({scale:2});
-            canvas.width=vp.width;canvas.height=vp.height;canvas.style.width='100%';
-            pg.render({canvasContext:canvas.getContext('2d'),viewport:vp});
-          });
-        })(i);
+  PDF_STATE.annotKey=pdfAnnotKey(url);
+  PDF_STATE.annots=pdfLoadAnnots();
+  function buildUI(doc){
+    const container=document.getElementById('pdfScrollArea');
+    if(!container)return;
+    container.innerHTML='';
+    PDF_STATE.doc=doc;
+    const pageWidth=Math.min(document.getElementById('pdfViewerWrap').offsetWidth-64,960);
+    for(let i=1;i<=doc.numPages;i++){renderPage(doc,i,pageWidth,container);}
+    document.getElementById('pdfPageLabel').textContent='1 / '+doc.numPages;
+    log('PDF renderizado: '+doc.numPages+' página(s)','ok');
+  }
+  function renderPage(doc,pageNum,baseWidth,container){
+    doc.getPage(pageNum).then(pg=>{
+      const vp0=pg.getViewport({scale:1});
+      const scale=(baseWidth/vp0.width)*PDF_STATE.zoom*2;
+      const vp=pg.getViewport({scale});
+      const wrap=document.createElement('div');
+      wrap.className='pdf-page-wrap';
+      wrap.dataset.page=pageNum;
+      wrap.style.width=Math.round(vp.width/2)+'px';
+      const render=document.createElement('canvas');
+      render.className='pdf-render';
+      render.width=vp.width;render.height=vp.height;
+      const annot=document.createElement('canvas');
+      annot.className='pdf-annot mode-'+PDF_STATE.mode;
+      annot.width=vp.width;annot.height=vp.height;
+      wrap.appendChild(render);wrap.appendChild(annot);
+      container.appendChild(wrap);
+      pg.render({canvasContext:render.getContext('2d'),viewport:vp});
+      // Recarregar anotações desta página
+      if(PDF_STATE.annots[pageNum]){
+        const img=new Image();
+        img.onload=()=>annot.getContext('2d').drawImage(img,0,0);
+        img.src=PDF_STATE.annots[pageNum];
       }
-      log('PDF renderizado: '+doc.numPages+' página(s)','ok');
-    }).catch(e=>{
-      if(container)container.innerHTML='<div style="text-align:center;padding:40px;color:#9a4626;font-family:monospace;font-size:12px">Erro ao carregar PDF: '+e.message+'</div>';
-      if(info)info.textContent='erro';
+      attachAnnotEvents(annot,pageNum);
+    });
+  }
+  function attachAnnotEvents(canvas,pageNum){
+    let drawing=false,lx=0,ly=0;
+    function getPos(e){
+      const r=canvas.getBoundingClientRect();
+      const scaleX=canvas.width/r.width,scaleY=canvas.height/r.height;
+      const src=e.touches?e.touches[0]:e;
+      return[(src.clientX-r.left)*scaleX,(src.clientY-r.top)*scaleY];
+    }
+    function down(e){
+      if(PDF_STATE.mode==='cursor')return;
+      e.preventDefault();drawing=true;
+      [lx,ly]=getPos(e);
+      const ctx=canvas.getContext('2d');
+      ctx.beginPath();ctx.moveTo(lx,ly);
+    }
+    function move(e){
+      if(!drawing)return;
+      e.preventDefault();
+      const [cx,cy]=getPos(e);
+      const ctx=canvas.getContext('2d');
+      if(PDF_STATE.mode==='eraser'){
+        ctx.clearRect(cx-20,cy-20,40,40);
+      } else {
+        ctx.globalAlpha=PDF_STATE.mode==='highlight'?0.35:1;
+        ctx.strokeStyle=PDF_STATE.color;
+        ctx.lineWidth=PDF_STATE.mode==='highlight'?PDF_STATE.size*5:PDF_STATE.size;
+        ctx.lineCap='round';ctx.lineJoin='round';
+        ctx.lineTo(cx,cy);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx,cy);
+      }
+      lx=cx;ly=cy;
+    }
+    function up(e){
+      if(!drawing)return;
+      drawing=false;
+      PDF_STATE.annots[pageNum]=canvas.toDataURL();
+      pdfSaveAnnots();
+    }
+    canvas.addEventListener('mousedown',down);
+    canvas.addEventListener('mousemove',move);
+    canvas.addEventListener('mouseup',up);
+    canvas.addEventListener('mouseleave',up);
+    canvas.addEventListener('touchstart',down,{passive:false});
+    canvas.addEventListener('touchmove',move,{passive:false});
+    canvas.addEventListener('touchend',up);
+    canvas.className='pdf-annot mode-'+PDF_STATE.mode;
+  }
+  function setMode(m){
+    PDF_STATE.mode=m;
+    document.querySelectorAll('.tb-btn[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));
+    document.querySelectorAll('.pdf-annot').forEach(c=>{c.className='pdf-annot mode-'+m});
+  }
+  function setZoom(z){
+    PDF_STATE.zoom=Math.max(0.5,Math.min(3,z));
+    document.getElementById('pdfZoomLabel').textContent=Math.round(PDF_STATE.zoom*100)+'%';
+    rebuildPages();
+  }
+  function rebuildPages(){
+    const doc=PDF_STATE.doc;if(!doc)return;
+    const container=document.getElementById('pdfScrollArea');if(!container)return;
+    container.innerHTML='';
+    const pageWidth=Math.min(document.getElementById('pdfViewerWrap').offsetWidth-64,960);
+    for(let i=1;i<=doc.numPages;i++){renderPage(doc,i,pageWidth,container);}
+  }
+  renderPdfViewer._redrawAll=rebuildPages;
+
+  // Toolbar
+  const toolbar=document.getElementById('pdfToolbar');
+  if(toolbar){
+    const COLORS=['#9a4626','#315f8f','#3e6b4a','#1a1714','#c97a55'];
+    toolbar.innerHTML=`
+      <div class="tb-group">
+        <button class="tb-btn active" data-mode="cursor" title="Cursor" onclick="(${setMode.toString()})('cursor')">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2l4 10 2-4 4-2z"/></svg>
+        </button>
+        <button class="tb-btn" data-mode="pen" title="Caneta" onclick="(${setMode.toString()})('pen')">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2l3 3-7 7H2v-3z"/></svg>
+        </button>
+        <button class="tb-btn" data-mode="highlight" title="Marcador" onclick="(${setMode.toString()})('highlight')">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l3-6h2l3 6"/><line x1="4" y1="8" x2="10" y2="8"/></svg>
+        </button>
+        <button class="tb-btn" data-mode="eraser" title="Borracha" onclick="(${setMode.toString()})('eraser')">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="10" height="6" rx="1"/><line x1="5" y1="5" x2="5" y2="11"/></svg>
+        </button>
+      </div>
+      <div class="tb-group" id="pdfColorGroup">
+        ${COLORS.map(c=>`<button class="annot-color-btn ${c===PDF_STATE.color?'active':''}" style="background:${c}" title="${c}" onclick="PDF_STATE.color='${c}';document.querySelectorAll('.annot-color-btn').forEach(b=>b.classList.toggle('active',b.style.background==='${c}' || b.style.backgroundColor==='${c}'))"></button>`).join('')}
+      </div>
+      <div class="tb-group">
+        <button class="tb-btn" title="Traço fino" onclick="PDF_STATE.size=2"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="1.2" fill="currentColor"/></svg></button>
+        <button class="tb-btn" title="Traço médio" onclick="PDF_STATE.size=4"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="2.5" fill="currentColor"/></svg></button>
+        <button class="tb-btn" title="Traço grosso" onclick="PDF_STATE.size=7"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="4" fill="currentColor"/></svg></button>
+      </div>
+      <div class="tb-group">
+        <button class="tb-btn" title="Diminuir zoom" onclick="(${setZoom.toString()})(PDF_STATE.zoom-0.25)">−</button>
+        <span id="pdfZoomLabel" class="tb-btn" style="cursor:default">100%</span>
+        <button class="tb-btn" title="Aumentar zoom" onclick="(${setZoom.toString()})(PDF_STATE.zoom+0.25)">+</button>
+        <button class="tb-btn" title="Zoom original" onclick="(${setZoom.toString()})(1)" style="font-size:9px">1:1</button>
+      </div>
+      <div class="tb-group">
+        <span id="pdfPageLabel" style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted)">—</span>
+      </div>
+      <div class="tb-group">
+        <button class="tb-btn" title="Limpar anotações" onclick="if(confirm('Apagar todas as anotações desta página?'))pdfClearAnnots()" style="color:var(--bad)">✕ anotar</button>
+      </div>`;
+    // Sync modo inicial
+    document.querySelectorAll('.tb-btn[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===PDF_STATE.mode));
+  }
+
+  function doRender(){
+    const scroll=document.getElementById('pdfScrollArea');
+    if(!scroll)return;
+    scroll.innerHTML='<div style="text-align:center;padding:60px;color:var(--muted);font-family:\'Geist Mono\',monospace;font-size:12px;letter-spacing:.1em">carregando PDF…</div>';
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    window.pdfjsLib.getDocument(url).promise.then(buildUI).catch(e=>{
+      if(scroll)scroll.innerHTML='<div style="text-align:center;padding:40px;color:#9a4626;font-family:monospace;font-size:12px">Erro ao carregar PDF: '+e.message+'</div>';
       log('PDF render falhou: '+e.message,'error');
     });
   }
@@ -761,11 +922,7 @@ function renderPdfViewer(url){
   const s=document.createElement('script');
   s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
   s.onload=doRender;
-  s.onerror=()=>{
-    const c=document.getElementById('pdfContainer');
-    if(c)c.innerHTML='<div style="text-align:center;padding:40px;color:#9a4626;font-family:monospace;font-size:12px">Não foi possível carregar o PDF.js. Verifique sua conexão.</div>';
-    log('PDF.js script falhou ao carregar','error');
-  };
+  s.onerror=()=>{const sc=document.getElementById('pdfScrollArea');if(sc)sc.innerHTML='<div style="text-align:center;padding:40px;color:#9a4626;font-family:monospace;font-size:12px">Não foi possível carregar o PDF.js.</div>';log('PDF.js falhou','error');};
   document.head.appendChild(s);
 }
 function openMaterialViewer(id){
