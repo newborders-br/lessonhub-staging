@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.16.1-alpha — New Borders</title>
+<title>LessonHub v1.16.2-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -423,7 +423,7 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 </head>
 <body>
 <div id="privacyGate" class="privacy-gate"><div><h2>Carregando LessonHub…</h2><p id="privacyText">Aguardando autenticação. Nenhum dado sensível aparece antes do login.</p></div></div>
-<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.16.1-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
+<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.16.2-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
 
 <div class="shell hidden" id="adminShell">
   <aside class="rail">
@@ -721,13 +721,11 @@ function studentCard(s){const lessons=DB.lessons.filter(l=>l.studentId===s.id);c
 function renderLessons(q='',periodo='todas'){
   const query=String(q||'').toLowerCase();
   const tod=today();
-  // semana corrente: segunda a domingo
   const d=new Date(tod);const dow=d.getDay();
   const seg=new Date(d);seg.setDate(d.getDate()-(dow===0?6:dow-1));
   const dom=new Date(seg);dom.setDate(seg.getDate()+6);
   const segStr=seg.toISOString().slice(0,10);
   const domStr=dom.toISOString().slice(0,10);
-
   let rows=DB.lessons.filter(l=>{
     if(query&&!(l.title+' '+studentName(l.studentId)+' '+l.date+' '+l.status).toLowerCase().includes(query))return false;
     if(periodo==='hoje')return l.date===tod;
@@ -736,13 +734,22 @@ function renderLessons(q='',periodo='todas'){
     if(periodo==='futuras')return l.date>tod;
     return true;
   }).sort((a,b)=>periodo==='passadas'?String(b.date||'').localeCompare(String(a.date||'')):String(a.date||'').localeCompare(String(b.date||'')));
-
   const periodos=[['todas','Todas'],['hoje','Hoje'],['semana','Esta semana'],['futuras','Futuras'],['passadas','Passadas']];
-  const sel=`<select class="search" style="width:auto;min-width:160px" onchange="renderLessons(document.querySelector('#page-lessons .search[type=text]')?.value||'',this.value)">${periodos.map(([v,l])=>`<option value="${v}" ${v===periodo?'selected':''}>${l}</option>`).join('')}</select>`;
-
-  $('page-lessons').innerHTML=pageHead('Lessons','Aulas reais salvas no DB único.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="toolbar" style="display:flex;gap:8px;flex-wrap:wrap"><input type="text" class="search" placeholder="buscar aula..." oninput="renderLessons(this.value,'${periodo}')" value="${esc(q)}">${sel}</div><div class="list">${rows.map(lessonCard).join('')||'<div class="empty">Sem aulas neste período.</div>'}</div>`
+  const sel=`<select style="border:0;border-bottom:1px solid var(--ink);padding:6px 0;background:transparent;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;outline:none;color:var(--ink)" onchange="renderLessons(document.querySelector('#page-lessons input')?.value||'',this.value)">${periodos.map(([v,l])=>`<option value="${v}" ${v===periodo?'selected':''}>${l}</option>`).join('')}</select>`;
+  $('page-lessons').innerHTML=`<div class="hero" style="margin-bottom:28px"><h1>Lessons</h1><p class="lede">${rows.length} aula${rows.length!==1?'s':''} · ${periodo==='todas'?'todas':periodo}.</p></div><div style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:28px"><input type="text" class="search" placeholder="buscar aula…" oninput="renderLessons(this.value,'${periodo}')" value="${esc(q)}" style="min-width:220px"><div style="display:flex;gap:12px;align-items:center">${sel}<button class="btn" onclick="openLessonModal()">+ nova aula</button></div></div><div>${rows.map(lessonCard).join('')||'<div class="empty">Sem aulas neste período.</div>'}</div>`
 }
-function lessonCard(l){const isPlanned=l.planStatus==='preparada';const lMats=lessonMaterials(l);const hasPlan=!!l.plannedLessonId;const planMats=hasPlan?DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId):[];const needsSync=hasPlan&&planMats.length>0&&lMats.length===0;return `<div class="item"><div class="item-title">${esc(lessonTitle(l))}</div><div class="badges">${badge(l.title,'blue')}${badge(l.status)}${badge(l.planStatus||'',isPlanned?'ok':'warn')}${badge(money(l.value))}${badge(lMats.length+' materiais','ok')}${hasPlan?badge('ficha vinculada','blue'):''}</div><div class="meta">${esc(l.notes||'Sem notas.')}</div>${needsSync?`<div class="meta" style="color:#9b7a29">⚠ Ficha tem ${planMats.length} material(is) não copiado(s) pra esta aula. <button class="linkbtn" onclick="syncMaterialsFromPlanned('${l.id}')">copiar agora</button></div>`:''}${l.studentNotes?`<div class="meta subtle">Nota pro aluno: ${esc(l.studentNotes.substring(0,80))}${l.studentNotes.length>80?'…':''}</div>`:''}<div class="row-actions"><button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button><button class="linkbtn" onclick="togglePlanStatus('${l.id}')">marcar ${isPlanned?'a planejar':'preparada'}</button><button class="linkbtn" onclick="openMaterialModal('${l.studentId}','','${l.id}')">material</button><button class="linkbtn" onclick="deleteItem('lessons','${l.id}')">excluir</button></div></div>`}
+function lessonCard(l){
+  const st=byId(DB.students,l.studentId);
+  const course=l.courseId?byId(DB.courses,l.courseId):null;
+  const isPlanned=l.planStatus==='preparada';
+  const lMats=lessonMaterials(l);
+  const hasPlan=!!l.plannedLessonId;
+  const planMats=hasPlan?DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId):[];
+  const needsSync=hasPlan&&planMats.length>0&&lMats.length===0;
+  const stClass=l.status==='dada'?'ok':l.status==='cancelada'?'warn':'';
+  const plClass=isPlanned?'ok':'todo';
+  return `<div style="display:grid;grid-template-columns:90px 1fr auto;gap:20px;padding:16px 0;border-bottom:1px solid var(--line);align-items:start"><div><div style="font-family:'Instrument Serif',serif;font-size:28px;line-height:.9;letter-spacing:-.025em">${l.date?fmtShort(l.date):'—'}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px">${l.startTime?l.startTime.slice(0,5):''}</div></div><div><div style="font-family:'Newsreader',serif;font-size:18px;line-height:1.1;letter-spacing:-.01em;margin-bottom:3px">${esc(st?.name||'Aluno')}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">${esc(course?.name||st?.activeCourseName||'')}${l.level?' · '+esc(l.level):''}${l.title&&l.title!=='Aula'?' · '+esc(l.title):''}</div>${l.unit?`<div style="font-size:13.5px;color:var(--ink2)">${esc(l.unit)}</div>`:''}${l.notes?`<div style="font-size:13px;color:var(--muted);margin-top:4px;max-width:52ch">${esc(l.notes.substring(0,120))}${l.notes.length>120?'…':''}</div>`:''}${needsSync?`<div style="font-size:12px;color:var(--rust);margin-top:6px">⚠ ${planMats.length} material(is) da ficha não copiado(s). <button class="linkbtn" onclick="syncMaterialsFromPlanned('${l.id}')">copiar agora</button></div>`:''}<div class="row-actions" style="margin-top:10px"><button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button><button class="linkbtn" onclick="togglePlanStatus('${l.id}')">marcar ${isPlanned?'a planejar':'preparada'}</button><button class="linkbtn" onclick="openMaterialModal('${l.studentId}','','${l.id}')">material</button><button class="linkbtn" onclick="deleteItem('lessons','${l.id}')">excluir</button></div></div><div style="text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:110px"><span class="tag-state ${stClass}">${l.status}</span><span class="tag-state ${plClass}">${l.planStatus||'a planejar'}</span>${lMats.length?`<span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em">${lMats.length} mat.</span>`:''}${hasPlan?`<span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);letter-spacing:.1em">ficha</span>`:''}</div></div>`;
+}
 function renderMaterials(q=''){
   const query=String(q||'').toLowerCase();
   const mats=DB.materials.filter(m=>!query||(m.title+' '+m.type+' '+(studentName(m.studentId)||'')).toLowerCase().includes(query));
@@ -1039,8 +1046,73 @@ function autoCreatePendingPayments(){
   if(changed)saveLocal();
 }
 
-function renderFinanceAdmin(){autoCreatePendingPayments();const ativos=DB.students.filter(s=>s.status==='ativo');const rows=ativos.map(s=>{const fin=financeForStudent(s.id);return{s,fin}});const ym=today().slice(0,7);const monthLessonsDadas=DB.lessons.filter(l=>lessonCountsForPackage(l)&&String(l.date).slice(0,7)===ym);const monthPaymentsPaid=DB.payments.filter(p=>p.paid&&String(p.paidAt).slice(0,7)===ym);const recebido=monthPaymentsPaid.reduce((s,p)=>s+(Number(p.valor)||0),0);const pendente=rows.reduce((s,r)=>s+r.fin.pending,0);const aCobrarTotal=rows.reduce((s,r)=>s+r.fin.aCobrar.length,0);const totalPrepMin=DB.lessons.filter(l=>lessonCountsForPackage(l)).reduce((s,l)=>s+(Number(l.prepMinutes)||0),0);const totalDada=DB.lessons.filter(l=>lessonCountsForPackage(l)).length;const avgPrep=totalDada?Math.round(totalPrepMin/totalDada):0;const pagamentosPagos=DB.payments.filter(p=>p.paid);const totalRevenueAll=pagamentosPagos.reduce((s,p)=>s+(Number(p.valor)||0),0);const totalLessonsAll=pagamentosPagos.reduce((s,p)=>s+(p.lessonIds?.length||0),0);const ticketMedio=totalLessonsAll?totalRevenueAll/totalLessonsAll:0;const totalRealHours=(totalLessonsAll)+(totalPrepMin/60);const ticketReal=totalRealHours?totalRevenueAll/totalRealHours:0;const semanasDoMes=4.33;const ocupacao=Math.round((monthLessonsDadas.length/(semanasDoMes*8))*100);$('page-finance').innerHTML=pageHead('Finance','Pagamentos vinculados a aulas, fechamento mensal e KPIs operacionais.',`<button class="btn" onclick="closeMonth()">fechar mês</button> <button class="btn soft" onclick="openBusinessSettings()">dados fiscais</button> <button class="btn soft" onclick="openRelatorioFinanceiro()">relatório mensal</button>`)+`<div class="grid"><div class="card"><div class="num">${money(recebido)}</div><div class="label">recebido no mês</div></div><div class="card"><div class="num">${money(pendente)}</div><div class="label">pendente</div></div><div class="card"><div class="num">${aCobrarTotal}</div><div class="label">aulas a cobrar</div></div><div class="card"><div class="num">${money(totalRevenueAll)}</div><div class="label">LTV total</div></div></div><div class="grid"><div class="card"><div class="num">${money(ticketMedio)}</div><div class="label">ticket médio por aula</div></div><div class="card"><div class="num">${money(ticketReal)}</div><div class="label">ticket real por hora total</div></div><div class="card"><div class="num">${avgPrep}min</div><div class="label">prep média/aula</div></div><div class="card"><div class="num">${ocupacao}%</div><div class="label">ocupação do teto 8h</div></div></div><div class="panel"><div class="panel-title">Alunos e pagamentos</div><div class="list">${rows.map(({s,fin})=>financeStudentCard(s,fin)).join('')||'<div class="empty">Nenhum aluno ativo.</div>'}</div></div>`}
-function financeStudentCard(s,fin){const future=fin.futureLinked.length;const consumed=fin.consumedLinked.length;const cobrar=fin.aCobrar.length;const courseName=s.courseId?byId(DB.courses,s.courseId)?.name:'';const courseBadge=courseName?badge(courseName,'blue'):'';const summary=`<div class="meta">${fin.pays.length} pagamento(s) · ${consumed} aula(s) dadas vinculadas · ${future} agendadas vinculadas${cobrar>0?` · <span style="color:#a63a2a">${cobrar} a cobrar</span>`:''}</div>`;return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${courseBadge}${badge(s.email||'sem e-mail',s.email?'ok':'warn')}${badge(fin.status,fin.status==='em dia'?'ok':'warn')}${badge('LTV '+money(fin.ltv),'blue')}${fin.pending>0?badge(money(fin.pending)+' pendente','warn'):''}</div>${summary}<div class="row-actions"><button class="linkbtn" onclick="openPaymentModal('${s.id}')">novo pagamento</button><button class="linkbtn" onclick="openFinanceDetail('${s.id}')">histórico</button></div></div>`}
+function renderFinanceAdmin(){
+  autoCreatePendingPayments();
+  const ativos=DB.students.filter(s=>s.status==='ativo');
+  const rows=ativos.map(s=>{const fin=financeForStudent(s.id);return{s,fin}});
+  const ym=today().slice(0,7);
+  const monthLessonsDadas=DB.lessons.filter(l=>lessonCountsForPackage(l)&&String(l.date).slice(0,7)===ym);
+  const monthPaymentsPaid=DB.payments.filter(p=>p.paid&&String(p.paidAt).slice(0,7)===ym);
+  const recebido=monthPaymentsPaid.reduce((s,p)=>s+(Number(p.valor)||0),0);
+  const pendente=rows.reduce((s,r)=>s+r.fin.pending,0);
+  const aCobrarTotal=rows.reduce((s,r)=>s+r.fin.aCobrar.length,0);
+  const totalPrepMin=DB.lessons.filter(l=>lessonCountsForPackage(l)).reduce((s,l)=>s+(Number(l.prepMinutes)||0),0);
+  const totalDada=DB.lessons.filter(l=>lessonCountsForPackage(l)).length;
+  const avgPrep=totalDada?Math.round(totalPrepMin/totalDada):0;
+  const pagamentosPagos=DB.payments.filter(p=>p.paid);
+  const totalRevenueAll=pagamentosPagos.reduce((s,p)=>s+(Number(p.valor)||0),0);
+  const totalLessonsAll=pagamentosPagos.reduce((s,p)=>s+(p.lessonIds?.length||0),0);
+  const ticketMedio=totalLessonsAll?totalRevenueAll/totalLessonsAll:0;
+  const totalRealHours=totalLessonsAll+(totalPrepMin/60);
+  const ticketReal=totalRealHours?totalRevenueAll/totalRealHours:0;
+  const ocupacao=Math.round((monthLessonsDadas.length/(4.33*8))*100);
+  $('page-finance').innerHTML=`
+    <div class="hero" style="margin-bottom:28px">
+      <h1>Finance</h1>
+      <p class="lede">Fechamento ${ym}. Pagamentos vinculados a aulas, KPIs operacionais.</p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px">
+      <button class="btn" onclick="closeMonth()">fechar mês</button>
+      <button class="btn soft" onclick="openRelatorioFinanceiro()">relatório mensal</button>
+      <button class="btn soft" onclick="openBusinessSettings()">dados fiscais</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink);margin-bottom:40px">
+      ${[
+        [money(recebido),'recebido em '+ym.slice(5)],
+        [money(pendente),'pendente'],
+        [aCobrarTotal+' aula'+(aCobrarTotal!==1?'s':''),'a cobrar'],
+        [money(totalRevenueAll),'LTV total']
+      ].map(([n,l])=>`<div style="border-right:1px solid var(--line);padding:20px 0;padding-right:20px"><div style="font-family:'Instrument Serif',serif;font-size:42px;line-height:.9;letter-spacing:-.03em">${n}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px">${l}</div></div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);margin-bottom:40px">
+      ${[
+        [money(ticketMedio),'ticket médio/aula'],
+        [money(ticketReal),'ticket real/hora'],
+        [avgPrep+'min','prep média/aula'],
+        [ocupacao+'%','ocupação teto 8h']
+      ].map(([n,l])=>`<div style="border-right:1px solid var(--line);padding:20px 0;padding-right:20px"><div style="font-family:'Instrument Serif',serif;font-size:36px;line-height:.9;letter-spacing:-.03em">${n}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px">${l}</div></div>`).join('')}
+    </div>
+    <div class="section-title">Alunos <span class="count">${ativos.length} ativos</span></div>
+    ${rows.map(({s,fin})=>financeStudentCard(s,fin)).join('')||'<div class="empty">Nenhum aluno ativo.</div>'}`;
+}
+function financeStudentCard(s,fin){
+  const course=s.courseId?byId(DB.courses,s.courseId):null;
+  const cobrar=fin.aCobrar.length;
+  const stateClass=cobrar>0?'todo':fin.pending>0?'warn':'ok';
+  const stateLabel=cobrar>0?cobrar+' a cobrar':fin.pending>0?money(fin.pending)+' pendente':'em dia';
+  return `<div style="display:grid;grid-template-columns:1fr auto;gap:24px;padding:16px 0;border-bottom:1px solid var(--line);align-items:start">
+    <div>
+      <div style="font-family:'Newsreader',serif;font-size:18px;line-height:1.1;letter-spacing:-.01em;margin-bottom:3px">${esc(s.name)}</div>
+      <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${esc(course?.name||s.activeCourseName||'sem curso')} · LTV ${money(fin.ltv)}</div>
+      <div style="font-size:13px;color:var(--muted)">${fin.pays.length} pagamento(s) · ${fin.consumedLinked.length} aula(s) vinculadas · ${fin.futureLinked.length} agendadas pagas</div>
+      <div class="row-actions" style="margin-top:10px">
+        <button class="linkbtn" onclick="openPaymentModal('${s.id}')">novo pagamento</button>
+        <button class="linkbtn" onclick="openFinanceDetail('${s.id}')">histórico</button>
+      </div>
+    </div>
+    <div style="text-align:right"><span class="tag-state ${stateClass}">${stateLabel}</span></div>
+  </div>`;
+}
 function openPaymentModal(studentId,id=''){const st=byId(DB.students,studentId);if(!st)return;const editing=id?byId(DB.payments,id):null;const linkedIds=editing?new Set(editing.lessonIds):new Set();const allLinkedElsewhere=new Set();DB.payments.forEach(p=>{if(p.id!==id)p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid))});const availableLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999')));const defaultVal=st.defaultLessonValue||0;openModal(editing?'Editar pagamento':'Novo pagamento',`Selecione as aulas que este pagamento cobre. Inclui aulas futuras (já agendadas) e aulas a cobrar (passadas).`,`<div class="form"><div class="field"><label>Aluno</label><input value="${esc(st.name)}" disabled></div><div class="two"><div class="field"><label>Valor (R$)</label><input id="payValor" type="number" step="0.01" min="0" value="${editing?editing.valor:''}" placeholder="auto: soma das aulas"></div><div class="field"><label>Status</label><select id="payPaid"><option value="false" ${editing&&!editing.paid?'selected':''}>pendente</option><option value="true" ${editing&&editing.paid?'selected':''}>pago</option></select></div></div><div class="two"><div class="field"><label>Data do pagamento</label><input id="payDate" type="date" value="${editing?.paidAt?String(editing.paidAt).slice(0,10):today()}"></div><div class="field"><label>Método</label><input id="payMethod" value="${esc(editing?.method||'')}" placeholder="PIX, transferência, ..."></div></div><div class="field"><label>Aulas cobertas por este pagamento</label><div id="payLessonsList" style="max-height:280px;overflow-y:auto;border:1px solid var(--line,#ddd);border-radius:4px;padding:8px;background:var(--paper-2,#f8f5f0)">${availableLessons.length?availableLessons.map(l=>{const checked=linkedIds.has(l.id);const dateStr=l.date?fmtDate(l.date):'sem data';const statusBadge=l.status==='dada'?' · <span style="color:#4a6b3a">dada</span>':l.status==='cancelada'&&!l.cancelNoticeOk?' · <span style="color:#a63a2a">falta paga</span>':l.status==='agendada'?' · <span style="color:#777">agendada</span>':' · '+l.status;return `<label style="display:grid;grid-template-columns:20px 1fr;gap:6px;align-items:start;padding:6px 4px;border-bottom:1px solid var(--line-soft,#eee);font-size:13px;cursor:pointer;line-height:1.4"><input type="checkbox" class="payLessonCheck" data-id="${l.id}" data-value="${l.value||defaultVal}" ${checked?'checked':''} style="margin-top:2px"> <span><b>${dateStr}${l.startTime?' · '+l.startTime:''}</b> · ${esc(l.title||'Aula')}${statusBadge}${(l.value||defaultVal)?` <span style="color:#777;font-size:12px">(${money(l.value||defaultVal)})</span>`:''}</span></label>`}).join(''):'<div class="empty" style="padding:8px">Nenhuma aula disponível. Crie aulas pra este aluno primeiro, depois vincule.</div>'}</div><div class="meta subtle" style="margin-top:6px"><span id="payCountSummary">${linkedIds.size} aula(s) selecionada(s)</span> · <a href="#" onclick="event.preventDefault();paySelectNextN('${studentId}',4)" style="margin-left:8px">vincular próximas 4</a> · <a href="#" onclick="event.preventDefault();paySelectNextN('${studentId}',8)">próximas 8</a> · <a href="#" onclick="event.preventDefault();paySelectAllACobrar('${studentId}')">só as "a cobrar"</a></div></div><div class="field"><label>Notas (opcional)</label><textarea id="payNotes">${esc(editing?.notes||'')}</textarea></div><button class="btn" onclick="savePayment('${studentId}','${id}')">${editing?'salvar alterações':'criar pagamento'}</button></div>`);setTimeout(()=>{const cb=document.querySelectorAll('.payLessonCheck');cb.forEach(c=>c.addEventListener('change',updatePaymentSummary));updatePaymentSummary()},50)}
 function updatePaymentSummary(){const checks=[...document.querySelectorAll('.payLessonCheck:checked')];const summary=$('payCountSummary');if(summary)summary.textContent=checks.length+' aula(s) selecionada(s)';const valorEl=$('payValor');if(valorEl&&!valorEl.value){const total=checks.reduce((s,c)=>s+(Number(c.dataset.value)||0),0);if(total>0)valorEl.placeholder='sugestão: R$ '+total.toFixed(2).replace('.',',')}}
 function paySelectNextN(studentId,n){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid)));const futureLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&(!l.date||l.date>=today())).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999'))).slice(0,n);const ids=new Set(futureLessons.map(l=>l.id));document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
@@ -1144,7 +1216,7 @@ function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planSta
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
 function boot(){
-  document.title='LessonHub v1.16.1-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.16.2-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
