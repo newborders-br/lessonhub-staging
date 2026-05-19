@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#fbfaf7">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.15.2-alpha — Cursos + Pagamento Vinculado</title>
+<title>LessonHub v1.15.3-alpha — Cursos + Pagamento Vinculado</title>
 <style>
 :root{
   --bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#777069;--soft:#aaa19a;
@@ -34,11 +34,11 @@ body.student-mode .shell{display:none}body:not(.student-mode) .student-shell{dis
 </head>
 <body>
 <div id="privacyGate" class="privacy-gate"><div><h2>Carregando LessonHub…</h2><p id="privacyText">Aguardando autenticação. Nenhum dado sensível aparece antes do login.</p></div></div>
-<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.15.2-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
+<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.15.3-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
 
-<div class="shell hidden" id="adminShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.15.2-alpha</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-lessons" class="page"></section><section id="page-courses" class="page"></section><section id="page-materials" class="page"></section><section id="page-finance" class="page"></section><section id="page-portal" class="page"></section><section id="page-health" class="page"></section></main></div>
+<div class="shell hidden" id="adminShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.15.3-alpha</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-lessons" class="page"></section><section id="page-courses" class="page"></section><section id="page-materials" class="page"></section><section id="page-finance" class="page"></section><section id="page-portal" class="page"></section><section id="page-health" class="page"></section></main></div>
 
-<div class="student-shell hidden" id="studentShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Student Portal · v1.15.2-alpha</p></div><div class="datebox" id="studentEmailBox"></div></header><nav class="student-nav" id="studentNav"><button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button><button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button><button data-spage="materials" onclick="showStudentPage('materials')">Materials</button><button data-spage="finance" onclick="showStudentPage('finance')">Finance</button></nav><main id="studentApp"></main></div>
+<div class="student-shell hidden" id="studentShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Student Portal · v1.15.3-alpha</p></div><div class="datebox" id="studentEmailBox"></div></header><nav class="student-nav" id="studentNav"><button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button><button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button><button data-spage="materials" onclick="showStudentPage('materials')">Materials</button><button data-spage="finance" onclick="showStudentPage('finance')">Finance</button></nav><main id="studentApp"></main></div>
 
 <input type="file" id="backupInput" accept=".json" class="hidden" onchange="importBackup(this.files[0])">
 <input type="file" id="materialFileInput" class="hidden" onchange="attachFileToCurrentMaterial(this.files[0])">
@@ -49,7 +49,7 @@ body.student-mode .shell{display:none}body:not(.student-mode) .student-shell{dis
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.15.2-alpha',
+  VERSION:'1.15.3-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -235,31 +235,37 @@ function gerarRelatorioMensal(ym){
   const biz=DB.meta?.business||{};
   const nomeMes=new Date(ym+'-15').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
 
-  // Todas as aulas dadas no mês
+  // Aulas dadas no mês (dada ou falta paga) — regime de competência
   const aulasMes=DB.lessons.filter(l=>lessonCountsForPackage(l)&&String(l.date).slice(0,7)===ym);
 
-  // Para cada aula, calcular valor unitário (rateio) e status
+  // Para cada aula: valor rateado do pagamento vinculado, ou valor unitário da aula, ou defaultLessonValue do aluno
   const linhasAulas=[];
   aulasMes.sort((a,b)=>String(a.date).localeCompare(String(b.date))).forEach(l=>{
     const st=byId(DB.students,l.studentId);
     const pay=DB.payments.find(p=>p.lessonIds?.includes(l.id));
     const qtd=pay?.lessonIds?.length||1;
-    const valorUnit=pay?(Number(pay.valor)||0)/qtd:0;
-    const status=pay?.paid?'Pago':'A cobrar';
-    linhasAulas.push({data:fmtDate(l.date),aluno:st?.name||'—',titulo:l.title||'Aula',status,valor:valorUnit,pago:!!pay?.paid});
+    // Valor: rateio do pagamento > valor da aula > valor padrão do aluno > 0
+    const valorUnit=pay?(Number(pay.valor)||0)/qtd:(Number(l.value)||Number(st?.defaultLessonValue)||0);
+    const status=pay?.paid?'Pago':pay?'Aguardando pagamento':'A cobrar';
+    linhasAulas.push({data:fmtDate(l.date),aluno:st?.name||'—',titulo:l.title||'Aula',status,valor:valorUnit,pago:!!pay?.paid,temPagamento:!!pay});
   });
 
-  const totalReceita=linhasAulas.filter(r=>r.pago).reduce((s,r)=>s+r.valor,0);
+  // Regime de competência: receita = valor de TODAS as aulas dadas no mês (pagas ou não)
+  // Isso reflete o trabalho feito, independente de quando o dinheiro entrou
+  const totalBruto=linhasAulas.reduce((s,r)=>s+r.valor,0);
+  const totalPago=linhasAulas.filter(r=>r.pago).reduce((s,r)=>s+r.valor,0);
   const totalACobrar=linhasAulas.filter(r=>!r.pago).reduce((s,r)=>s+r.valor,0);
-  const totalBruto=totalReceita+totalACobrar;
 
-  // prep e horas
+  // KPIs baseados no total de aulas dadas (não só pagas)
   const prepMin=aulasMes.reduce((s,l)=>s+(Number(l.prepMinutes)||0),0);
   const totalHorasReais=aulasMes.length+(prepMin/60);
   const semanasDoMes=4.33;
-  const ticketMedio=aulasMes.length?totalReceita/aulasMes.length:0;
-  const ticketReal=totalHorasReais?totalReceita/totalHorasReais:0;
+  // Ticket médio = receita bruta do mês ÷ aulas dadas (regime competência)
+  const ticketMedio=aulasMes.length?totalBruto/aulasMes.length:0;
+  // Ticket real = receita bruta ÷ horas totais (aula + prep)
+  const ticketReal=totalHorasReais?totalBruto/totalHorasReais:0;
   const alunosAtivos=new Set(aulasMes.map(l=>l.studentId)).size;
+  const horasSemanais=totalHorasReais/semanasDoMes;
 
   const linhasHtml=linhasAulas.map(r=>`
     <tr class="${r.pago?'pago':'acobrar'}">
@@ -322,8 +328,8 @@ function gerarRelatorioMensal(ym){
 
   <div class="sumario">
     <div class="sum-row"><span>Total bruto do período</span><span>${money(totalBruto)}</span></div>
-    <div class="sum-row subtracao"><span>A cobrar (−)</span><span>−${money(totalACobrar)}</span></div>
-    <div class="sum-row total destaque"><span>Receita realizada</span><span>${money(totalReceita)}</span></div>
+    <div class="sum-row subtracao"><span>A cobrar / aguardando pagamento (−)</span><span>−${money(totalACobrar)}</span></div>
+    <div class="sum-row total destaque"><span>Já recebido</span><span>${money(totalPago)}</span></div>
   </div>
 
   <h2>KPIs operacionais</h2>
@@ -473,7 +479,7 @@ function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planSta
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
 function boot(){
-  document.title='LessonHub v1.15.2-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.15.3-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
