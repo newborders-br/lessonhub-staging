@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#fbfaf7">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.15.6-alpha — Cursos + Pagamento Vinculado</title>
+<title>LessonHub v1.15.7-alpha — Cursos + Pagamento Vinculado</title>
 <style>
 :root{
   --bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#777069;--soft:#aaa19a;
@@ -34,11 +34,11 @@ body.student-mode .shell{display:none}body:not(.student-mode) .student-shell{dis
 </head>
 <body>
 <div id="privacyGate" class="privacy-gate"><div><h2>Carregando LessonHub…</h2><p id="privacyText">Aguardando autenticação. Nenhum dado sensível aparece antes do login.</p></div></div>
-<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.15.6-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
+<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.15.7-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
 
-<div class="shell hidden" id="adminShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.15.6-alpha</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-lessons" class="page"></section><section id="page-courses" class="page"></section><section id="page-materials" class="page"></section><section id="page-finance" class="page"></section><section id="page-portal" class="page"></section><section id="page-health" class="page"></section></main></div>
+<div class="shell hidden" id="adminShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.15.7-alpha</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-lessons" class="page"></section><section id="page-courses" class="page"></section><section id="page-materials" class="page"></section><section id="page-finance" class="page"></section><section id="page-portal" class="page"></section><section id="page-health" class="page"></section></main></div>
 
-<div class="student-shell hidden" id="studentShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Student Portal · v1.15.6-alpha</p></div><div class="datebox" id="studentEmailBox"></div></header><nav class="student-nav" id="studentNav"><button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button><button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button><button data-spage="materials" onclick="showStudentPage('materials')">Materials</button><button data-spage="finance" onclick="showStudentPage('finance')">Finance</button></nav><main id="studentApp"></main></div>
+<div class="student-shell hidden" id="studentShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Student Portal · v1.15.7-alpha</p></div><div class="datebox" id="studentEmailBox"></div></header><nav class="student-nav" id="studentNav"><button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button><button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button><button data-spage="materials" onclick="showStudentPage('materials')">Materials</button><button data-spage="finance" onclick="showStudentPage('finance')">Finance</button></nav><main id="studentApp"></main></div>
 
 <input type="file" id="backupInput" accept=".json" class="hidden" onchange="importBackup(this.files[0])">
 <input type="file" id="materialFileInput" class="hidden" onchange="attachFileToCurrentMaterial(this.files[0])">
@@ -176,9 +176,143 @@ function render(){if(STATE.mode!=='admin')return;buildNav();document.querySelect
 function renderDashboard(){const todayLessons=DB.lessons.filter(l=>l.date===today());const toPlan=DB.lessons.filter(l=>l.planStatus==='a planejar');$('page-dashboard').innerHTML=pageHead('Today','Núcleo consolidado: alunos, aulas, materiais, portal e sincronização.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="grid"><div class="card"><div class="num">${DB.students.length}</div><div class="label">alunos</div></div><div class="card"><div class="num">${todayLessons.length}</div><div class="label">aulas hoje</div></div><div class="card"><div class="num">${toPlan.length}</div><div class="label">a planejar</div></div><div class="card"><div class="num">${STATE.source}</div><div class="label">fonte carregada</div></div></div><div class="two"><div class="panel"><div class="panel-title">Aulas de hoje</div><div class="list">${todayLessons.map(lessonCard).join('')||'<div class="empty">Nenhuma aula hoje.</div>'}</div></div><div class="panel"><div class="panel-title">Últimos logs</div>${logList()}</div></div>`}
 function renderStudents(q=''){const query=String(q).toLowerCase();const rows=DB.students.filter(s=>(s.name+' '+s.email+' '+s.activeCourseName).toLowerCase().includes(query)).sort((a,b)=>a.name.localeCompare(b.name));$('page-students').innerHTML=pageHead('Students','Cadastro essencial, e-mail do portal e curso ativo.',`<button class="btn" onclick="openStudentModal()">novo aluno</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar aluno..." oninput="renderStudents(this.value)"></div><div class="list">${rows.map(studentCard).join('')||'<div class="empty">Nenhum aluno cadastrado.</div>'}</div>`}
 function studentCard(s){const lessons=DB.lessons.filter(l=>l.studentId===s.id);const next=lessons.filter(l=>!l.date||l.date>=today()).sort((a,b)=>String(a.date).localeCompare(String(b.date)))[0];const fin=financeForStudent(s.id);const course=s.courseId?byId(DB.courses,s.courseId):null;const courseBadge=course?`<span class="badge" style="background:${esc(course.color||'#8b3a1f')}22;color:${esc(course.color||'#8b3a1f')};border-color:${esc(course.color||'#8b3a1f')}44">${esc(course.name)}</span>`:badge('sem curso','warn');return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.status)}${badge(s.email||'sem e-mail',s.email?'ok':'warn')}${courseBadge}${badge(`${lessons.length} aulas`)}${badge('LTV '+money(fin.ltv),'ok')}${fin.aCobrar.length>0?badge(fin.aCobrar.length+' a cobrar','warn'):''}</div><div class="meta">${next?`Próxima: ${fmtDate(next.date)} ${esc(next.startTime||'')}`:'Sem próxima aula.'}<br>${esc(s.goal||'Sem objetivo registrado.')}</div><div class="row-actions"><button class="linkbtn" onclick="openStudentModal('${s.id}')">editar</button><button class="linkbtn" onclick="openLessonModal('${s.id}')">nova aula</button><button class="linkbtn" onclick="openPaymentModal('${s.id}')">novo pagamento</button><button class="linkbtn" onclick="previewStudent('${s.id}')">preview</button><button class="linkbtn" onclick="deleteStudent('${s.id}')">excluir</button></div></div>`}
-function renderLessons(q=''){const query=String(q).toLowerCase();const rows=DB.lessons.filter(l=>(l.title+' '+studentName(l.studentId)+' '+l.date+' '+l.status).toLowerCase().includes(query)).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));$('page-lessons').innerHTML=pageHead('Lessons','Aulas reais salvas no DB único.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar aula..." oninput="renderLessons(this.value)"></div><div class="list">${rows.map(lessonCard).join('')||'<div class="empty">Sem aulas.</div>'}</div>`}
+function renderLessons(q='',periodo='todas'){
+  const query=String(q||'').toLowerCase();
+  const tod=today();
+  // semana corrente: segunda a domingo
+  const d=new Date(tod);const dow=d.getDay();
+  const seg=new Date(d);seg.setDate(d.getDate()-(dow===0?6:dow-1));
+  const dom=new Date(seg);dom.setDate(seg.getDate()+6);
+  const segStr=seg.toISOString().slice(0,10);
+  const domStr=dom.toISOString().slice(0,10);
+
+  let rows=DB.lessons.filter(l=>{
+    if(query&&!(l.title+' '+studentName(l.studentId)+' '+l.date+' '+l.status).toLowerCase().includes(query))return false;
+    if(periodo==='hoje')return l.date===tod;
+    if(periodo==='semana')return l.date>=segStr&&l.date<=domStr;
+    if(periodo==='passadas')return l.date<tod;
+    if(periodo==='futuras')return l.date>tod;
+    return true;
+  }).sort((a,b)=>periodo==='passadas'?String(b.date||'').localeCompare(String(a.date||'')):String(a.date||'').localeCompare(String(b.date||'')));
+
+  const periodos=[['todas','Todas'],['hoje','Hoje'],['semana','Esta semana'],['futuras','Futuras'],['passadas','Passadas']];
+  const sel=`<select class="search" style="width:auto;min-width:160px" onchange="renderLessons(document.querySelector('#page-lessons .search[type=text]')?.value||'',this.value)">${periodos.map(([v,l])=>`<option value="${v}" ${v===periodo?'selected':''}>${l}</option>`).join('')}</select>`;
+
+  $('page-lessons').innerHTML=pageHead('Lessons','Aulas reais salvas no DB único.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="toolbar" style="display:flex;gap:8px;flex-wrap:wrap"><input type="text" class="search" placeholder="buscar aula..." oninput="renderLessons(this.value,'${periodo}')" value="${esc(q)}">${sel}</div><div class="list">${rows.map(lessonCard).join('')||'<div class="empty">Sem aulas neste período.</div>'}</div>`
+}
 function lessonCard(l){const isPlanned=l.planStatus==='preparada';const lMats=lessonMaterials(l);const hasPlan=!!l.plannedLessonId;const planMats=hasPlan?DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId):[];const needsSync=hasPlan&&planMats.length>0&&lMats.length===0;return `<div class="item"><div class="item-title">${esc(lessonTitle(l))}</div><div class="badges">${badge(l.title,'blue')}${badge(l.status)}${badge(l.planStatus||'',isPlanned?'ok':'warn')}${badge(money(l.value))}${badge(lMats.length+' materiais','ok')}${hasPlan?badge('ficha vinculada','blue'):''}</div><div class="meta">${esc(l.notes||'Sem notas.')}</div>${needsSync?`<div class="meta" style="color:#9b7a29">⚠ Ficha tem ${planMats.length} material(is) não copiado(s) pra esta aula. <button class="linkbtn" onclick="syncMaterialsFromPlanned('${l.id}')">copiar agora</button></div>`:''}${l.studentNotes?`<div class="meta subtle">Nota pro aluno: ${esc(l.studentNotes.substring(0,80))}${l.studentNotes.length>80?'…':''}</div>`:''}<div class="row-actions"><button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button><button class="linkbtn" onclick="togglePlanStatus('${l.id}')">marcar ${isPlanned?'a planejar':'preparada'}</button><button class="linkbtn" onclick="openMaterialModal('${l.studentId}','','${l.id}')">material</button><button class="linkbtn" onclick="deleteItem('lessons','${l.id}')">excluir</button></div></div>`}
-function renderMaterials(q=''){const query=String(q).toLowerCase();const rows=DB.materials.filter(m=>(m.title+' '+m.type+' '+studentName(m.studentId)).toLowerCase().includes(query)).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));$('page-materials').innerHTML=pageHead('Materials','Metadados no Supabase, arquivos no Drive.',`<button class="btn" onclick="openMaterialModal()">novo material</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar material..." oninput="renderMaterials(this.value)"></div><div class="list">${rows.map(materialCard).join('')||'<div class="empty">Sem materiais.</div>'}</div>`}
+function renderMaterials(q=''){
+  const query=String(q||'').toLowerCase();
+  const mats=DB.materials.filter(m=>!query||(m.title+' '+m.type+' '+(studentName(m.studentId)||'')).toLowerCase().includes(query));
+
+  // Separar: com curso vs sem curso
+  const comCurso=mats.filter(m=>{
+    const l=byId(DB.lessons,m.lessonId);
+    return l?.courseId||(m.plannedLessonId&&byId(DB.plannedLessons,m.plannedLessonId)?.courseId);
+  });
+  const semCurso=mats.filter(m=>!comCurso.includes(m));
+
+  // Agrupar comCurso por curso → unidade → ficha
+  const porCurso={};
+  comCurso.forEach(m=>{
+    const l=m.lessonId?byId(DB.lessons,m.lessonId):null;
+    const pl=m.plannedLessonId?byId(DB.plannedLessons,m.plannedLessonId):null;
+    const cid=l?.courseId||pl?.courseId||'';
+    const uid2=pl?.unitId||'';
+    const pid=m.plannedLessonId||'';
+    if(!porCurso[cid])porCurso[cid]={units:{},outras:[]};
+    if(uid2){
+      if(!porCurso[cid].units[uid2])porCurso[cid].units[uid2]={planned:{},outras:[]};
+      if(pid){
+        if(!porCurso[cid].units[uid2].planned[pid])porCurso[cid].units[uid2].planned[pid]=[];
+        porCurso[cid].units[uid2].planned[pid].push(m);
+      } else {
+        porCurso[cid].units[uid2].outras.push(m);
+      }
+    } else {
+      porCurso[cid].outras.push(m);
+    }
+  });
+
+  // Agrupar semCurso por aluno → data → título
+  const porAluno={};
+  semCurso.forEach(m=>{
+    const sid=m.studentId||'__sem_aluno';
+    if(!porAluno[sid])porAluno[sid]=[];
+    porAluno[sid].push(m);
+  });
+
+  let html='';
+
+  // Renderizar por curso
+  const cursoIds=Object.keys(porCurso).sort((a,b)=>{
+    const ca=byId(DB.courses,a)?.name||'';
+    const cb=byId(DB.courses,b)?.name||'';
+    return ca.localeCompare(cb);
+  });
+
+  cursoIds.forEach(cid=>{
+    const c=byId(DB.courses,cid);
+    const dot=c?.color?`<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${esc(c.color)};margin-right:8px;vertical-align:middle"></span>`:'';
+    html+=`<div class="panel" style="margin-bottom:20px"><div class="panel-title" style="font-size:15px">${dot}${esc(c?.name||'Curso desconhecido')}</div>`;
+
+    const {units,outras}=porCurso[cid];
+
+    // Unidades em ordem
+    const unitIds=Object.keys(units).sort((a,b)=>{
+      const ua=byId(DB.units,a);const ub=byId(DB.units,b);
+      return (ua?.order||0)-(ub?.order||0)||(ua?.name||'').localeCompare(ub?.name||'');
+    });
+
+    unitIds.forEach(uid2=>{
+      const u=byId(DB.units,uid2);
+      html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${esc(u?.code||'')} ${esc(u?.name||'Unidade')}</span></div>`;
+
+      const {planned,outras:outrasFicha}=units[uid2];
+
+      // Fichas em ordem
+      const planIds=Object.keys(planned).sort((a,b)=>{
+        const pa=byId(DB.plannedLessons,a);const pb=byId(DB.plannedLessons,b);
+        return (pa?.order||0)-(pb?.order||0)||(pa?.code||'').localeCompare(pb?.code||'');
+      });
+
+      planIds.forEach(pid=>{
+        const pl=byId(DB.plannedLessons,pid);
+        html+=`<div style="margin:6px 0 2px;padding:4px 8px;background:var(--paper-2,#f5f2eb);font-size:12px"><b>${esc(pl?.code||'')} ${esc(pl?.title||'Aula planejada')}</b></div>`;
+        html+=`<div class="list" style="margin-bottom:4px">${planned[pid].map(materialCard).join('')}</div>`;
+      });
+
+      if(outrasFicha.length){
+        html+=`<div style="margin:6px 0 2px;padding:4px 8px;font-size:12px;color:#888">Outras aulas</div>`;
+        html+=`<div class="list">${outrasFicha.sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt))).map(materialCard).join('')}</div>`;
+      }
+    });
+
+    if(outras.length){
+      if(unitIds.length)html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">Sem unidade</span></div>`;
+      html+=`<div class="list">${outras.sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt))).map(materialCard).join('')}</div>`;
+    }
+
+    html+='</div>';
+  });
+
+  // Renderizar por aluno (sem curso)
+  if(Object.keys(porAluno).length){
+    html+=`<div class="panel" style="margin-bottom:20px"><div class="panel-title" style="font-size:15px">Sem curso vinculado</div>`;
+    Object.keys(porAluno).sort((a,b)=>(studentName(a)||'').localeCompare(studentName(b)||'')).forEach(sid=>{
+      const name=studentName(sid)||'Sem aluno';
+      html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${esc(name)}</span></div>`;
+      const sorted=porAluno[sid].sort((a,b)=>{
+        const la=byId(DB.lessons,a.lessonId);const lb=byId(DB.lessons,b.lessonId);
+        return String(la?.date||'').localeCompare(String(lb?.date||''))||a.title.localeCompare(b.title);
+      });
+      html+=`<div class="list">${sorted.map(materialCard).join('')}</div>`;
+    });
+    html+='</div>';
+  }
+
+  $('page-materials').innerHTML=pageHead('Materials','Metadados no Supabase, arquivos no Drive.',`<button class="btn" onclick="openMaterialModal()">novo material</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar material..." oninput="renderMaterials(this.value)" value="${esc(q)}"></div>${html||'<div class="empty">Sem materiais.</div>'}`
+}
 function materialCard(m){const att=m.attachments?.[0];const pending=att&&att.pendingUpload;const hasFile=att&&(att.driveLink||att.youtubeUrl);const fileBadge=pending?badge('arquivo pendente','warn'):hasFile?badge('Drive','ok'):badge('sem arquivo','warn');const openBtn=hasFile?`<button class="linkbtn" onclick="openMaterialViewer('${m.id}')">abrir</button>`:'';const uploadBtn=pending?`<button class="linkbtn" onclick="replaceMaterial('${m.id}')">subir arquivo</button>`:`<button class="linkbtn" onclick="replaceMaterial('${m.id}')">${hasFile?'substituir arquivo':'anexar arquivo'}</button>`;return `<div class="item"><div class="item-title">${esc(m.title)}</div><div class="badges">${badge(m.type,'blue')}${badge(studentName(m.studentId))}${badge(m.studentVisible?'visível aluno':'interno',m.studentVisible?'ok':'warn')}${fileBadge}</div><div class="meta">${esc(m.notes||'')}${att?`<br>Arquivo: ${esc(att.name||'arquivo')}${pending?' (aguardando upload pro Drive)':''}`:''}</div><div class="row-actions">${openBtn}<button class="linkbtn" onclick="openMaterialModal('${m.studentId||''}','${m.id}','${m.lessonId||''}')">editar</button>${uploadBtn}<button class="linkbtn" onclick="toggleMaterial('${m.id}')">${m.studentVisible?'ocultar':'mostrar'}</button><button class="linkbtn" onclick="deleteItem('materials','${m.id}')">excluir</button></div></div>`}
 function renderPortalAdmin(){const rows=DB.students.filter(s=>s.email);$('page-portal').innerHTML=pageHead('Student Portal','Os portais são publicados automaticamente sempre que você salva uma aula, material ou aluno.','')+`<div class="panel"><div class="panel-title">Portais dos alunos</div><div class="list">${rows.map(s=>{const snap=snapshotForStudent(s.id);const pub=(STATE.portalHashes&&STATE.portalHashes[s.id]);return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.email,'blue')}${badge((snap?.lessons||[]).length+' aulas')}${badge((snap?.materials||[]).length+' materiais','ok')}${badge(pub?'publicado':'aguardando 1º save',pub?'ok':'warn')}</div><div class="meta">${pub?'Portal sincronizado. O aluno vê a versão mais recente ao entrar.':'Salve uma aula ou material deste aluno para publicar o portal.'}</div><div class="row-actions"><button class="linkbtn" onclick="previewStudent('${s.id}')">preview</button></div></div>`}).join('')||'<div class="empty">Cadastre alunos com e-mail para que tenham portal.</div>'}</div></div>`}
 function renderHealth(){const html=pageHead('Health','Diagnóstico do núcleo consolidado.',`<button class="btn" onclick="manualSaveAll()">salvar agora</button><button class="btn soft" onclick="exportBackup()">backup JSON</button>`)+`<div class="grid"><div class="card"><div class="num">${CONFIG.VERSION}</div><div class="label">versão</div></div><div class="card"><div class="num">${STATE.source}</div><div class="label">fonte inicial</div></div><div class="card"><div class="num">${STATE.driveReady?'OK':'—'}</div><div class="label">Drive files</div></div><div class="card"><div class="num">${sizeOf()}</div><div class="label">bytes JSON</div></div></div><div class="two"><div class="panel"><div class="panel-title">Arquitetura</div><div class="meta"><b>Supabase:</b> backend JSON de dados e portais. Se aparecer RLS, precisa liberar policy no Supabase.<br><b>Drive:</b> arquivos reais, links e fallback JSON/portal.<br><b>localStorage:</b> cache operacional.<br><b>Usuário:</b> ${esc(STATE.userEmail||'—')}<br><b>Último Supabase:</b> ${STATE.lastSupabaseSave?STATE.lastSupabaseSave.toLocaleTimeString('pt-BR'):'—'}<br><b>Último Drive:</b> ${STATE.lastDriveSave?STATE.lastDriveSave.toLocaleTimeString('pt-BR'):'—'}<br><b>Erro:</b> ${esc(STATE.lastError||'—')}</div></div><div class="panel"><div class="panel-title">Logs</div>${logList()}</div></div>`;$('page-health').innerHTML=html}
@@ -479,7 +613,7 @@ function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planSta
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
 function boot(){
-  document.title='LessonHub v1.15.6-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.15.7-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
