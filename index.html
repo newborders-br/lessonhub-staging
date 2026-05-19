@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.17.0-alpha — New Borders</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<title>LessonHub v1.17.1-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -742,17 +742,19 @@ async function sbSaveDB(){if(!STATE.userEmail)return false;DB.meta.updatedAt=now
 /* ── Supabase Storage: biblioteca de materiais de curso ── */
 async function sbStorageUpload(file,plannedId){
   try{
-    const ext=file.name.split('.').pop()||'bin';
+    const client=sb();
+    log('Storage: upload '+file.name+' ('+Math.round(file.size/1024)+'KB) bucket='+CONFIG.SB_BUCKET,'info');
+    const ext=(file.name.split('.').pop()||'bin').toLowerCase();
     const key='planned/'+plannedId+'/'+uid('f')+'.'+ext;
-    const {data,error}=await sb().storage.from(CONFIG.SB_BUCKET).upload(key,file,{
+    const {data,error}=await client.storage.from(CONFIG.SB_BUCKET).upload(key,file,{
       cacheControl:'3600',upsert:false,contentType:file.type||'application/octet-stream'
     });
-    if(error)throw error;
-    const {data:pub}=sb().storage.from(CONFIG.SB_BUCKET).getPublicUrl(key);
+    if(error){const det=error.message+(error.statusCode?' ['+error.statusCode+']':'')+(error.error?' ('+error.error+')':'');throw new Error(det);}
+    const {data:pub}=client.storage.from(CONFIG.SB_BUCKET).getPublicUrl(key);
     log('Storage upload ok: '+key,'ok');
     return{id:uid('file'),name:file.name,type:file.type||'',size:file.size,storageKey:key,storageUrl:pub?.publicUrl||'',createdAt:nowIso()};
   }catch(e){
-    log('Storage upload falhou: '+(e.message||e),'error');
+    log('Storage upload falhou: '+(e.message||String(e)),'error');
     return null;
   }
 }
