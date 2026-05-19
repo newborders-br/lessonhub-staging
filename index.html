@@ -394,6 +394,42 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .s-fin.warn{color:var(--rust)}
 .s-arrow{text-align:right;font-family:'Instrument Serif',Georgia,serif;font-size:22px;color:var(--soft);transition:color .12s,transform .12s}
 .student-row:hover .s-arrow{color:var(--rust);transform:translateX(3px)}
+/* ---------- form system (bloco 14) ---------- */
+.form-section{padding:0 0 32px;border-bottom:1px solid var(--line);margin-bottom:32px}
+.form-section:last-of-type{border-bottom:0;margin-bottom:0;padding-bottom:0}
+.form-section-title{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:baseline}
+.form-section-title .help{color:var(--muted);font-size:12px;letter-spacing:0;text-transform:none;font-style:italic;font-family:'Newsreader',serif;font-weight:400}
+.form-row{margin-bottom:24px}.form-row:last-child{margin-bottom:0}
+.form-row.split{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.form-row.split3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+.form-row.split2-1{display:grid;grid-template-columns:2fr 1fr;gap:32px}
+.ff-label{display:block;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.ff-label .req{color:var(--rust);margin-left:3px;letter-spacing:0}
+.ff-label .hint{font-family:'Newsreader',serif;font-style:italic;font-size:12.5px;letter-spacing:0;text-transform:none;color:var(--muted);margin-left:10px;font-weight:400}
+.ff-input,.ff-select,.ff-textarea{width:100%;border:0;border-bottom:1px solid var(--ink);background:transparent;padding:6px 0 10px;font-family:'Newsreader',serif;font-size:17px;color:var(--ink);letter-spacing:-.005em;outline:0;border-radius:0;line-height:1.4}
+.ff-input:focus,.ff-select:focus,.ff-textarea:focus{border-bottom-color:var(--rust);outline:none}
+.ff-input::placeholder,.ff-textarea::placeholder{color:var(--soft);font-style:italic}
+.ff-input.mono{font-family:'Geist Mono',ui-monospace,monospace;font-size:14px;letter-spacing:.02em}
+.ff-input.ff-large{font-family:'Instrument Serif',serif;font-size:42px;line-height:1;letter-spacing:-.03em;font-weight:400;padding:8px 0 12px}
+.ff-textarea{resize:vertical;min-height:88px;line-height:1.55;font-size:16px}
+.ff-select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 10px) 60%,calc(100% - 5px) 60%;background-size:4px 4px;background-repeat:no-repeat;cursor:pointer;padding-right:20px}
+.ff-seg{display:inline-flex;border:1px solid var(--ink);width:fit-content;flex-wrap:wrap}
+.ff-seg .seglbl{padding:9px 14px;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-right:1px solid var(--ink);transition:all .12s;line-height:1;background:transparent;user-select:none}
+.ff-seg .seglbl:last-child{border-right:0}
+.ff-seg .seglbl:hover{color:var(--ink)}
+.ff-seg .seglbl.on{background:var(--ink);color:var(--paper)}
+.ff-schedule{display:flex;flex-direction:column;gap:16px}
+.ff-sched-row{display:grid;grid-template-columns:1fr 1fr auto;gap:24px;align-items:end}
+.ff-sched-row .ff-remove{background:none;border:0;color:var(--soft);cursor:pointer;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:0 0 10px;line-height:1}
+.ff-sched-row .ff-remove:hover{color:var(--rust)}
+.ff-add-row{font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust);background:none;border:0;padding:12px 0 0;cursor:pointer;line-height:1}
+.ff-add-row:hover{text-decoration:underline}
+.form-actions{display:flex;justify-content:space-between;gap:16px;padding-top:24px;border-top:1px solid var(--ink);margin-top:36px;flex-wrap:wrap;align-items:center}
+.form-actions .right{display:flex;gap:12px;align-items:center}
+.form-meta{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.modal-box.ff-modal{padding:36px;max-width:min(800px,100%)}
+.ff-modal .modal-head{margin-bottom:28px}
+@media(max-width:700px){.form-row.split,.form-row.split3,.form-row.split2-1{grid-template-columns:1fr}.ff-sched-row{grid-template-columns:1fr 1fr;gap:14px}.ff-input.ff-large{font-size:28px}}
 /* ---------- curso detalhe (bloco 10) ---------- */
 .course-head{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:48px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:28px;margin-bottom:36px}
 .course-head h1{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(48px,7vw,84px);line-height:.88;letter-spacing:-.04em;font-weight:400}
@@ -866,7 +902,7 @@ function snapshotForStudent(studentId){const st=byId(DB.students,studentId);if(!
 function showAdmin(){STATE.mode='admin';document.body.classList.remove('student-mode');$('privacyGate').classList.add('hidden');$('loginScreen').classList.add('hidden');$('adminShell').classList.remove('hidden');$('studentShell').classList.add('hidden');render()}
 function showStudent(){STATE.mode='student';document.body.classList.add('student-mode');$('privacyGate').classList.add('hidden');$('loginScreen').classList.add('hidden');$('studentShell').classList.remove('hidden');$('adminShell').classList.add('hidden');renderStudent()}
 function showLogin(msg=''){STATE.mode='login';$('privacyGate').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginMsg').textContent=msg}
-function openModal(title,sub,body){$('modalTitle').textContent=title;$('modalSub').textContent=sub||'';$('modalBody').innerHTML=body;$('modal').style.display='flex'}
+function openModal(title,sub,body,extraClass=''){$('modalTitle').textContent=title;$('modalSub').textContent=sub||'';$('modalBody').innerHTML=body;const box=$('modal').querySelector('.modal-box');if(box){box.className='modal-box'+(extraClass?' '+extraClass:'');}$('modal').style.display='flex'}
 function closeModal(){$('modal').style.display='none'}
 function closeViewer(){const s=$('viewerScreen');if(s){s.style.display='none';const f=$('viewerFrame');if(f)f.innerHTML=''}document.body.style.overflow='';const tbt=$('pdfToolbarToggle');if(tbt)tbt.remove();}
 function youtubeEmbedSrc(url){const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1&autoplay=1':null}
@@ -1826,15 +1862,76 @@ function unitRow(u){const count=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.s
 function renderCoursesLevelC(){const c=byId(DB.courses,STATE.coursesView.courseId);const u=byId(DB.units,STATE.coursesView.unitId);if(!c||!u){STATE.coursesView={level:'courses',courseId:'',unitId:''};return renderCourses()}const planned=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status!=='arquivado').sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)||String(a.code).localeCompare(String(b.code)));const arquivadas=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status==='arquivado');const breadcrumb=`<div class="meta subtle" style="margin-bottom:12px"><a href="#" onclick="event.preventDefault();courseNavTo('courses')">Courses</a> › <a href="#" onclick="event.preventDefault();courseNavTo('units','${c.id}')">${esc(c.name)}</a> › <b>${esc(u.name)}</b></div>`;$('page-courses').innerHTML=pageHead('Courses',`${courseDot(c)}${esc(c.name)} — ${esc(u.name)}`,`<button class="btn" onclick="openPlannedLessonModal('${c.id}','${u.id}')">nova aula planejada</button>`)+breadcrumb+`<div class="list">${planned.map(plannedRow).join('')||'<div class="empty">Nenhuma aula planejada nesta unidade.</div>'}</div>${arquivadas.length?`<div class="panel" style="margin-top:24px;opacity:0.7"><div class="panel-title">Arquivadas (${arquivadas.length})</div><div class="list">${arquivadas.map(plannedRow).join('')}</div></div>`:''}`}
 function plannedRow(p){const matCount=DB.materials.filter(m=>m.plannedLessonId===p.id&&m.type!=='homework').length;const hwCount=DB.materials.filter(m=>m.plannedLessonId===p.id&&m.type==='homework').length;return `<div class="item"><div class="item-title">${p.code?`<span class="subtle" style="margin-right:8px;font-family:monospace">${esc(p.code)}</span>`:''}<span>${esc(p.title)}</span>${p.level?`<span class="subtle" style="margin-left:8px;font-size:12px">${esc(p.level)}</span>`:''}</div>${p.content?`<div class="meta">${esc(p.content)}</div>`:''}<div class="meta subtle">${matCount>0?`📎 ${matCount} material(is)`:''}${matCount>0&&hwCount>0?' · ':''}${hwCount>0?`✏ ${hwCount} homework`:''}</div><div class="row-actions"><button class="linkbtn" onclick="openPlannedLessonModal('${p.courseId}','${p.unitId}','${p.id}')">editar</button><button class="linkbtn" onclick="archivePlannedLesson('${p.id}')">${p.status==='arquivado'?'reativar':'arquivar'}</button><button class="linkbtn" onclick="deletePlannedLesson('${p.id}')">excluir</button></div></div>`}
 function courseNavTo(level,courseId='',unitId=''){STATE.coursesView={level,courseId,unitId};render()}
-function openCourseModal(id=''){const c=byId(DB.courses,id)||{};openModal(id?'Editar curso':'Novo curso','Produto pedagógico (ex: New Borders English, Foundations Travel, PLE).',`<div class="form"><div class="field"><label>Nome do curso</label><input id="courseName" value="${esc(c.name||'')}" placeholder="ex: New Borders English"></div><div class="two"><div class="field"><label>Tipo / linha</label><input id="courseKind" value="${esc(c.kind||'')}" placeholder="ex: principal, plugin, desenvolvimento"></div><div class="field"><label>Cor (visual)</label><input id="courseColor" type="color" value="${esc(c.color||'#8b3a1f')}"></div></div><div class="field"><label>Status</label><select id="courseStatus">${['ativo','desenvolvimento','futuro','arquivado'].map(x=>`<option ${(c.status||'ativo')===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Descrição (opcional)</label><textarea id="courseDescription">${esc(c.description||'')}</textarea></div><button class="btn" onclick="saveCourse('${id}')">salvar</button></div>`)}
+function openCourseModal(id=''){
+  const c=byId(DB.courses,id)||{};
+  const statusSeg=['ativo','desenvolvimento','futuro','arquivado'].map(x=>`<span class="seglbl ${(c.status||'ativo')===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('courseStatus').value='${x}'">${x}</span>`).join('');
+  openModal(id?'Editar curso':'Novo curso','Produto pedagógico da New Borders.',`<div class="ff-modal-body">
+<div class="form-section">
+<div class="form-row"><label class="ff-label">Nome do curso <span class="req">*</span></label><input class="ff-input ff-large" id="courseName" value="${esc(c.name||'')}" placeholder="ex. New Borders English"></div>
+<div class="form-row split">
+<div><label class="ff-label">Tipo / linha</label><input class="ff-input" id="courseKind" value="${esc(c.kind||'')}" placeholder="ex. principal, plugin, desenvolvimento"></div>
+<div><label class="ff-label">Cor do curso</label><input id="courseColor" type="color" value="${esc(c.color||'#8b3a1f')}" style="width:100%;height:44px;border:0;border-bottom:1px solid var(--ink);background:transparent;cursor:pointer;padding:0"></div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Status</div>
+<div class="ff-seg">${statusSeg}</div><input type="hidden" id="courseStatus" value="${c.status||'ativo'}">
+</div>
+<div class="form-section">
+<div class="form-section-title">Descrição <span class="help">opcional</span></div>
+<textarea class="ff-textarea" id="courseDescription" rows="3" placeholder="Objetivo do curso, público-alvo…">${esc(c.description||'')}</textarea>
+</div>
+<div class="form-actions"><div class="form-meta">${id?'ID: '+id:'Novo'}</div><div class="right">${id?`<button class="linkbtn" style="color:var(--rust)" onclick="deleteCourse('${id}')">excluir</button>`:''}<button class="btn" onclick="saveCourse('${id}')">salvar →</button></div></div>
+</div>`,'ff-modal')
+}
 function saveCourse(id=''){const name=$('courseName').value.trim();if(!name){toast('Nome obrigatório.');return}const c=byId(DB.courses,id)||{id:uid('course'),createdAt:nowIso()};c.name=name;c.kind=$('courseKind').value.trim();c.color=$('courseColor').value||'#8b3a1f';c.status=$('courseStatus').value;c.description=$('courseDescription').value.trim();if(!id)DB.courses.push(c);closeModal();scheduleSave();toast(id?'Curso atualizado.':'Curso criado.')}
 function archiveCourse(id){const c=byId(DB.courses,id);if(!c)return;c.status=c.status==='arquivado'?'ativo':'arquivado';scheduleSave();toast(c.status==='arquivado'?'Curso arquivado.':'Curso reativado.')}
 function deleteCourse(id){const c=byId(DB.courses,id);if(!c)return;const studentsCount=DB.students.filter(s=>s.courseId===id).length;const lessonsCount=DB.lessons.filter(l=>l.courseId===id).length;const unitsCount=DB.units.filter(u=>u.courseId===id).length;if(studentsCount>0||lessonsCount>0||unitsCount>0){if(!confirm(`Excluir "${c.name}"? Esse curso tem ${unitsCount} unidade(s), ${studentsCount} aluno(s) e ${lessonsCount} aula(s) vinculados. Unidades e aulas planejadas serão APAGADAS. Alunos e aulas reais ficam sem curso. Considere arquivar em vez de excluir.`))return}else if(!confirm(`Excluir "${c.name}"?`))return;const unitIds=DB.units.filter(u=>u.courseId===id).map(u=>u.id);DB.plannedLessons=DB.plannedLessons.filter(p=>!unitIds.includes(p.unitId));DB.materials=DB.materials.filter(m=>!DB.plannedLessons.some(p=>p.id===m.plannedLessonId)||m.studentId);DB.units=DB.units.filter(u=>u.courseId!==id);DB.students.forEach(s=>{if(s.courseId===id)s.courseId=''});DB.lessons.forEach(l=>{if(l.courseId===id)l.courseId=''});DB.courses=DB.courses.filter(x=>x.id!==id);scheduleSave();toast('Curso excluído.');courseNavTo('courses')}
-function openUnitModal(courseId,id=''){const u=byId(DB.units,id)||{};openModal(id?'Editar unidade':'Nova unidade','Bloco do curso (módulo, unit, capítulo).',`<div class="form"><div class="two"><div class="field"><label>Código</label><input id="unitCode" value="${esc(u.code||'')}" placeholder="M1, Unit 5, etc"></div><div class="field"><label>Ordem</label><input id="unitOrder" type="number" min="0" step="1" value="${u.order||0}"></div></div><div class="field"><label>Nome</label><input id="unitName" value="${esc(u.name||'')}" placeholder="ex: Módulo 1 — Apresentações"></div><div class="field"><label>Status</label><select id="unitStatus">${['ativo','futuro','arquivado'].map(x=>`<option ${(u.status||'ativo')===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Descrição (opcional)</label><textarea id="unitDescription">${esc(u.description||'')}</textarea></div><button class="btn" onclick="saveUnit('${courseId}','${id}')">salvar</button></div>`)}
+function openUnitModal(courseId,id=''){
+  const u=byId(DB.units,id)||{};
+  const cid=courseId||u.courseId||'';
+  const c=byId(DB.courses,cid);
+  const statusSeg=['ativo','futuro','arquivado'].map(x=>`<span class="seglbl ${(u.status||'ativo')===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('unitStatus').value='${x}'">${x}</span>`).join('');
+  openModal(id?'Editar unidade':'Nova unidade',c?'Curso: '+esc(c.name):'Bloco do curso.',`<div class="ff-modal-body">
+<div class="form-section">
+<div class="form-row split2-1">
+<div><label class="ff-label">Nome da unidade <span class="req">*</span></label><input class="ff-input ff-large" id="unitName" value="${esc(u.name||'')}" placeholder="ex. Módulo 1 — Apresentações"></div>
+<div><label class="ff-label">Código</label><input class="ff-input mono" id="unitCode" value="${esc(u.code||'')}" placeholder="M1, U01…"></div>
+</div>
+<div class="form-row split">
+<div><label class="ff-label">Ordem</label><input class="ff-input mono" id="unitOrder" type="number" min="0" step="1" value="${u.order||0}" placeholder="1"></div>
+<div><label class="ff-label">Status</label><div class="ff-seg">${statusSeg}</div><input type="hidden" id="unitStatus" value="${u.status||'ativo'}"></div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Descrição <span class="help">opcional</span></div>
+<textarea class="ff-textarea" id="unitDescription" rows="3" placeholder="Objetivo da unidade, conteúdo principal…">${esc(u.description||'')}</textarea>
+</div>
+<div class="form-actions"><div class="form-meta">${c?esc(c.name):''}</div><div class="right"><button class="btn" onclick="saveUnit('${cid}','${id}')">salvar →</button></div></div>
+</div>`,'ff-modal')
+}
 function saveUnit(courseId,id=''){const name=$('unitName').value.trim();if(!name){toast('Nome obrigatório.');return}const u=byId(DB.units,id)||{id:uid('unit'),createdAt:nowIso()};u.courseId=courseId;u.code=$('unitCode').value.trim();u.name=name;u.order=Number($('unitOrder').value)||0;u.status=$('unitStatus').value;u.description=$('unitDescription').value.trim();if(!id)DB.units.push(u);closeModal();scheduleSave();toast(id?'Unidade atualizada.':'Unidade criada.')}
 function archiveUnit(id){const u=byId(DB.units,id);if(!u)return;u.status=u.status==='arquivado'?'ativo':'arquivado';scheduleSave();toast(u.status==='arquivado'?'Unidade arquivada.':'Unidade reativada.')}
 function deleteUnit(id){const u=byId(DB.units,id);if(!u)return;const plannedCount=DB.plannedLessons.filter(p=>p.unitId===id).length;if(plannedCount>0){if(!confirm(`Excluir "${u.name}"? Esta unidade tem ${plannedCount} aula(s) planejada(s) que serão APAGADAS. Considere arquivar.`))return}else if(!confirm(`Excluir "${u.name}"?`))return;const plannedIds=DB.plannedLessons.filter(p=>p.unitId===id).map(p=>p.id);DB.materials=DB.materials.filter(m=>!plannedIds.includes(m.plannedLessonId)||m.studentId);DB.plannedLessons=DB.plannedLessons.filter(p=>p.unitId!==id);DB.units=DB.units.filter(x=>x.id!==id);scheduleSave();toast('Unidade excluída.')}
-function openPlannedLessonModal(courseId,unitId,id=''){const p=byId(DB.plannedLessons,id)||{};const tab=STATE._plannedTab||'ficha';const matsAll=DB.materials.filter(m=>m.plannedLessonId===id&&!m.studentId);const mats=matsAll.filter(m=>m.type!=='homework');const hws=matsAll.filter(m=>m.type==='homework');const tabBtns=`<div style="display:flex;gap:4px;border-bottom:2px solid var(--line,#ddd);margin-bottom:16px">${['ficha','notas','material','homework'].map(t=>`<button class="linkbtn" style="border:none;background:none;padding:8px 12px;border-bottom:3px solid ${tab===t?'var(--accent,#8b3a1f)':'transparent'};margin-bottom:-2px;font-weight:${tab===t?'bold':'normal'};cursor:pointer" onclick="switchPlannedTab('${t}','${courseId}','${unitId}','${id}')">${t}</button>`).join('')}</div>`;let tabContent='';if(tab==='ficha'){tabContent=`<div class="two"><div class="field"><label>Código</label><input id="plCode" value="${esc(p.code||'')}" placeholder="NBEM101"></div><div class="field"><label>Ordem</label><input id="plOrder" type="number" min="0" step="1" value="${p.order||0}"></div></div><div class="field"><label>Título</label><input id="plTitle" value="${esc(p.title||'')}" placeholder="ex: Greetings & Introductions"></div><div class="two"><div class="field"><label>Nível</label><input id="plLevel" value="${esc(p.level||'')}" placeholder="A1, B1..."></div><div class="field"><label>Status</label><select id="plStatus">${['ativo','futuro','arquivado'].map(x=>`<option ${(p.status||'ativo')===x?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="field"><label>Conteúdo</label><textarea id="plContent" placeholder="simple present; routines; vocabulary">${esc(p.content||'')}</textarea></div>`}else if(tab==='notas'){tabContent=`<div class="field"><label>Notas privadas (só você)</label><textarea id="plPrivateNotes" rows="5">${esc(p.privateNotes||'')}</textarea></div><div class="field"><label>Notas visíveis ao aluno (aparecem no portal quando esta vira aula real)</label><textarea id="plStudentNotes" rows="5">${esc(p.studentNotes||'')}</textarea></div>`}else if(tab==='material'){tabContent=plannedMaterialsList(id,mats,'material',courseId,unitId)}else if(tab==='homework'){tabContent=plannedMaterialsList(id,hws,'homework',courseId,unitId)}openModal(id?'Editar aula planejada':'Nova aula planejada','Ficha pedagógica. Reutilizada toda vez que esta aula é dada pra um aluno.',`<div class="form">${tabBtns}${tabContent}${tab==='ficha'||tab==='notas'?`<button class="btn" onclick="savePlannedLesson('${courseId}','${unitId}','${id}','${tab}')">salvar</button>`:''}</div>`)}
+function openPlannedLessonModal(courseId,unitId,id=''){
+  const p=byId(DB.plannedLessons,id)||{};
+  const tab=STATE._plannedTab||'ficha';
+  const matsAll=DB.materials.filter(m=>m.plannedLessonId===id&&!m.studentId);
+  const mats=matsAll.filter(m=>m.type!=='homework');
+  const hws=matsAll.filter(m=>m.type==='homework');
+  const u=byId(DB.units,unitId);const c=byId(DB.courses,courseId);
+  const tabBtns=['ficha','notas','material','homework'].map(t=>`<button class="linkbtn" style="padding:8px 16px;border-bottom:2px solid ${tab===t?'var(--rust)':'transparent'};color:${tab===t?'var(--ink)':'var(--muted)'};font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase" onclick="switchPlannedTab('${t}','${courseId}','${unitId}','${id}')">${t}</button>`).join('');
+  let tabContent='';
+  if(tab==='ficha'){
+    const statusSeg=['ativo','futuro','arquivado'].map(x=>`<span class="seglbl ${(p.status||'ativo')===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('plStatus').value='${x}'">${x}</span>`).join('');
+    tabContent=`<div class="form-row split2-1"><div><label class="ff-label">Título <span class="req">*</span></label><input class="ff-input ff-large" id="plTitle" value="${esc(p.title||'')}" placeholder="ex. Greetings & Introductions"></div><div><label class="ff-label">Código</label><input class="ff-input mono" id="plCode" value="${esc(p.code||'')}" placeholder="NBEM101"></div></div><div class="form-row split3"><div><label class="ff-label">Nível</label><input class="ff-input mono" id="plLevel" value="${esc(p.level||'')}" placeholder="A1, B2…"></div><div><label class="ff-label">Ordem</label><input class="ff-input mono" id="plOrder" type="number" min="0" value="${p.order||0}"></div><div><label class="ff-label">Status</label><div class="ff-seg">${statusSeg}</div><input type="hidden" id="plStatus" value="${p.status||'ativo'}"></div></div><div class="form-row"><label class="ff-label">Conteúdo <span class="hint">separe por ponto-vírgula</span></label><textarea class="ff-textarea" id="plContent" rows="3" placeholder="simple present; routines; vocabulary">${esc(p.content||'')}</textarea></div><div class="form-actions" style="margin-top:24px"><div></div><div class="right"><button class="btn" onclick="savePlannedLesson('${courseId}','${unitId}','${id}','ficha')">salvar →</button></div></div>`;
+  } else if(tab==='notas'){
+    tabContent=`<div class="form-row"><label class="ff-label">Notas privadas <span class="hint">só você vê</span></label><textarea class="ff-textarea" id="plPrivateNotes" rows="4" placeholder="estratégia da aula, pontos de atenção…">${esc(p.privateNotes||'')}</textarea></div><div class="form-row"><label class="ff-label">Notas visíveis ao aluno <span class="hint">aparecem no portal quando esta vira aula real</span></label><textarea class="ff-textarea" id="plStudentNotes" rows="4" placeholder="o que o aluno precisa trazer, contexto da aula…">${esc(p.studentNotes||'')}</textarea></div><div class="form-actions" style="margin-top:24px"><div></div><div class="right"><button class="btn" onclick="savePlannedLesson('${courseId}','${unitId}','${id}','notas')">salvar →</button></div></div>`;
+  } else {
+    tabContent=plannedMaterialsList(id,tab==='material'?mats:hws,tab,courseId,unitId);
+  }
+  openModal(id?'Editar aula planejada':'Nova aula planejada',`${c?esc(c.name)+' › ':''}${u?esc(u.name):''}`,`<div class="ff-modal-body"><div style="display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:28px">${tabBtns}</div>${tabContent}</div>`,'ff-modal')
+}
 function plannedMaterialsList(plannedId,mats,kind,courseId,unitId){if(!plannedId)return `<div class="empty">Salve a ficha primeiro (aba "ficha") antes de anexar ${kind}.</div>`;const isHw=kind==='homework';return `<div class="meta subtle" style="margin-bottom:8px">${isHw?'Homework anexado à ficha. Será compartilhado com o aluno quando esta vira aula real.':'Material anexado à ficha (handout, slides, áudio, etc).'}</div><div class="list">${mats.length?mats.map(m=>`<div class="item"><div class="item-title">${esc(m.title)}</div><div class="badges">${badge(m.studentVisible?'visível ao aluno':'só você',m.studentVisible?'ok':'warn')}${badge(m.downloadAllowed?'download permitido':'só visualizar',m.downloadAllowed?'ok':'warn')}${m.attachments?.[0]?badge('com arquivo','ok'):badge('sem arquivo','warn')}</div><div class="row-actions"><button class="linkbtn" onclick="openMaterialModal('','${m.id}')">editar</button><button class="linkbtn" onclick="deleteItem('materials','${m.id}');setTimeout(()=>openPlannedLessonModal('${courseId}','${unitId}','${plannedId}'),50)">excluir</button></div></div>`).join(''):`<div class="empty">Nenhum ${kind} anexado ainda.</div>`}</div><button class="btn soft" style="margin-top:12px" onclick="newPlannedMaterial('${plannedId}','${kind}','${courseId}','${unitId}')">+ anexar ${kind}</button>`}
 function newPlannedMaterial(plannedId,kind,courseId,unitId){const m={id:uid('mat'),title:kind==='homework'?'Homework':'Material',type:kind,studentId:'',lessonId:'',plannedLessonId:plannedId,studentVisible:true,downloadAllowed:true,attachments:[],notes:'',createdAt:nowIso()};DB.materials.push(m);scheduleSave();closeModal();setTimeout(()=>openMaterialModal('',m.id),50)}
 function switchPlannedTab(tab,courseId,unitId,plannedId){STATE._plannedTab=tab;if(plannedId)openPlannedLessonModal(courseId,unitId,plannedId);else openPlannedLessonModal(courseId,unitId)}
@@ -2064,7 +2161,50 @@ function financeStudentCard(s,fin){
     <div style="text-align:right"><span class="tag-state ${stateClass}">${stateLabel}</span></div>
   </div>`;
 }
-function openPaymentModal(studentId,id=''){const st=byId(DB.students,studentId);if(!st)return;const editing=id?byId(DB.payments,id):null;const linkedIds=editing?new Set(editing.lessonIds):new Set();const allLinkedElsewhere=new Set();DB.payments.forEach(p=>{if(p.id!==id)p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid))});const availableLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999')));const defaultVal=st.defaultLessonValue||0;openModal(editing?'Editar pagamento':'Novo pagamento',`Selecione as aulas que este pagamento cobre. Inclui aulas futuras (já agendadas) e aulas a cobrar (passadas).`,`<div class="form"><div class="field"><label>Aluno</label><input value="${esc(st.name)}" disabled></div><div class="two"><div class="field"><label>Valor (R$)</label><input id="payValor" type="number" step="0.01" min="0" value="${editing?editing.valor:''}" placeholder="auto: soma das aulas"></div><div class="field"><label>Status</label><select id="payPaid"><option value="false" ${editing&&!editing.paid?'selected':''}>pendente</option><option value="true" ${editing&&editing.paid?'selected':''}>pago</option></select></div></div><div class="two"><div class="field"><label>Data do pagamento</label><input id="payDate" type="date" value="${editing?.paidAt?String(editing.paidAt).slice(0,10):today()}"></div><div class="field"><label>Método</label><input id="payMethod" value="${esc(editing?.method||'')}" placeholder="PIX, transferência, ..."></div></div><div class="field"><label>Aulas cobertas por este pagamento</label><div id="payLessonsList" style="max-height:280px;overflow-y:auto;border:1px solid var(--line,#ddd);border-radius:4px;padding:8px;background:var(--paper-2,#f8f5f0)">${availableLessons.length?availableLessons.map(l=>{const checked=linkedIds.has(l.id);const dateStr=l.date?fmtDate(l.date):'sem data';const statusBadge=l.status==='dada'?' · <span style="color:#4a6b3a">dada</span>':l.status==='cancelada'&&!l.cancelNoticeOk?' · <span style="color:#a63a2a">falta paga</span>':l.status==='agendada'?' · <span style="color:#777">agendada</span>':' · '+l.status;return `<label style="display:grid;grid-template-columns:20px 1fr;gap:6px;align-items:start;padding:6px 4px;border-bottom:1px solid var(--line-soft,#eee);font-size:13px;cursor:pointer;line-height:1.4"><input type="checkbox" class="payLessonCheck" data-id="${l.id}" data-value="${l.value||defaultVal}" ${checked?'checked':''} style="margin-top:2px"> <span><b>${dateStr}${l.startTime?' · '+l.startTime:''}</b> · ${esc(l.title||'Aula')}${statusBadge}${(l.value||defaultVal)?` <span style="color:#777;font-size:12px">(${money(l.value||defaultVal)})</span>`:''}</span></label>`}).join(''):'<div class="empty" style="padding:8px">Nenhuma aula disponível. Crie aulas pra este aluno primeiro, depois vincule.</div>'}</div><div class="meta subtle" style="margin-top:6px"><span id="payCountSummary">${linkedIds.size} aula(s) selecionada(s)</span> · <a href="#" onclick="event.preventDefault();paySelectNextN('${studentId}',4)" style="margin-left:8px">vincular próximas 4</a> · <a href="#" onclick="event.preventDefault();paySelectNextN('${studentId}',8)">próximas 8</a> · <a href="#" onclick="event.preventDefault();paySelectAllACobrar('${studentId}')">só as "a cobrar"</a></div></div><div class="field"><label>Notas (opcional)</label><textarea id="payNotes">${esc(editing?.notes||'')}</textarea></div><button class="btn" onclick="savePayment('${studentId}','${id}')">${editing?'salvar alterações':'criar pagamento'}</button></div>`);setTimeout(()=>{const cb=document.querySelectorAll('.payLessonCheck');cb.forEach(c=>c.addEventListener('change',updatePaymentSummary));updatePaymentSummary()},50)}
+function openPaymentModal(studentId,id=''){
+  const st=byId(DB.students,studentId);if(!st)return;
+  const editing=id?byId(DB.payments,id):null;
+  const linkedIds=editing?new Set(editing.lessonIds):new Set();
+  const allLinkedElsewhere=new Set();
+  DB.payments.forEach(p=>{if(p.id!==id)p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid))});
+  const availableLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999')));
+  const defaultVal=st.defaultLessonValue||0;
+  const paidSeg=`<span class="seglbl ${editing&&editing.paid?'':'on'}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('payPaid').value='false'">pendente</span><span class="seglbl ${editing&&editing.paid?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('payPaid').value='true'">pago</span>`;
+  const lessonRows=availableLessons.length?availableLessons.map(l=>{
+    const checked=linkedIds.has(l.id);
+    const dateStr=l.date?fmtDate(l.date):'sem data';
+    const statusBadge=l.status==='dada'?`<span class="tag-state ok">dada</span>`:l.status==='cancelada'&&!l.cancelNoticeOk?`<span class="tag-state todo">falta paga</span>`:l.status==='agendada'?`<span class="tag-state">agendada</span>`:`<span class="tag-state">${l.status}</span>`;
+    const val=l.value||defaultVal;
+    return `<label style="display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line2);cursor:pointer"><input type="checkbox" class="payLessonCheck" data-id="${l.id}" data-value="${val}" ${checked?'checked':''} style="margin-top:3px"><span style="font-family:'Newsreader',serif;font-size:15px">${esc(l.title||'Aula')} <span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted)">${dateStr}${l.startTime?' · '+l.startTime.slice(0,5):''}</span></span><span style="display:flex;align-items:center;gap:8px">${statusBadge}<span style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted)">${val?money(val):''}</span></span></label>`;
+  }).join(''):`<div class="empty" style="padding:16px 0">Nenhuma aula disponível. Crie aulas pra este aluno primeiro.</div>`;
+  openModal(editing?'Editar pagamento':'Novo pagamento',esc(st.name),`<div class="ff-modal-body">
+<div class="form-section">
+<div class="form-row split">
+<div><label class="ff-label">Valor (R$) <span class="hint">deixe em branco pra calcular da seleção</span></label><input class="ff-input mono" id="payValor" type="number" step="0.01" min="0" value="${editing?editing.valor:''}" placeholder="auto: soma das aulas"></div>
+<div><label class="ff-label">Status</label><div class="ff-seg">${paidSeg}</div><input type="hidden" id="payPaid" value="${editing&&editing.paid?'true':'false'}"></div>
+</div>
+<div class="form-row split">
+<div><label class="ff-label">Data</label><input class="ff-input mono" id="payDate" type="date" value="${editing?.paidAt?String(editing.paidAt).slice(0,10):today()}"></div>
+<div><label class="ff-label">Método</label><input class="ff-input" id="payMethod" value="${esc(editing?.method||'')}" placeholder="PIX, transferência…"></div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Aulas cobertas <span id="payCountSummary" class="help">${linkedIds.size} selecionada(s)</span></div>
+<div style="max-height:280px;overflow-y:auto">${lessonRows}</div>
+<div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
+<button class="ff-add-row" onclick="paySelectNextN('${studentId}',4)">vincular próximas 4</button>
+<button class="ff-add-row" onclick="paySelectNextN('${studentId}',8)">próximas 8</button>
+<button class="ff-add-row" onclick="paySelectAllACobrar('${studentId}')">só as a cobrar</button>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Notas <span class="help">opcional</span></div>
+<textarea class="ff-textarea" id="payNotes" rows="2" placeholder="observações…">${esc(editing?.notes||'')}</textarea>
+</div>
+<div class="form-actions"><div></div><div class="right">${editing?`<button class="linkbtn" style="color:var(--rust)" onclick="deletePayment('${id}','${studentId}');closeModal()">excluir</button>`:''}<button class="btn" onclick="savePayment('${studentId}','${id}')">${editing?'salvar':'criar pagamento →'}</button></div></div>
+</div>`,'ff-modal');
+  setTimeout(()=>{document.querySelectorAll('.payLessonCheck').forEach(c=>c.addEventListener('change',updatePaymentSummary));updatePaymentSummary()},50)
+}
 function updatePaymentSummary(){const checks=[...document.querySelectorAll('.payLessonCheck:checked')];const summary=$('payCountSummary');if(summary)summary.textContent=checks.length+' aula(s) selecionada(s)';const valorEl=$('payValor');if(valorEl&&!valorEl.value){const total=checks.reduce((s,c)=>s+(Number(c.dataset.value)||0),0);if(total>0)valorEl.placeholder='sugestão: R$ '+total.toFixed(2).replace('.',',')}}
 function paySelectNextN(studentId,n){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid)));const futureLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&(!l.date||l.date>=today())).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999'))).slice(0,n);const ids=new Set(futureLessons.map(l=>l.id));document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
 function paySelectAllACobrar(studentId){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid)));const aCobrar=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&lessonCountsForPackage(l));const ids=new Set(aCobrar.map(l=>l.id));document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
@@ -2080,7 +2220,37 @@ function logList(){return `<div class="list">${STATE.logs.slice(0,12).map(l=>`<d
 async function manualSaveAll(){saveLocal();await saveRemoteAll();toast('Salvo.')} 
 
 function studentOptions(sel='',allowEmpty=false){if(!allowEmpty&&!sel&&DB.students.length===1)sel=DB.students[0].id;return `<select id="studentId"><option value="">${allowEmpty?'Biblioteca geral / sem aluno':'Selecione...'}</option>${DB.students.map(s=>`<option value="${s.id}" ${s.id===sel?'selected':''}>${esc(s.name)}</option>`).join('')}</select>`}
-function openStudentModal(id=''){const s=byId(DB.students,id)||{};const courseOpts=`<option value="">— sem curso —</option>`+DB.courses.filter(c=>c.status!=='arquivado').map(c=>`<option value="${c.id}" ${s.courseId===c.id?'selected':''}>${esc(c.name)}</option>`).join('');openModal(id?'Editar aluno':'Novo aluno','Ficha essencial para portal e aulas.',`<div class="form"><div class="field"><label>Nome</label><input id="stName" value="${esc(s.name||'')}"></div><div class="two"><div class="field"><label>E-mail do aluno</label><input id="stEmail" value="${esc(s.email||'')}"></div><div class="field"><label>Status</label><select id="stStatus">${['ativo','pausado','arquivado'].map(x=>`<option ${s.status===x?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="two"><div class="field"><label>Curso ativo</label><select id="stCourseId">${courseOpts}</select></div><div class="field"><label>Nível</label><input id="stLevel" value="${esc(s.activeCourseLevel||'')}"></div></div><div class="two"><div class="field"><label>Valor padrão aula</label><input id="stValue" type="number" step="0.01" value="${s.defaultLessonValue||''}"></div><div class="field"><label>Telefone</label><input id="stPhone" value="${esc(s.phone||'')}"></div></div><div class="field"><label>Objetivo</label><textarea id="stGoal">${esc(s.goal||'')}</textarea></div><div class="field"><label>Notas internas</label><textarea id="stNotes">${esc(s.notes||'')}</textarea></div><button class="btn" onclick="saveStudent('${id}')">salvar</button></div>`)}
+function openStudentModal(id=''){
+  const s=byId(DB.students,id)||{};
+  const courseOpts=`<option value="">— sem curso —</option>`+DB.courses.filter(c=>c.status!=='arquivado').map(c=>`<option value="${c.id}" ${s.courseId===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
+  const statusSeg=['ativo','pausado','arquivado'].map(x=>`<span class="seglbl ${(s.status||'ativo')===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('stStatus').value='${x}'">${x}</span>`).join('');
+  openModal(id?'Editar aluno':'Novo aluno',id?'Editando ficha de '+esc(s.name||'aluno'):'Dados essenciais para portal e aulas.',`<div class="ff-modal-body">
+<div class="form-section">
+<div class="form-row split2-1">
+<div><label class="ff-label">Nome completo <span class="req">*</span></label><input class="ff-input ff-large" id="stName" value="${esc(s.name||'')}" placeholder="ex. Maria Costa"></div>
+<div><label class="ff-label">Status</label><div class="ff-seg">${statusSeg}</div><input type="hidden" id="stStatus" value="${s.status||'ativo'}"></div>
+</div>
+<div class="form-row split">
+<div><label class="ff-label">E-mail do portal <span class="req">*</span><span class="hint">login da aluna</span></label><input class="ff-input mono" id="stEmail" value="${esc(s.email||'')}" placeholder="aluna@gmail.com"></div>
+<div><label class="ff-label">WhatsApp<span class="hint">opcional</span></label><input class="ff-input mono" id="stPhone" value="${esc(s.phone||'')}" placeholder="(11) 9 ____-____"></div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Curso atual <span class="help">pode atribuir depois</span></div>
+<div class="form-row split3">
+<div><label class="ff-label">Curso ativo</label><select class="ff-select" id="stCourseId">${courseOpts}</select></div>
+<div><label class="ff-label">Nível</label><input class="ff-input mono" id="stLevel" value="${esc(s.activeCourseLevel||'')}" placeholder="A1, B2…"></div>
+<div><label class="ff-label">Valor da aula</label><input class="ff-input mono" id="stValue" type="number" step="0.01" value="${s.defaultLessonValue||''}" placeholder="R$ 0,00"></div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Notas internas <span class="help">só você vê</span></div>
+<div><label class="ff-label">Objetivo</label><input class="ff-input" id="stGoal" value="${esc(s.goal||'')}" placeholder="ex. viagem pra Lisboa em outubro…"></div>
+<div style="margin-top:20px"><label class="ff-label">Anotações</label><textarea class="ff-textarea" id="stNotes" rows="4" placeholder="contexto, preferências, observações…">${esc(s.notes||'')}</textarea></div>
+</div>
+<div class="form-actions"><div class="form-meta">${id?'ID: '+s.id.slice(0,12).toUpperCase():''}</div><div class="right">${id?`<button class="linkbtn" style="color:var(--rust)" onclick="deleteStudent('${id}');closeModal()">excluir</button>`:''}<button class="btn" onclick="saveStudent('${id}')">salvar →</button></div></div>
+</div>`,'ff-modal')
+}
 function saveStudent(id=''){if(!stName.value.trim())return toast('Nome obrigatório.');const existing=byId(DB.students,id);const oldEmail=existing?String(existing.email||'').toLowerCase():'';const s=existing||{id:uid('student'),createdAt:nowIso()};s.name=stName.value.trim();s.email=stEmail.value.trim().toLowerCase();s.status=stStatus.value;s.courseId=$('stCourseId')?.value||'';s.activeCourseLevel=stLevel.value.trim();const c=s.courseId?byId(DB.courses,s.courseId):null;s.activeCourseName=c?c.name:s.activeCourseLevel;s.defaultLessonValue=Number(stValue.value)||0;s.phone=stPhone.value.trim();s.goal=stGoal.value.trim();s.notes=stNotes.value.trim();if(!id)DB.students.push(s);if(oldEmail&&oldEmail!==s.email){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(oldEmail))}catch(e){}sbDelete(oldEmail).catch(()=>{});log('E-mail do aluno mudou de '+oldEmail+' para '+s.email+'. Linha antiga limpa.','ok');}closeModal();scheduleSave();toast('Aluno salvo.')}
 async function deleteStudent(id){const s=byId(DB.students,id);if(!s)return;if(!confirm(`Excluir ${s.name}? Aulas, materiais e pagamentos vinculados também serão removidos do LessonHub. Arquivos no Drive não serão apagados.`))return;const orphanEmail=s.email?String(s.email).toLowerCase():'';DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(x=>x.studentId!==id);DB.materials=DB.materials.filter(x=>x.studentId!==id);DB.packages=DB.packages.filter(x=>x.studentId!==id);DB.payments=DB.payments.filter(x=>x.studentId!==id);if(STATE.portalHashes)delete STATE.portalHashes[id];if(orphanEmail){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(orphanEmail))}catch(e){}sbDelete(orphanEmail).catch(()=>{});}scheduleSave();toast('Aluno excluído.')}
 function openLessonModal(studentId='',id=''){const l=byId(DB.lessons,id)||{};studentId=studentId||l.studentId||'';if(!studentId&&DB.students.length===1)studentId=DB.students[0].id;const st=byId(DB.students,studentId)||{};const fin=studentId?financeForStudent(studentId):null;const paymentBadge=l.paymentId?` <span class="subtle">· já vinculada a um pagamento</span>`:studentId&&fin&&fin.aCobrar.length>0?` <span class="subtle">· ${fin.aCobrar.length} aula(s) "a cobrar" deste aluno</span>`:'';const courseSelected=l.courseId||st.courseId||'';const courseOpts=`<option value="">— sem curso —</option>`+DB.courses.filter(c=>c.status!=='arquivado').map(c=>`<option value="${c.id}" ${courseSelected===c.id?'selected':''}>${esc(c.name)}</option>`).join('');const lessonStatus=l.status||'agendada';const planStatus=l.planStatus||'a planejar';
@@ -2143,7 +2313,47 @@ function saveLesson(id=''){
     toast('Erro ao salvar aula: '+(err.message||err));
   }
 }
-function openMaterialModal(studentId='',id='',lessonId=''){const m=byId(DB.materials,id)||{};studentId=studentId||m.studentId||'';lessonId=lessonId||m.lessonId||'';const isPlannedMat=!!m.plannedLessonId&&!m.studentId;let contextField;if(isPlannedMat){const p=byId(DB.plannedLessons,m.plannedLessonId);const u=p?byId(DB.units,p.unitId):null;const c=p?byId(DB.courses,p.courseId):null;contextField=`<div class="field"><label>Material da ficha</label><div class="meta">${c?esc(c.name):''}${u?' › '+esc(u.name):''}${p?' › '+esc(p.title):''}</div></div><div class="field"><label>Download permitido</label><select id="matDownload"><option value="true" ${m.downloadAllowed!==false?'selected':''}>sim, aluno pode baixar</option><option value="false" ${m.downloadAllowed===false?'selected':''}>não, só visualizar</option></select></div>`}else{contextField=`<div class="field"><label>Aluno ou biblioteca</label>${studentOptions(studentId,true)}</div><div class="field"><label>Aula vinculada</label><select id="matLesson"><option value="">Sem aula específica</option>${DB.lessons.filter(l=>!studentId||l.studentId===studentId).map(l=>`<option value="${l.id}" ${l.id===lessonId?'selected':''}>${esc(lessonTitle(l))} · ${esc(l.title)}</option>`).join('')}</select></div>`}const att=m.attachments?.[0];const fileInfoText=att?.storageUrl?`Storage: ${esc(att.name||'arquivo')}`:att?.driveLink?`Drive: ${esc(att.name||'arquivo')}`:att?.youtubeUrl?'YouTube':'nenhum';const uploadDestLabel=isPlannedMat?'Arquivo (vai para Supabase Storage · sem Drive)':'Arquivo (vai para Google Drive)';openModal(id?'Editar material':'Novo material',isPlannedMat?'Material de biblioteca de curso. Arquivo vai pro Supabase Storage.':'Arquivo real fica no Drive; metadados ficam no Supabase.',`<div class="form">${contextField}<div class="two"><div class="field"><label>Tipo</label><select id="matType">${['handout','homework','answer key','audio','video','test','rubric','extra','material'].map(x=>`<option ${x===(m.type||'material')?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Visível ao aluno</label><select id="matVisible"><option value="true" ${m.studentVisible!==false?'selected':''}>sim</option><option value="false" ${m.studentVisible===false?'selected':''}>não</option></select></div></div><div class="field"><label>Título</label><input id="matTitle" value="${esc(m.title||'')}"></div><div class="field"><label>Notas</label><textarea id="matNotes">${esc(m.notes||'')}</textarea></div><div class="field"><label>${uploadDestLabel}</label><input id="matFile" type="file"><div class="subtle">Arquivo atual: ${fileInfoText}</div></div><div class="field"><label>URL do YouTube (opcional, substitui arquivo)</label><input id="matYoutube" value="${esc(m.attachments?.[0]?.youtubeUrl||'')}" placeholder="https://youtube.com/watch?v=..."></div><button class="btn" onclick="saveMaterial('${id}')">salvar</button></div>`)}
+function openMaterialModal(studentId='',id='',lessonId=''){
+  const m=byId(DB.materials,id)||{};
+  studentId=studentId||m.studentId||'';
+  lessonId=lessonId||m.lessonId||'';
+  const isPlannedMat=!!m.plannedLessonId&&!m.studentId;
+  let contextBlock;
+  if(isPlannedMat){
+    const p=byId(DB.plannedLessons,m.plannedLessonId);
+    const u=p?byId(DB.units,p.unitId):null;
+    const c=p?byId(DB.courses,p.courseId):null;
+    contextBlock=`<div class="form-section"><div class="form-section-title">Ficha <span class="help">material de curso · vai pro Supabase Storage</span></div><p class="notes-block" style="font-size:14px;color:var(--muted)">${c?esc(c.name):''}${u?' › '+esc(u.name):''}${p?' › '+esc(p.title):''}</p></div>`;
+  } else {
+    contextBlock=`<div class="form-section"><div class="form-section-title">Vínculo</div><div class="form-row"><label class="ff-label">Aluno</label>${studentOptions(studentId,true)}</div><div class="form-row"><label class="ff-label">Aula vinculada</label><select class="ff-select" id="matLesson"><option value="">Sem aula específica</option>${DB.lessons.filter(l=>!studentId||l.studentId===studentId).map(l=>`<option value="${l.id}" ${l.id===lessonId?'selected':''}>${esc(lessonTitle(l))} · ${esc(l.title)}</option>`).join('')}</select></div></div>`;
+  }
+  const att=m.attachments?.[0];
+  const fileInfo=att?.storageUrl?`Storage: ${esc(att.name||'arquivo')}`:att?.driveLink?`Drive: ${esc(att.name||'arquivo')}`:att?.youtubeUrl?'YouTube':'nenhum';
+  const uploadLabel=isPlannedMat?'Arquivo <span class="hint">vai pro Supabase Storage · sem Drive</span>':'Arquivo <span class="hint">vai pro Google Drive</span>';
+  const dlBlock=isPlannedMat?`<div class="form-row"><label class="ff-label">Download</label><div class="ff-seg"><span class="seglbl ${m.downloadAllowed!==false?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('matDownload').value='true'">permitir</span><span class="seglbl ${m.downloadAllowed===false?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('matDownload').value='false'">só visualizar</span></div><input type="hidden" id="matDownload" value="${m.downloadAllowed!==false?'true':'false'}"></div>`:'';
+  const visSeg=`<span class="seglbl ${m.studentVisible!==false?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('matVisible').value='true'">visível</span><span class="seglbl ${m.studentVisible===false?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('matVisible').value='false'">só admin</span>`;
+  openModal(id?'Editar material':'Novo material','',`<div class="ff-modal-body">
+${contextBlock}
+<div class="form-section">
+<div class="form-row split">
+<div><label class="ff-label">Título <span class="req">*</span></label><input class="ff-input" id="matTitle" value="${esc(m.title||'')}" placeholder="ex. Apostila Unidade 1"></div>
+<div><label class="ff-label">Tipo</label><select class="ff-select" id="matType">${['handout','homework','answer key','audio','video','test','rubric','extra','material'].map(x=>`<option ${x===(m.type||'material')?'selected':''}>${x}</option>`).join('')}</select></div>
+</div>
+<div class="form-row"><label class="ff-label">Visibilidade</label><div class="ff-seg">${visSeg}</div><input type="hidden" id="matVisible" value="${m.studentVisible!==false?'true':'false'}"></div>
+${dlBlock}
+</div>
+<div class="form-section">
+<div class="form-section-title">Arquivo</div>
+<div class="form-row"><label class="ff-label">${uploadLabel}</label><input id="matFile" type="file" style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted);padding:8px 0"><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-top:4px">atual: ${fileInfo}</div></div>
+<div class="form-row"><label class="ff-label">URL YouTube <span class="hint">substitui arquivo</span></label><input class="ff-input mono" id="matYoutube" value="${esc(att?.youtubeUrl||'')}" placeholder="https://youtube.com/watch?v=…"></div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Notas <span class="help">opcional</span></div>
+<textarea class="ff-textarea" id="matNotes" rows="2" placeholder="descrição, instruções…">${esc(m.notes||'')}</textarea>
+</div>
+<div class="form-actions"><div></div><div class="right"><button class="btn" onclick="saveMaterial('${id}')">salvar →</button></div></div>
+</div>`,'ff-modal')
+}
 async function saveMaterial(id=''){const existing=byId(DB.materials,id);const isPlannedMat=!!existing?.plannedLessonId&&!existing.studentId;const m=existing||{id:uid('mat'),attachments:[],createdAt:nowIso()};if(!isPlannedMat){m.studentId=$('studentId')?.value||'';m.lessonId=$('matLesson')?.value||''}m.type=matType.value;m.studentVisible=matVisible.value==='true';if(isPlannedMat&&$('matDownload'))m.downloadAllowed=$('matDownload').value==='true';m.title=matTitle.value.trim()||matType.value;m.notes=matNotes.value.trim();const ytUrl=$('matYoutube')?.value.trim();if(ytUrl){if(!m.attachments.length)m.attachments=[{id:uid('file'),createdAt:nowIso()}];m.attachments[0].youtubeUrl=ytUrl;m.attachments[0].name='YouTube: '+ytUrl;m.attachments[0].type='video/youtube';}const file=matFile.files?.[0];let uploadWarning='';if(file){
   if(isPlannedMat){
     // Materiais de ficha → Supabase Storage (sem depender do Drive)
@@ -2281,7 +2491,7 @@ async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lesson
 function toggleUnitBlock(unitId){const el=document.getElementById('unit-'+unitId);if(el)el.classList.toggle('open')}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
 function boot(){
-  document.title='LessonHub v1.17.2-alpha — Supabase Storage + PDF Viewer';
+  document.title='LessonHub v1.17.3-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
