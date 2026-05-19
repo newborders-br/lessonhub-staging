@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#fbfaf7">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.15.7-alpha — Cursos + Pagamento Vinculado</title>
+<title>LessonHub v1.15-alpha — Cursos + Pagamento Vinculado</title>
 <style>
 :root{
   --bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#777069;--soft:#aaa19a;
@@ -28,17 +28,17 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}
 .card,.panel,.item,.modal-box,.student-card,.student-panel{background:rgba(255,253,249,.72);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.card,.student-card{padding:22px;min-height:128px;display:flex;flex-direction:column;justify-content:space-between}.card .num,.student-card .num{font-family:Georgia,serif;font-size:38px;letter-spacing:-.06em;font-weight:400;line-height:.9}.label{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-top:12px}.subtle{color:var(--muted);font-size:13px;line-height:1.55}.panel,.student-panel{padding:20px;margin-bottom:16px}.panel-title,.student-panel-title{font-family:Georgia,serif;font-size:25px;font-weight:400;letter-spacing:-.04em;border-bottom:1px solid var(--ink);padding-bottom:11px;margin-bottom:14px}.form{display:grid;gap:12px}.field{display:grid;gap:6px}.field label,.micro{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}input,textarea,select{width:100%;background:rgba(255,255,255,.64);border:1px solid var(--line);padding:10px 11px;outline:none;color:var(--ink)}textarea{min-height:86px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--ink);background:#fff}.btn{background:transparent;border:1px solid var(--ink);color:var(--ink);padding:9px 13px;text-transform:uppercase;letter-spacing:.13em;font-size:11px}.btn:hover{background:var(--ink);color:var(--paper)}.btn.soft{border-color:var(--line);color:var(--muted)}.btn.danger{border-color:var(--bad);color:var(--bad)}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}.toolbar-left,.row-actions,.compact-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.search{max-width:460px}.list{display:grid;gap:10px}.item{padding:15px}.item-title{font-family:Georgia,serif;font-size:21px;font-weight:400;letter-spacing:-.035em}.item:hover{border-color:rgba(24,21,18,.28)}.meta{font-size:13px;color:var(--muted);line-height:1.5}.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.badge{border:1px solid var(--line);padding:3px 7px;font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);background:rgba(255,255,255,.35)}.badge.ok{color:var(--ok);border-color:rgba(40,116,90,.35)}.badge.bad{color:var(--bad);border-color:rgba(157,45,37,.35)}.badge.warn{color:var(--warn);border-color:rgba(160,108,27,.35)}.badge.blue{color:var(--blue);border-color:rgba(49,95,143,.35)}.empty{padding:34px;text-align:center;border:1px dashed var(--line);color:var(--soft);background:rgba(255,255,255,.35)}
 .modal{position:fixed;inset:0;background:rgba(24,21,18,.48);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:22px;z-index:80}.modal-box{width:min(880px,100%);max-height:90vh;overflow:auto;padding:24px}.modal-head{display:flex;justify-content:space-between;gap:16px;margin-bottom:14px;border-bottom:1px solid var(--ink);padding-bottom:12px}.modal-title{font-family:Georgia,serif;font-size:30px;letter-spacing:-.04em}.toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:var(--paper);padding:12px 14px;font-size:13px;display:none;z-index:100}.statusbar{position:fixed;left:18px;bottom:18px;z-index:70;border:1px solid var(--line);background:rgba(255,253,249,.9);backdrop-filter:blur(14px);padding:9px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);box-shadow:var(--shadow);display:none}
 #loginScreen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;text-align:center}.login-logo{font-family:Georgia,serif;font-size:72px;font-weight:400;letter-spacing:-.07em;line-height:.85}.google-btn{display:flex;align-items:center;gap:12px;padding:14px 28px;background:#fff;border:1px solid #dadce0;border-radius:6px;font-size:15px;color:#3c4043;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15);font-family:sans-serif}.privacy-gate{position:fixed;inset:0;z-index:89;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:var(--bg);color:var(--ink)}.privacy-gate h2{font-family:Georgia,serif;font-size:clamp(36px,8vw,58px);line-height:.9;letter-spacing:-.06em;font-weight:400;margin-bottom:14px}.privacy-gate p{max-width:540px;margin:0 auto;color:var(--muted);font-size:13px;line-height:1.55}
-body.student-mode .shell{display:none}body:not(.student-mode) .student-shell{display:none}.student-hero{border:1px solid var(--ink);padding:24px;margin-bottom:16px;background:rgba(255,253,249,.72);box-shadow:var(--shadow)}.student-hero h2{font-size:46px;line-height:.95}.student-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.student-lesson,.student-resource{border:1px solid var(--line);background:rgba(255,255,255,.35);padding:15px;margin-bottom:10px}.student-lesson-title{font-family:Georgia,serif;font-size:24px;letter-spacing:-.04em}.viewer-frame iframe{width:min(1000px,calc(100vw - 28px));height:calc(100vh - 100px);border:0;background:white;box-shadow:0 25px 70px rgba(24,21,18,.12)}@media(max-width:700px){#viewerModal .modal-box{width:100%!important;height:100vh;max-height:100vh;border-radius:0;margin:0;display:flex;flex-direction:column}#viewerModal .modal-head{flex-shrink:0;padding:12px 16px}#viewerModal .viewer-frame{flex:1;overflow:hidden;display:flex;flex-direction:column}#viewerModal .viewer-frame iframe{width:100%!important;height:100%!important;flex:1}}.danger-note{border-left:1px solid var(--bad);padding-left:12px;color:var(--bad)}
+body.student-mode .shell{display:none}body:not(.student-mode) .student-shell{display:none}.student-hero{border:1px solid var(--ink);padding:24px;margin-bottom:16px;background:rgba(255,253,249,.72);box-shadow:var(--shadow)}.student-hero h2{font-size:46px;line-height:.95}.student-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.student-lesson,.student-resource{border:1px solid var(--line);background:rgba(255,255,255,.35);padding:15px;margin-bottom:10px}.student-lesson-title{font-family:Georgia,serif;font-size:24px;letter-spacing:-.04em}.viewer-frame iframe{width:min(1000px,calc(100vw - 28px));height:calc(100vh - 100px);border:0;background:white;box-shadow:0 25px 70px rgba(24,21,18,.12)}.danger-note{border-left:1px solid var(--bad);padding-left:12px;color:var(--bad)}
 @media(max-width:900px){.shell,.student-shell{width:min(100% - 24px,1440px);padding-top:18px}.mast,.grid,.two,.three,.student-grid{grid-template-columns:1fr}.datebox{text-align:left}.brand h1{font-size:42px}.page-head{display:block}.actions{margin-left:0}.login-logo{font-size:56px}}
 </style>
 </head>
 <body>
 <div id="privacyGate" class="privacy-gate"><div><h2>Carregando LessonHub…</h2><p id="privacyText">Aguardando autenticação. Nenhum dado sensível aparece antes do login.</p></div></div>
-<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.15.7-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
+<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.15-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
 
-<div class="shell hidden" id="adminShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.15.7-alpha</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-lessons" class="page"></section><section id="page-courses" class="page"></section><section id="page-materials" class="page"></section><section id="page-finance" class="page"></section><section id="page-portal" class="page"></section><section id="page-health" class="page"></section></main></div>
+<div class="shell hidden" id="adminShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.15-alpha</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-lessons" class="page"></section><section id="page-courses" class="page"></section><section id="page-materials" class="page"></section><section id="page-finance" class="page"></section><section id="page-portal" class="page"></section><section id="page-health" class="page"></section></main></div>
 
-<div class="student-shell hidden" id="studentShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Student Portal · v1.15.7-alpha</p></div><div class="datebox" id="studentEmailBox"></div></header><nav class="student-nav" id="studentNav"><button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button><button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button><button data-spage="materials" onclick="showStudentPage('materials')">Materials</button><button data-spage="finance" onclick="showStudentPage('finance')">Finance</button></nav><main id="studentApp"></main></div>
+<div class="student-shell hidden" id="studentShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Student Portal · v1.15-alpha</p></div><div class="datebox" id="studentEmailBox"></div></header><nav class="student-nav" id="studentNav"><button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button><button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button><button data-spage="materials" onclick="showStudentPage('materials')">Materials</button><button data-spage="finance" onclick="showStudentPage('finance')">Finance</button></nav><main id="studentApp"></main></div>
 
 <input type="file" id="backupInput" accept=".json" class="hidden" onchange="importBackup(this.files[0])">
 <input type="file" id="materialFileInput" class="hidden" onchange="attachFileToCurrentMaterial(this.files[0])">
@@ -49,7 +49,7 @@ body.student-mode .shell{display:none}body:not(.student-mode) .student-shell{dis
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.15.4-alpha',
+  VERSION:'1.15-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -176,143 +176,10 @@ function render(){if(STATE.mode!=='admin')return;buildNav();document.querySelect
 function renderDashboard(){const todayLessons=DB.lessons.filter(l=>l.date===today());const toPlan=DB.lessons.filter(l=>l.planStatus==='a planejar');$('page-dashboard').innerHTML=pageHead('Today','Núcleo consolidado: alunos, aulas, materiais, portal e sincronização.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="grid"><div class="card"><div class="num">${DB.students.length}</div><div class="label">alunos</div></div><div class="card"><div class="num">${todayLessons.length}</div><div class="label">aulas hoje</div></div><div class="card"><div class="num">${toPlan.length}</div><div class="label">a planejar</div></div><div class="card"><div class="num">${STATE.source}</div><div class="label">fonte carregada</div></div></div><div class="two"><div class="panel"><div class="panel-title">Aulas de hoje</div><div class="list">${todayLessons.map(lessonCard).join('')||'<div class="empty">Nenhuma aula hoje.</div>'}</div></div><div class="panel"><div class="panel-title">Últimos logs</div>${logList()}</div></div>`}
 function renderStudents(q=''){const query=String(q).toLowerCase();const rows=DB.students.filter(s=>(s.name+' '+s.email+' '+s.activeCourseName).toLowerCase().includes(query)).sort((a,b)=>a.name.localeCompare(b.name));$('page-students').innerHTML=pageHead('Students','Cadastro essencial, e-mail do portal e curso ativo.',`<button class="btn" onclick="openStudentModal()">novo aluno</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar aluno..." oninput="renderStudents(this.value)"></div><div class="list">${rows.map(studentCard).join('')||'<div class="empty">Nenhum aluno cadastrado.</div>'}</div>`}
 function studentCard(s){const lessons=DB.lessons.filter(l=>l.studentId===s.id);const next=lessons.filter(l=>!l.date||l.date>=today()).sort((a,b)=>String(a.date).localeCompare(String(b.date)))[0];const fin=financeForStudent(s.id);const course=s.courseId?byId(DB.courses,s.courseId):null;const courseBadge=course?`<span class="badge" style="background:${esc(course.color||'#8b3a1f')}22;color:${esc(course.color||'#8b3a1f')};border-color:${esc(course.color||'#8b3a1f')}44">${esc(course.name)}</span>`:badge('sem curso','warn');return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.status)}${badge(s.email||'sem e-mail',s.email?'ok':'warn')}${courseBadge}${badge(`${lessons.length} aulas`)}${badge('LTV '+money(fin.ltv),'ok')}${fin.aCobrar.length>0?badge(fin.aCobrar.length+' a cobrar','warn'):''}</div><div class="meta">${next?`Próxima: ${fmtDate(next.date)} ${esc(next.startTime||'')}`:'Sem próxima aula.'}<br>${esc(s.goal||'Sem objetivo registrado.')}</div><div class="row-actions"><button class="linkbtn" onclick="openStudentModal('${s.id}')">editar</button><button class="linkbtn" onclick="openLessonModal('${s.id}')">nova aula</button><button class="linkbtn" onclick="openPaymentModal('${s.id}')">novo pagamento</button><button class="linkbtn" onclick="previewStudent('${s.id}')">preview</button><button class="linkbtn" onclick="deleteStudent('${s.id}')">excluir</button></div></div>`}
-function renderLessons(q='',periodo='todas'){
-  const query=String(q||'').toLowerCase();
-  const tod=today();
-  // semana corrente: segunda a domingo
-  const d=new Date(tod);const dow=d.getDay();
-  const seg=new Date(d);seg.setDate(d.getDate()-(dow===0?6:dow-1));
-  const dom=new Date(seg);dom.setDate(seg.getDate()+6);
-  const segStr=seg.toISOString().slice(0,10);
-  const domStr=dom.toISOString().slice(0,10);
-
-  let rows=DB.lessons.filter(l=>{
-    if(query&&!(l.title+' '+studentName(l.studentId)+' '+l.date+' '+l.status).toLowerCase().includes(query))return false;
-    if(periodo==='hoje')return l.date===tod;
-    if(periodo==='semana')return l.date>=segStr&&l.date<=domStr;
-    if(periodo==='passadas')return l.date<tod;
-    if(periodo==='futuras')return l.date>tod;
-    return true;
-  }).sort((a,b)=>periodo==='passadas'?String(b.date||'').localeCompare(String(a.date||'')):String(a.date||'').localeCompare(String(b.date||'')));
-
-  const periodos=[['todas','Todas'],['hoje','Hoje'],['semana','Esta semana'],['futuras','Futuras'],['passadas','Passadas']];
-  const sel=`<select class="search" style="width:auto;min-width:160px" onchange="renderLessons(document.querySelector('#page-lessons .search[type=text]')?.value||'',this.value)">${periodos.map(([v,l])=>`<option value="${v}" ${v===periodo?'selected':''}>${l}</option>`).join('')}</select>`;
-
-  $('page-lessons').innerHTML=pageHead('Lessons','Aulas reais salvas no DB único.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="toolbar" style="display:flex;gap:8px;flex-wrap:wrap"><input type="text" class="search" placeholder="buscar aula..." oninput="renderLessons(this.value,'${periodo}')" value="${esc(q)}">${sel}</div><div class="list">${rows.map(lessonCard).join('')||'<div class="empty">Sem aulas neste período.</div>'}</div>`
-}
-function lessonCard(l){const isPlanned=l.planStatus==='preparada';const lMats=lessonMaterials(l);const hasPlan=!!l.plannedLessonId;const planMats=hasPlan?DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId):[];const needsSync=hasPlan&&planMats.length>0&&lMats.length===0;return `<div class="item"><div class="item-title">${esc(lessonTitle(l))}</div><div class="badges">${badge(l.title,'blue')}${badge(l.status)}${badge(l.planStatus||'',isPlanned?'ok':'warn')}${badge(money(l.value))}${badge(lMats.length+' materiais','ok')}${hasPlan?badge('ficha vinculada','blue'):''}</div><div class="meta">${esc(l.notes||'Sem notas.')}</div>${needsSync?`<div class="meta" style="color:#9b7a29">⚠ Ficha tem ${planMats.length} material(is) não copiado(s) pra esta aula. <button class="linkbtn" onclick="syncMaterialsFromPlanned('${l.id}')">copiar agora</button></div>`:''}${l.studentNotes?`<div class="meta subtle">Nota pro aluno: ${esc(l.studentNotes.substring(0,80))}${l.studentNotes.length>80?'…':''}</div>`:''}<div class="row-actions"><button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button><button class="linkbtn" onclick="togglePlanStatus('${l.id}')">marcar ${isPlanned?'a planejar':'preparada'}</button><button class="linkbtn" onclick="openMaterialModal('${l.studentId}','','${l.id}')">material</button><button class="linkbtn" onclick="deleteItem('lessons','${l.id}')">excluir</button></div></div>`}
-function renderMaterials(q=''){
-  const query=String(q||'').toLowerCase();
-  const mats=DB.materials.filter(m=>!query||(m.title+' '+m.type+' '+(studentName(m.studentId)||'')).toLowerCase().includes(query));
-
-  // Separar: com curso vs sem curso
-  const comCurso=mats.filter(m=>{
-    const l=byId(DB.lessons,m.lessonId);
-    return l?.courseId||(m.plannedLessonId&&byId(DB.plannedLessons,m.plannedLessonId)?.courseId);
-  });
-  const semCurso=mats.filter(m=>!comCurso.includes(m));
-
-  // Agrupar comCurso por curso → unidade → ficha
-  const porCurso={};
-  comCurso.forEach(m=>{
-    const l=m.lessonId?byId(DB.lessons,m.lessonId):null;
-    const pl=m.plannedLessonId?byId(DB.plannedLessons,m.plannedLessonId):null;
-    const cid=l?.courseId||pl?.courseId||'';
-    const uid2=pl?.unitId||'';
-    const pid=m.plannedLessonId||'';
-    if(!porCurso[cid])porCurso[cid]={units:{},outras:[]};
-    if(uid2){
-      if(!porCurso[cid].units[uid2])porCurso[cid].units[uid2]={planned:{},outras:[]};
-      if(pid){
-        if(!porCurso[cid].units[uid2].planned[pid])porCurso[cid].units[uid2].planned[pid]=[];
-        porCurso[cid].units[uid2].planned[pid].push(m);
-      } else {
-        porCurso[cid].units[uid2].outras.push(m);
-      }
-    } else {
-      porCurso[cid].outras.push(m);
-    }
-  });
-
-  // Agrupar semCurso por aluno → data → título
-  const porAluno={};
-  semCurso.forEach(m=>{
-    const sid=m.studentId||'__sem_aluno';
-    if(!porAluno[sid])porAluno[sid]=[];
-    porAluno[sid].push(m);
-  });
-
-  let html='';
-
-  // Renderizar por curso
-  const cursoIds=Object.keys(porCurso).sort((a,b)=>{
-    const ca=byId(DB.courses,a)?.name||'';
-    const cb=byId(DB.courses,b)?.name||'';
-    return ca.localeCompare(cb);
-  });
-
-  cursoIds.forEach(cid=>{
-    const c=byId(DB.courses,cid);
-    const dot=c?.color?`<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${esc(c.color)};margin-right:8px;vertical-align:middle"></span>`:'';
-    html+=`<div class="panel" style="margin-bottom:20px"><div class="panel-title" style="font-size:15px">${dot}${esc(c?.name||'Curso desconhecido')}</div>`;
-
-    const {units,outras}=porCurso[cid];
-
-    // Unidades em ordem
-    const unitIds=Object.keys(units).sort((a,b)=>{
-      const ua=byId(DB.units,a);const ub=byId(DB.units,b);
-      return (ua?.order||0)-(ub?.order||0)||(ua?.name||'').localeCompare(ub?.name||'');
-    });
-
-    unitIds.forEach(uid2=>{
-      const u=byId(DB.units,uid2);
-      html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${esc(u?.code||'')} ${esc(u?.name||'Unidade')}</span></div>`;
-
-      const {planned,outras:outrasFicha}=units[uid2];
-
-      // Fichas em ordem
-      const planIds=Object.keys(planned).sort((a,b)=>{
-        const pa=byId(DB.plannedLessons,a);const pb=byId(DB.plannedLessons,b);
-        return (pa?.order||0)-(pb?.order||0)||(pa?.code||'').localeCompare(pb?.code||'');
-      });
-
-      planIds.forEach(pid=>{
-        const pl=byId(DB.plannedLessons,pid);
-        html+=`<div style="margin:6px 0 2px;padding:4px 8px;background:var(--paper-2,#f5f2eb);font-size:12px"><b>${esc(pl?.code||'')} ${esc(pl?.title||'Aula planejada')}</b></div>`;
-        html+=`<div class="list" style="margin-bottom:4px">${planned[pid].map(materialCard).join('')}</div>`;
-      });
-
-      if(outrasFicha.length){
-        html+=`<div style="margin:6px 0 2px;padding:4px 8px;font-size:12px;color:#888">Outras aulas</div>`;
-        html+=`<div class="list">${outrasFicha.sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt))).map(materialCard).join('')}</div>`;
-      }
-    });
-
-    if(outras.length){
-      if(unitIds.length)html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">Sem unidade</span></div>`;
-      html+=`<div class="list">${outras.sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt))).map(materialCard).join('')}</div>`;
-    }
-
-    html+='</div>';
-  });
-
-  // Renderizar por aluno (sem curso)
-  if(Object.keys(porAluno).length){
-    html+=`<div class="panel" style="margin-bottom:20px"><div class="panel-title" style="font-size:15px">Sem curso vinculado</div>`;
-    Object.keys(porAluno).sort((a,b)=>(studentName(a)||'').localeCompare(studentName(b)||'')).forEach(sid=>{
-      const name=studentName(sid)||'Sem aluno';
-      html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${esc(name)}</span></div>`;
-      const sorted=porAluno[sid].sort((a,b)=>{
-        const la=byId(DB.lessons,a.lessonId);const lb=byId(DB.lessons,b.lessonId);
-        return String(la?.date||'').localeCompare(String(lb?.date||''))||a.title.localeCompare(b.title);
-      });
-      html+=`<div class="list">${sorted.map(materialCard).join('')}</div>`;
-    });
-    html+='</div>';
-  }
-
-  $('page-materials').innerHTML=pageHead('Materials','Metadados no Supabase, arquivos no Drive.',`<button class="btn" onclick="openMaterialModal()">novo material</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar material..." oninput="renderMaterials(this.value)" value="${esc(q)}"></div>${html||'<div class="empty">Sem materiais.</div>'}`
-}
+function renderLessons(q=''){const query=String(q).toLowerCase();const rows=DB.lessons.filter(l=>(l.title+' '+studentName(l.studentId)+' '+l.date+' '+l.status).toLowerCase().includes(query)).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));$('page-lessons').innerHTML=pageHead('Lessons','Aulas reais salvas no DB único.',`<button class="btn" onclick="openLessonModal()">nova aula</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar aula..." oninput="renderLessons(this.value)"></div><div class="list">${rows.map(lessonCard).join('')||'<div class="empty">Sem aulas.</div>'}</div>`}
+function lessonCard(l){const isPlanned=l.planStatus==='preparada';return `<div class="item"><div class="item-title">${esc(lessonTitle(l))}</div><div class="badges">${badge(l.title,'blue')}${badge(l.status)}${badge(l.planStatus||'',isPlanned?'ok':'warn')}${badge(money(l.value))}${badge(lessonMaterials(l).length+' materiais','ok')}</div><div class="meta">${esc(l.notes||'Sem notas.')}</div><div class="row-actions"><button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button><button class="linkbtn" onclick="togglePlanStatus('${l.id}')">marcar ${isPlanned?'a planejar':'preparada'}</button><button class="linkbtn" onclick="openMaterialModal('${l.studentId}','','${l.id}')">material</button><button class="linkbtn" onclick="deleteItem('lessons','${l.id}')">excluir</button></div></div>`}
+function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planStatus=l.planStatus==='preparada'?'a planejar':'preparada';scheduleSave();toast('Marcada como '+l.planStatus+'.')}
+function renderMaterials(q=''){const query=String(q).toLowerCase();const rows=DB.materials.filter(m=>(m.title+' '+m.type+' '+studentName(m.studentId)).toLowerCase().includes(query)).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));$('page-materials').innerHTML=pageHead('Materials','Metadados no Supabase, arquivos no Drive.',`<button class="btn" onclick="openMaterialModal()">novo material</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar material..." oninput="renderMaterials(this.value)"></div><div class="list">${rows.map(materialCard).join('')||'<div class="empty">Sem materiais.</div>'}</div>`}
 function materialCard(m){const att=m.attachments?.[0];const pending=att&&att.pendingUpload;const hasFile=att&&(att.driveLink||att.youtubeUrl);const fileBadge=pending?badge('arquivo pendente','warn'):hasFile?badge('Drive','ok'):badge('sem arquivo','warn');const openBtn=hasFile?`<button class="linkbtn" onclick="openMaterialViewer('${m.id}')">abrir</button>`:'';const uploadBtn=pending?`<button class="linkbtn" onclick="replaceMaterial('${m.id}')">subir arquivo</button>`:`<button class="linkbtn" onclick="replaceMaterial('${m.id}')">${hasFile?'substituir arquivo':'anexar arquivo'}</button>`;return `<div class="item"><div class="item-title">${esc(m.title)}</div><div class="badges">${badge(m.type,'blue')}${badge(studentName(m.studentId))}${badge(m.studentVisible?'visível aluno':'interno',m.studentVisible?'ok':'warn')}${fileBadge}</div><div class="meta">${esc(m.notes||'')}${att?`<br>Arquivo: ${esc(att.name||'arquivo')}${pending?' (aguardando upload pro Drive)':''}`:''}</div><div class="row-actions">${openBtn}<button class="linkbtn" onclick="openMaterialModal('${m.studentId||''}','${m.id}','${m.lessonId||''}')">editar</button>${uploadBtn}<button class="linkbtn" onclick="toggleMaterial('${m.id}')">${m.studentVisible?'ocultar':'mostrar'}</button><button class="linkbtn" onclick="deleteItem('materials','${m.id}')">excluir</button></div></div>`}
 function renderPortalAdmin(){const rows=DB.students.filter(s=>s.email);$('page-portal').innerHTML=pageHead('Student Portal','Os portais são publicados automaticamente sempre que você salva uma aula, material ou aluno.','')+`<div class="panel"><div class="panel-title">Portais dos alunos</div><div class="list">${rows.map(s=>{const snap=snapshotForStudent(s.id);const pub=(STATE.portalHashes&&STATE.portalHashes[s.id]);return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.email,'blue')}${badge((snap?.lessons||[]).length+' aulas')}${badge((snap?.materials||[]).length+' materiais','ok')}${badge(pub?'publicado':'aguardando 1º save',pub?'ok':'warn')}</div><div class="meta">${pub?'Portal sincronizado. O aluno vê a versão mais recente ao entrar.':'Salve uma aula ou material deste aluno para publicar o portal.'}</div><div class="row-actions"><button class="linkbtn" onclick="previewStudent('${s.id}')">preview</button></div></div>`}).join('')||'<div class="empty">Cadastre alunos com e-mail para que tenham portal.</div>'}</div></div>`}
 function renderHealth(){const html=pageHead('Health','Diagnóstico do núcleo consolidado.',`<button class="btn" onclick="manualSaveAll()">salvar agora</button><button class="btn soft" onclick="exportBackup()">backup JSON</button>`)+`<div class="grid"><div class="card"><div class="num">${CONFIG.VERSION}</div><div class="label">versão</div></div><div class="card"><div class="num">${STATE.source}</div><div class="label">fonte inicial</div></div><div class="card"><div class="num">${STATE.driveReady?'OK':'—'}</div><div class="label">Drive files</div></div><div class="card"><div class="num">${sizeOf()}</div><div class="label">bytes JSON</div></div></div><div class="two"><div class="panel"><div class="panel-title">Arquitetura</div><div class="meta"><b>Supabase:</b> backend JSON de dados e portais. Se aparecer RLS, precisa liberar policy no Supabase.<br><b>Drive:</b> arquivos reais, links e fallback JSON/portal.<br><b>localStorage:</b> cache operacional.<br><b>Usuário:</b> ${esc(STATE.userEmail||'—')}<br><b>Último Supabase:</b> ${STATE.lastSupabaseSave?STATE.lastSupabaseSave.toLocaleTimeString('pt-BR'):'—'}<br><b>Último Drive:</b> ${STATE.lastDriveSave?STATE.lastDriveSave.toLocaleTimeString('pt-BR'):'—'}<br><b>Erro:</b> ${esc(STATE.lastError||'—')}</div></div><div class="panel"><div class="panel-title">Logs</div>${logList()}</div></div>`;$('page-health').innerHTML=html}
@@ -359,7 +226,7 @@ function openRelatorioFinanceiro(){
     <select id="relMes" style="width:100%;margin:8px 0 20px;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:15px">${opts}</select>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button onclick="this.closest('div').parentElement.remove()" style="padding:8px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer">Cancelar</button>
-      <button onclick="const el=this.closest('div').parentElement;el.remove();gerarRelatorioMensal(document.getElementById('relMes').value)" style="padding:8px 20px;background:#222;color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:Georgia,serif">Gerar PDF</button>
+      <button onclick="const _ym=document.getElementById('relMes').value;this.closest('div').parentElement.remove();gerarRelatorioMensal(_ym)" style="padding:8px 20px;background:#222;color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:Georgia,serif">Gerar PDF</button>
     </div>
   </div>`;
   document.body.appendChild(modal);
@@ -369,37 +236,31 @@ function gerarRelatorioMensal(ym){
   const biz=DB.meta?.business||{};
   const nomeMes=new Date(ym+'-15').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
 
-  // Aulas dadas no mês (dada ou falta paga) — regime de competência
+  // Todas as aulas dadas no mês
   const aulasMes=DB.lessons.filter(l=>lessonCountsForPackage(l)&&String(l.date).slice(0,7)===ym);
 
-  // Para cada aula: valor rateado do pagamento vinculado, ou valor unitário da aula, ou defaultLessonValue do aluno
+  // Para cada aula, calcular valor unitário (rateio) e status
   const linhasAulas=[];
   aulasMes.sort((a,b)=>String(a.date).localeCompare(String(b.date))).forEach(l=>{
     const st=byId(DB.students,l.studentId);
-    const pay=DB.payments.find(p=>p.lessonIds?.includes(l.id)&&!(p.auto&&!p.valor));
+    const pay=DB.payments.find(p=>p.lessonIds?.includes(l.id));
     const qtd=pay?.lessonIds?.length||1;
-    // Valor: rateio do pagamento > valor da aula > valor padrão do aluno > 0
-    const valorUnit=pay?(Number(pay.valor)||0)/qtd:(Number(l.value)||Number(st?.defaultLessonValue)||0);
-    const status=pay?.paid?'Pago':pay?'Aguardando pagamento':'A cobrar';
-    linhasAulas.push({data:fmtDate(l.date),aluno:st?.name||'—',titulo:l.title||'Aula',status,valor:valorUnit,pago:!!pay?.paid,temPagamento:!!pay});
+    const valorUnit=pay?(Number(pay.valor)||0)/qtd:0;
+    const status=pay?.paid?'Pago':'A cobrar';
+    linhasAulas.push({data:fmtDate(l.date),aluno:st?.name||'—',titulo:l.title||'Aula',status,valor:valorUnit,pago:!!pay?.paid});
   });
 
-  // Regime de competência: receita = valor de TODAS as aulas dadas no mês (pagas ou não)
-  // Isso reflete o trabalho feito, independente de quando o dinheiro entrou
-  const totalBruto=linhasAulas.reduce((s,r)=>s+r.valor,0);
-  const totalPago=linhasAulas.filter(r=>r.pago).reduce((s,r)=>s+r.valor,0);
+  const totalReceita=linhasAulas.filter(r=>r.pago).reduce((s,r)=>s+r.valor,0);
   const totalACobrar=linhasAulas.filter(r=>!r.pago).reduce((s,r)=>s+r.valor,0);
+  const totalBruto=totalReceita+totalACobrar;
 
-  // KPIs baseados no total de aulas dadas (não só pagas)
+  // prep e horas
   const prepMin=aulasMes.reduce((s,l)=>s+(Number(l.prepMinutes)||0),0);
   const totalHorasReais=aulasMes.length+(prepMin/60);
   const semanasDoMes=4.33;
-  // Ticket médio = receita bruta do mês ÷ aulas dadas (regime competência)
-  const ticketMedio=aulasMes.length?totalBruto/aulasMes.length:0;
-  // Ticket real = receita bruta ÷ horas totais (aula + prep)
-  const ticketReal=totalHorasReais?totalBruto/totalHorasReais:0;
+  const ticketMedio=aulasMes.length?totalReceita/aulasMes.length:0;
+  const ticketReal=totalHorasReais?totalReceita/totalHorasReais:0;
   const alunosAtivos=new Set(aulasMes.map(l=>l.studentId)).size;
-  const horasSemanais=totalHorasReais/semanasDoMes;
 
   const linhasHtml=linhasAulas.map(r=>`
     <tr class="${r.pago?'pago':'acobrar'}">
@@ -462,8 +323,8 @@ function gerarRelatorioMensal(ym){
 
   <div class="sumario">
     <div class="sum-row"><span>Total bruto do período</span><span>${money(totalBruto)}</span></div>
-    <div class="sum-row subtracao"><span>A cobrar / aguardando pagamento (−)</span><span>−${money(totalACobrar)}</span></div>
-    <div class="sum-row total destaque"><span>Já recebido</span><span>${money(totalPago)}</span></div>
+    <div class="sum-row subtracao"><span>A cobrar (−)</span><span>−${money(totalACobrar)}</span></div>
+    <div class="sum-row total destaque"><span>Receita realizada</span><span>${money(totalReceita)}</span></div>
   </div>
 
   <h2>KPIs operacionais</h2>
@@ -495,9 +356,9 @@ function autoCreatePendingPayments(){
       if(existingPending){
         const newIds=unpaid.map(l=>l.id);
         const same=newIds.length===existingPending.lessonIds.length&&newIds.every(id=>existingPending.lessonIds.includes(id));
-        if(!same){existingPending.lessonIds=newIds;existingPending.valor=unpaid.length*(Number(st.defaultLessonValue)||0);changed=true;}
+        if(!same){existingPending.lessonIds=newIds;existingPending.valor=unpaid.reduce((s,l)=>{const p=DB.payments.find(pp=>pp.lessonIds?.includes(l.id));return s+(p?(Number(p.valor)||0)/(p.lessonIds?.length||1):(Number(st.defaultLessonValue)||0));},0);changed=true;}
       } else {
-        DB.payments.push({id:uid('pay'),studentId:st.id,paid:false,paidAt:'',method:'',notes:'',valor:unpaid.length*(Number(st.defaultLessonValue)||0),lessonIds:unpaid.map(l=>l.id),createdAt:nowIso(),auto:true});
+        const valorAuto=unpaid.reduce((s,l)=>{const p=DB.payments.find(pp=>pp.lessonIds?.includes(l.id));return s+(p?(Number(p.valor)||0)/(p.lessonIds?.length||1):(Number(st.defaultLessonValue)||0));},0);DB.payments.push({id:uid('pay'),studentId:st.id,paid:false,paidAt:'',method:'',notes:'',valor:valorAuto,lessonIds:unpaid.map(l=>l.id),createdAt:nowIso(),auto:true});
         changed=true;
       }
     } else if(existingPending){
@@ -508,9 +369,9 @@ function autoCreatePendingPayments(){
   if(changed)saveLocal();
 }
 
-function renderFinanceAdmin(){autoCreatePendingPayments();const ativos=DB.students.filter(s=>s.status==='ativo');const rows=ativos.map(s=>{const fin=financeForStudent(s.id);return{s,fin}});const ym=today().slice(0,7);const monthLessonsDadas=DB.lessons.filter(l=>lessonCountsForPackage(l)&&String(l.date).slice(0,7)===ym);const monthPaymentsPaid=DB.payments.filter(p=>p.paid&&String(p.paidAt).slice(0,7)===ym);const recebido=monthPaymentsPaid.reduce((s,p)=>s+(Number(p.valor)||0),0);const pendente=rows.reduce((s,r)=>s+r.fin.pending,0);const aCobrarTotal=rows.reduce((s,r)=>s+r.fin.aCobrar.length,0);const totalPrepMin=DB.lessons.filter(l=>lessonCountsForPackage(l)).reduce((s,l)=>s+(Number(l.prepMinutes)||0),0);const totalDada=DB.lessons.filter(l=>lessonCountsForPackage(l)).length;const avgPrep=totalDada?Math.round(totalPrepMin/totalDada):0;const pagamentosPagos=DB.payments.filter(p=>p.paid);const totalRevenueAll=pagamentosPagos.reduce((s,p)=>s+(Number(p.valor)||0),0);const totalLessonsAll=pagamentosPagos.reduce((s,p)=>s+(p.lessonIds?.length||0),0);const ticketMedio=totalLessonsAll?totalRevenueAll/totalLessonsAll:0;const totalRealHours=(totalLessonsAll)+(totalPrepMin/60);const ticketReal=totalRealHours?totalRevenueAll/totalRealHours:0;const semanasDoMes=4.33;const ocupacao=Math.round((monthLessonsDadas.length/(semanasDoMes*8))*100);$('page-finance').innerHTML=pageHead('Finance','Pagamentos vinculados a aulas, fechamento mensal e KPIs operacionais.',`<button class="btn" onclick="closeMonth()">fechar mês</button> <button class="btn soft" onclick="openBusinessSettings()">dados fiscais</button> <button class="btn soft" onclick="openRelatorioFinanceiro()">relatório mensal</button>`)+`<div class="grid"><div class="card"><div class="num">${money(recebido)}</div><div class="label">recebido no mês</div></div><div class="card"><div class="num">${money(pendente)}</div><div class="label">pendente</div></div><div class="card"><div class="num">${aCobrarTotal}</div><div class="label">aulas a cobrar</div></div><div class="card"><div class="num">${money(totalRevenueAll)}</div><div class="label">LTV total</div></div></div><div class="grid"><div class="card"><div class="num">${money(ticketMedio)}</div><div class="label">ticket médio por aula</div></div><div class="card"><div class="num">${money(ticketReal)}</div><div class="label">ticket real por hora total</div></div><div class="card"><div class="num">${avgPrep}min</div><div class="label">prep média/aula</div></div><div class="card"><div class="num">${ocupacao}%</div><div class="label">ocupação do teto 8h</div></div></div><div class="panel"><div class="panel-title">Alunos e pagamentos</div><div class="list">${rows.map(({s,fin})=>financeStudentCard(s,fin)).join('')||'<div class="empty">Nenhum aluno ativo.</div>'}</div></div>`}
+function renderFinanceAdmin(){autoCreatePendingPayments();const ativos=DB.students.filter(s=>s.status==='ativo');const rows=ativos.map(s=>{const fin=financeForStudent(s.id);return{s,fin}});const ym=today().slice(0,7);const monthLessonsDadas=DB.lessons.filter(l=>lessonCountsForPackage(l)&&String(l.date).slice(0,7)===ym);const monthPaymentsPaid=DB.payments.filter(p=>p.paid&&String(p.paidAt).slice(0,7)===ym);const recebido=monthPaymentsPaid.reduce((s,p)=>s+(Number(p.valor)||0),0);const pendente=rows.reduce((s,r)=>{const aCobrarLessons=r.fin.aCobrar;const fromPays=DB.payments.filter(p=>p.studentId===r.s.id&&!p.paid).reduce((ps,p)=>{const qtd=p.lessonIds?.length||1;const linked=p.lessonIds?.filter(lid=>aCobrarLessons.find(l=>l.id===lid))||[];return ps+linked.length*((Number(p.valor)||0)/qtd);},0);const unlinked=aCobrarLessons.filter(l=>!DB.payments.some(p=>p.lessonIds?.includes(l.id)));const fromUnlinked=unlinked.length*(Number(r.s.defaultLessonValue)||0);return s+fromPays+fromUnlinked;},0);const aCobrarTotal=rows.reduce((s,r)=>s+r.fin.aCobrar.length,0);const totalPrepMin=DB.lessons.filter(l=>lessonCountsForPackage(l)).reduce((s,l)=>s+(Number(l.prepMinutes)||0),0);const totalDada=DB.lessons.filter(l=>lessonCountsForPackage(l)).length;const avgPrep=totalDada?Math.round(totalPrepMin/totalDada):0;const pagamentosPagos=DB.payments.filter(p=>p.paid);const totalRevenueAll=pagamentosPagos.reduce((s,p)=>s+(Number(p.valor)||0),0);const totalLessonsAll=pagamentosPagos.reduce((s,p)=>s+(p.lessonIds?.length||0),0);const ticketMedio=totalLessonsAll?totalRevenueAll/totalLessonsAll:0;const totalRealHours=(totalLessonsAll)+(totalPrepMin/60);const ticketReal=totalRealHours?totalRevenueAll/totalRealHours:0;const semanasDoMes=4.33;const ocupacao=Math.round((monthLessonsDadas.length/(semanasDoMes*8))*100);$('page-finance').innerHTML=pageHead('Finance','Pagamentos vinculados a aulas, fechamento mensal e KPIs operacionais.',`<button class="btn" onclick="closeMonth()">fechar mês</button> <button class="btn soft" onclick="openBusinessSettings()">dados fiscais</button> <button class="btn soft" onclick="openRelatorioFinanceiro()">relatório mensal</button>`)+`<div class="grid"><div class="card"><div class="num">${money(recebido)}</div><div class="label">recebido no mês</div></div><div class="card"><div class="num">${money(pendente)}</div><div class="label">pendente</div></div><div class="card"><div class="num">${aCobrarTotal}</div><div class="label">aulas a cobrar</div></div><div class="card"><div class="num">${money(totalRevenueAll)}</div><div class="label">LTV total</div></div></div><div class="grid"><div class="card"><div class="num">${money(ticketMedio)}</div><div class="label">ticket médio por aula</div></div><div class="card"><div class="num">${money(ticketReal)}</div><div class="label">ticket real por hora total</div></div><div class="card"><div class="num">${avgPrep}min</div><div class="label">prep média/aula</div></div><div class="card"><div class="num">${ocupacao}%</div><div class="label">ocupação do teto 8h</div></div></div><div class="panel"><div class="panel-title">Alunos e pagamentos</div><div class="list">${rows.map(({s,fin})=>financeStudentCard(s,fin)).join('')||'<div class="empty">Nenhum aluno ativo.</div>'}</div></div>`}
 function financeStudentCard(s,fin){const future=fin.futureLinked.length;const consumed=fin.consumedLinked.length;const cobrar=fin.aCobrar.length;const courseName=s.courseId?byId(DB.courses,s.courseId)?.name:'';const courseBadge=courseName?badge(courseName,'blue'):'';const summary=`<div class="meta">${fin.pays.length} pagamento(s) · ${consumed} aula(s) dadas vinculadas · ${future} agendadas vinculadas${cobrar>0?` · <span style="color:#a63a2a">${cobrar} a cobrar</span>`:''}</div>`;return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${courseBadge}${badge(s.email||'sem e-mail',s.email?'ok':'warn')}${badge(fin.status,fin.status==='em dia'?'ok':'warn')}${badge('LTV '+money(fin.ltv),'blue')}${fin.pending>0?badge(money(fin.pending)+' pendente','warn'):''}</div>${summary}<div class="row-actions"><button class="linkbtn" onclick="openPaymentModal('${s.id}')">novo pagamento</button><button class="linkbtn" onclick="openFinanceDetail('${s.id}')">histórico</button></div></div>`}
-function openPaymentModal(studentId,id=''){const st=byId(DB.students,studentId);if(!st)return;const editing=id?byId(DB.payments,id):null;const linkedIds=editing?new Set(editing.lessonIds):new Set();const allLinkedElsewhere=new Set();DB.payments.forEach(p=>{if(p.id!==id)p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid))});const availableLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999')));const defaultVal=st.defaultLessonValue||0;openModal(editing?'Editar pagamento':'Novo pagamento',`Selecione as aulas que este pagamento cobre. Inclui aulas futuras (já agendadas) e aulas a cobrar (passadas).`,`<div class="form"><div class="field"><label>Aluno</label><input value="${esc(st.name)}" disabled></div><div class="two"><div class="field"><label>Valor (R$)</label><input id="payValor" type="number" step="0.01" min="0" value="${editing?editing.valor:''}" placeholder="auto: soma das aulas"></div><div class="field"><label>Status</label><select id="payPaid"><option value="false" ${editing&&!editing.paid?'selected':''}>pendente</option><option value="true" ${editing&&editing.paid?'selected':''}>pago</option></select></div></div><div class="two"><div class="field"><label>Data do pagamento</label><input id="payDate" type="date" value="${editing?.paidAt?String(editing.paidAt).slice(0,10):today()}"></div><div class="field"><label>Método</label><input id="payMethod" value="${esc(editing?.method||'')}" placeholder="PIX, transferência, ..."></div></div><div class="field"><label>Aulas cobertas por este pagamento</label><div id="payLessonsList" style="max-height:280px;overflow-y:auto;border:1px solid var(--line,#ddd);border-radius:4px;padding:8px;background:var(--paper-2,#f8f5f0)">${availableLessons.length?availableLessons.map(l=>{const checked=linkedIds.has(l.id);const dateStr=l.date?fmtDate(l.date):'sem data';const statusBadge=l.status==='dada'?' · <span style="color:#4a6b3a">dada</span>':l.status==='cancelada'&&!l.cancelNoticeOk?' · <span style="color:#a63a2a">falta paga</span>':l.status==='agendada'?' · <span style="color:#777">agendada</span>':' · '+l.status;return `<label style="display:grid;grid-template-columns:20px 1fr;gap:6px;align-items:start;padding:6px 4px;border-bottom:1px solid var(--line-soft,#eee);font-size:13px;cursor:pointer;line-height:1.4"><input type="checkbox" class="payLessonCheck" data-id="${l.id}" data-value="${l.value||defaultVal}" ${checked?'checked':''} style="margin-top:2px"> <span><b>${dateStr}${l.startTime?' · '+l.startTime:''}</b> · ${esc(l.title||'Aula')}${statusBadge}${(l.value||defaultVal)?` <span style="color:#777;font-size:12px">(${money(l.value||defaultVal)})</span>`:''}</span></label>`}).join(''):'<div class="empty" style="padding:8px">Nenhuma aula disponível. Crie aulas pra este aluno primeiro, depois vincule.</div>'}</div><div class="meta subtle" style="margin-top:6px"><span id="payCountSummary">${linkedIds.size} aula(s) selecionada(s)</span> · <a href="#" onclick="event.preventDefault();paySelectNextN('${studentId}',4)" style="margin-left:8px">vincular próximas 4</a> · <a href="#" onclick="event.preventDefault();paySelectNextN('${studentId}',8)">próximas 8</a> · <a href="#" onclick="event.preventDefault();paySelectAllACobrar('${studentId}')">só as "a cobrar"</a></div></div><div class="field"><label>Notas (opcional)</label><textarea id="payNotes">${esc(editing?.notes||'')}</textarea></div><button class="btn" onclick="savePayment('${studentId}','${id}')">${editing?'salvar alterações':'criar pagamento'}</button></div>`);setTimeout(()=>{const cb=document.querySelectorAll('.payLessonCheck');cb.forEach(c=>c.addEventListener('change',updatePaymentSummary));updatePaymentSummary()},50)}
+function openPaymentModal(studentId,id=''){const st=byId(DB.students,studentId);if(!st)return;const editing=id?byId(DB.payments,id):null;const linkedIds=editing?new Set(editing.lessonIds):new Set();const allLinkedElsewhere=new Set();DB.payments.forEach(p=>{if(p.id!==id)p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid))});const availableLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999')));const defaultVal=st.defaultLessonValue||0;openModal(editing?'Editar pagamento':'Novo pagamento',`Selecione as aulas que este pagamento cobre. Inclui aulas futuras (já agendadas) e aulas a cobrar (passadas).`,`<div class="form"><div class="field"><label>Aluno</label><input value="${esc(st.name)}" disabled></div><div class="two"><div class="field"><label>Valor (R$)</label><input id="payValor" type="number" step="0.01" min="0" value="${editing?editing.valor:''}" placeholder="auto: soma das aulas"></div><div class="field"><label>Status</label><select id="payPaid"><option value="false" ${editing&&!editing.paid?'selected':''}>pendente</option><option value="true" ${editing&&editing.paid?'selected':''}>pago</option></select></div></div><div class="two"><div class="field"><label>Data do pagamento</label><input id="payDate" type="date" value="${editing?.paidAt?String(editing.paidAt).slice(0,10):today()}"></div><div class="field"><label>Método</label><input id="payMethod" value="${esc(editing?.method||'')}" placeholder="PIX, transferência, ..."></div></div><div class="field"><label>Aulas cobertas por este pagamento</label><div id="payLessonsList" style="max-height:280px;overflow-y:auto;border:1px solid var(--line,#ddd);border-radius:4px;padding:8px;background:var(--paper-2,#f8f5f0)">${availableLessons.length?availableLessons.map(l=>{const checked=linkedIds.has(l.id);const dateStr=l.date?fmtDate(l.date):'sem data';const statusBadge=l.status==='dada'?' · <span style="color:#4a6b3a">dada</span>':l.status==='cancelada'&&!l.cancelNoticeOk?' · <span style="color:#a63a2a">falta paga</span>':l.status==='agendada'?' · <span style="color:#777">agendada</span>':' · '+l.status;return `<label style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;cursor:pointer"><input type="checkbox" class="payLessonCheck" data-id="${l.id}" data-value="${l.value||defaultVal}" ${checked?'checked':''}> <span>${dateStr} · ${esc(l.title||'Aula')}${l.startTime?' · '+l.startTime:''}${statusBadge}</span></label>`}).join(''):'<div class="empty" style="padding:8px">Nenhuma aula disponível. Crie aulas pra este aluno primeiro, depois vincule.</div>'}</div><div class="meta subtle" style="margin-top:6px"><span id="payCountSummary">${linkedIds.size} aula(s) selecionada(s)</span> · <a href="#" onclick="event.preventDefault();paySelectNextN('${studentId}',4)" style="margin-left:8px">vincular próximas 4</a> · <a href="#" onclick="event.preventDefault();paySelectNextN('${studentId}',8)">próximas 8</a> · <a href="#" onclick="event.preventDefault();paySelectAllACobrar('${studentId}')">só as "a cobrar"</a></div></div><div class="field"><label>Notas (opcional)</label><textarea id="payNotes">${esc(editing?.notes||'')}</textarea></div><button class="btn" onclick="savePayment('${studentId}','${id}')">${editing?'salvar alterações':'criar pagamento'}</button></div>`);setTimeout(()=>{const cb=document.querySelectorAll('.payLessonCheck');cb.forEach(c=>c.addEventListener('change',updatePaymentSummary));updatePaymentSummary()},50)}
 function updatePaymentSummary(){const checks=[...document.querySelectorAll('.payLessonCheck:checked')];const summary=$('payCountSummary');if(summary)summary.textContent=checks.length+' aula(s) selecionada(s)';const valorEl=$('payValor');if(valorEl&&!valorEl.value){const total=checks.reduce((s,c)=>s+(Number(c.dataset.value)||0),0);if(total>0)valorEl.placeholder='sugestão: R$ '+total.toFixed(2).replace('.',',')}}
 function paySelectNextN(studentId,n){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid)));const futureLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&(!l.date||l.date>=today())).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999'))).slice(0,n);const ids=new Set(futureLessons.map(l=>l.id));document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
 function paySelectAllACobrar(studentId){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid)));const aCobrar=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&lessonCountsForPackage(l));const ids=new Set(aCobrar.map(l=>l.id));document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
@@ -568,9 +429,7 @@ function saveLesson(id=''){
     const isNew=!id&&!DB.lessons.some(x=>x.id===l.id);
     if(isNew&&STATE._pullPlannedId&&STATE._pullCopyMats){
       const sourceMats=DB.materials.filter(m=>m.plannedLessonId===STATE._pullPlannedId&&!m.studentId);
-      const st=byId(DB.students,sid);
-      sourceMats.forEach(sm=>{const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:sid,lessonId:l.id,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);
-      if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){driveShare(a.driveId,st.email,newMat.downloadAllowed!==false).then(ok=>{if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);scheduleSave();}});}}}});
+      sourceMats.forEach(sm=>{const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:sid,lessonId:l.id,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat)});
       log('Materiais copiados da aula planejada: '+sourceMats.length,'ok');
     }
     if(isNew&&STATE._pullPlannedId){l.plannedLessonId=STATE._pullPlannedId}
@@ -594,9 +453,9 @@ async function saveMaterial(id=''){const existing=byId(DB.materials,id);const is
 function replaceMaterial(id){STATE.currentMaterialId=id;$('materialFileInput').click()}
 async function attachFileToCurrentMaterial(file){const m=byId(DB.materials,STATE.currentMaterialId);if(!file||!m)return;if(!STATE.driveReady){toast('Conecte o Google Drive primeiro (botão no topo) e tente novamente.');return}const att=await driveUploadFile(file,m.studentId);if(att){m.attachments=[att];if(m.studentId&&m.studentVisible){const st=byId(DB.students,m.studentId);if(st?.email&&att.driveId){if(await driveShare(att.driveId,st.email,true)){att.sharedWith=[st.email];}}}scheduleSave();toast('Arquivo enviado ao Drive.');}else{toast('Falha no upload. Tente reconectar o Drive.');}}
 function toggleMaterial(id){const m=byId(DB.materials,id);if(!m)return;m.studentVisible=!m.studentVisible;scheduleSave()}
-function youtubeEmbedSrc(url){const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1':null}function buildViewerHtml(att,title){const ytSrc=youtubeEmbedSrc(att?.youtubeUrl||att?.driveLink||'');if(ytSrc){return `<iframe src="${ytSrc}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0"></iframe>`}if(att?.driveLink){const fileId=String(att.driveId||att.driveLink).match(/[-\w]{25,}/)?.[0]||'';const src=fileId?`https://drive.google.com/file/d/${fileId}/preview?rm=minimal`:String(att.driveLink).replace('/view','/preview').replace(/[\?&]usp=[^&]*/g,'').replace(/\?$/,'');return `<iframe src="${esc(src)}" style="width:100%;height:100%;min-height:75vh;border:0" allow="autoplay" allowfullscreen></iframe>`}return '<div class="empty">Sem arquivo disponível.</div>'}
+function youtubeEmbedSrc(url){const m=String(url||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);return m?'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1':null}function buildViewerHtml(att,title){const ytSrc=youtubeEmbedSrc(att?.youtubeUrl||att?.driveLink||'');if(ytSrc){return `<iframe src="${ytSrc}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0"></iframe>`}if(att?.driveLink){const fileId=String(att.driveId||att.driveLink).match(/[-\w]{25,}/)?.[0]||'';const src=fileId?`https://drive.google.com/file/d/${fileId}/preview?rm=minimal`:String(att.driveLink).replace('/view','/preview').replace(/[\?&]usp=[^&]*/g,'').replace(/\?$/,'');return `<iframe src="${esc(src)}" style="width:100%;height:75vh;border:0" allow="autoplay" allowfullscreen></iframe>`}return '<div class="empty">Sem arquivo disponível.</div>'}
 function openMaterialViewer(id){const m=byId(DB.materials,id);if(!m)return;const att=m.attachments?.[0];$('viewerTitle').textContent=m.title;$('viewerSub').textContent=att?.name||'sem arquivo';$('viewerFrame').innerHTML=buildViewerHtml(att,m.title);$('viewerModal').style.display='flex'}
-function deleteItem(k,id){if(!confirm('Excluir item do LessonHub? Arquivos no Drive não serão apagados.'))return;if(k==='lessons'){DB.materials=DB.materials.filter(m=>m.lessonId!==id);}DB[k]=DB[k].filter(x=>x.id!==id);scheduleSave();toast('Excluído.')}
+function deleteItem(k,id){if(!confirm('Excluir item do LessonHub? Arquivos no Drive não serão apagados.'))return;DB[k]=DB[k].filter(x=>x.id!==id);scheduleSave();toast('Excluído.')}
 function previewStudent(id){const snap=snapshotForStudent(id);if(!snap)return toast('Aluno sem e-mail.');STATE.studentPortal=snap;showStudent()}
 
 function showStudentPage(p){STATE.studentPage=p;document.querySelectorAll('[data-spage]').forEach(b=>b.classList.toggle('active',b.dataset.spage===p));renderStudent()}
@@ -609,11 +468,9 @@ function openStudentMaterial(id){const snap=STATE.studentPortal;if(!snap)return;
 function exportBackup(){saveLocal();const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_11_2_alpha_backup_'+today()+'.json';a.click();URL.revokeObjectURL(a.href);toast('Backup exportado.')}
 function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{DB=normalizeDB(JSON.parse(r.result));saveLocal();scheduleSave();toast('Backup importado.')}catch(e){toast('Erro ao importar.')}};r.readAsText(file)}
 
-function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planStatus=l.planStatus==='preparada'?'a planejar':'preparada';scheduleSave();toast('Marcada como '+l.planStatus+'.')}
-async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
-Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
+Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
 function boot(){
-  document.title='LessonHub v1.15.7-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.15-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
