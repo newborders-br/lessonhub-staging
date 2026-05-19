@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-<title>LessonHub v1.17.1-alpha — New Borders</title>
+<title>LessonHub v1.17.2-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -710,18 +710,16 @@ function buildViewerHtml(att,title,downloadAllowed){
   if(ytSrc){
     return `<div class="cinema-frame"><div class="cinema-top"><span>${esc(title)}</span><span>YouTube</span></div><div style="width:100%;max-width:880px;aspect-ratio:16/9;margin:40px auto;padding:0 40px"><iframe src="${ytSrc}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0;display:block;aspect-ratio:16/9"></iframe></div><div class="cinema-bottom"><span>${esc(title)}</span><span>vídeo</span></div></div>`;
   }
-  // Supabase Storage → PDF.js inline
   if(att?.storageUrl){
     const isPdf=String(att.name||att.storageUrl).toLowerCase().endsWith('.pdf')||String(att.type||'').includes('pdf');
     if(isPdf){
-      return `<div class="cinema-frame" id="pdfViewerFrame"><div class="cinema-top"><span>${esc(title)}</span><span>PDF · ${downloadAllowed?'download liberado':'só visualização'}</span></div><div id="pdfContainer" style="max-width:880px;margin:0 auto;padding:0 40px 40px"></div><div class="cinema-bottom"><span>${esc(att.name||title)}</span><span id="pdfPageInfo">carregando…</span></div></div><script>(function(){const url=${JSON.stringify(att.storageUrl)};const dl=${downloadAllowed?'true':'false'};if(document.getElementById('pdfDlBtn'))document.getElementById('pdfDlBtn').style.display=dl?'block':'none';if(!window.pdfjsLib){const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=()=>{window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';renderPdf(url)};document.head.appendChild(s);}else{renderPdf(url);}function renderPdf(u){const container=document.getElementById('pdfContainer');const info=document.getElementById('pdfPageInfo');if(!container)return;container.innerHTML='<div style="text-align:center;padding:40px;color:#888;font-family:monospace;font-size:12px">carregando PDF…</div>';pdfjsLib.getDocument(u).promise.then(doc=>{container.innerHTML='';if(info)info.textContent=doc.numPages+' página'+(doc.numPages>1?'s':'');const renders=[];for(let i=1;i<=doc.numPages;i++){renders.push((page=>{const canvas=document.createElement('canvas');canvas.style='display:block;width:100%;margin-bottom:8px;border:1px solid rgba(26,23,20,.08)';container.appendChild(canvas);doc.getPage(page).then(pg=>{const vp=pg.getViewport({scale:2});canvas.width=vp.width;canvas.height=vp.height;canvas.style.width='100%';pg.render({canvasContext:canvas.getContext('2d'),viewport:vp})});return page})(i));}}).catch(e=>{container.innerHTML='<div style="text-align:center;padding:40px;color:#9a4626;font-family:monospace;font-size:12px">Erro ao carregar PDF: '+e.message+'</div>';if(info)info.textContent='erro';});}})();<\/script>`;
+      // Sem <script> no innerHTML — renderPdfViewer() é chamado externamente após setar o HTML
+      return `<div class="cinema-frame" id="pdfViewerFrame"><div class="cinema-top"><span>${esc(title)}</span><span>PDF · ${downloadAllowed?'download liberado':'só visualização'}</span></div><div id="pdfContainer" style="max-width:880px;margin:0 auto;padding:0 40px 40px"><div style="text-align:center;padding:60px;color:#888;font-family:monospace;font-size:12px">carregando PDF…</div></div><div class="cinema-bottom"><span>${esc(att.name||title)}</span><span id="pdfPageInfo">carregando…</span></div></div>`;
     }
-    // Imagem ou outro — renderizar direto
     const isImage=/\.(png|jpe?g|gif|webp|svg)$/i.test(att.name||att.storageUrl)||String(att.type||'').startsWith('image/');
     if(isImage){
       return `<div class="cinema-frame"><div class="cinema-top"><span>${esc(title)}</span><span>Imagem${downloadAllowed?' · download liberado':''}</span></div><div style="text-align:center;padding:40px 40px 0"><img src="${esc(att.storageUrl)}" style="max-width:100%;border:1px solid rgba(26,23,20,.1)"></div><div class="cinema-bottom"><span>${esc(att.name||title)}</span><span></span></div></div>`;
     }
-    // Outros formatos — link direto
     return `<div class="cinema-frame"><div class="cinema-top"><span>${esc(title)}</span><span>arquivo</span></div><div style="text-align:center;padding:80px 40px"><p style="font-family:'Newsreader',serif;font-size:18px;font-style:italic;color:#666;margin-bottom:24px">${esc(att.name||title)}</p>${downloadAllowed?`<a href="${esc(att.storageUrl)}" target="_blank" class="btn">baixar arquivo ↓</a>`:'<p style="font-size:13px;color:#999">Arquivo disponível. Download não liberado neste material.</p>'}</div><div class="cinema-bottom"><span>${esc(att.name||title)}</span><span>Supabase Storage</span></div></div>`;
   }
   if(att?.driveLink){
@@ -731,7 +729,65 @@ function buildViewerHtml(att,title,downloadAllowed){
   }
   return `<div style="padding:80px;text-align:center"><p style="font-family:'Newsreader',serif;font-size:18px;color:var(--muted);font-style:italic">Sem arquivo disponível para visualização.</p></div>`;
 }
-function openMaterialViewer(id){const m=byId(DB.materials,id);if(!m)return;const att=m.attachments?.[0];const t=$('viewerTitle');const s=$('viewerSub');const f=$('viewerFrame');const dl=$('viewerDlBtn');const screen=$('viewerScreen');if(!t||!s||!f||!screen)return;t.textContent=m.title;s.textContent=[m.type,att?.name].filter(Boolean).join(' · ');f.innerHTML=buildViewerHtml(att,m.title,m.downloadAllowed!==false);if(dl){const hasDl=(att?.driveLink||att?.storageUrl)&&m.downloadAllowed!==false;if(hasDl){dl.style.display='block';dl.id='viewerDlBtn';dl.onclick=()=>window.open(att.storageUrl||att.driveLink,'_blank')}else{dl.style.display='none'}}screen.style.display='block';document.body.style.overflow='hidden';screen.scrollTop=0}
+function renderPdfViewer(url){
+  function doRender(){
+    const container=document.getElementById('pdfContainer');
+    const info=document.getElementById('pdfPageInfo');
+    if(!container){log('PDF viewer: container não encontrado','warn');return;}
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    window.pdfjsLib.getDocument(url).promise.then(doc=>{
+      container.innerHTML='';
+      if(info)info.textContent=doc.numPages+' página'+(doc.numPages>1?'s':'');
+      for(let i=1;i<=doc.numPages;i++){
+        (function(pageNum){
+          const canvas=document.createElement('canvas');
+          canvas.style='display:block;width:100%;margin-bottom:8px;border:1px solid rgba(26,23,20,.08)';
+          container.appendChild(canvas);
+          doc.getPage(pageNum).then(pg=>{
+            const vp=pg.getViewport({scale:2});
+            canvas.width=vp.width;canvas.height=vp.height;canvas.style.width='100%';
+            pg.render({canvasContext:canvas.getContext('2d'),viewport:vp});
+          });
+        })(i);
+      }
+      log('PDF renderizado: '+doc.numPages+' página(s)','ok');
+    }).catch(e=>{
+      if(container)container.innerHTML='<div style="text-align:center;padding:40px;color:#9a4626;font-family:monospace;font-size:12px">Erro ao carregar PDF: '+e.message+'</div>';
+      if(info)info.textContent='erro';
+      log('PDF render falhou: '+e.message,'error');
+    });
+  }
+  if(window.pdfjsLib){doRender();return;}
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+  s.onload=doRender;
+  s.onerror=()=>{
+    const c=document.getElementById('pdfContainer');
+    if(c)c.innerHTML='<div style="text-align:center;padding:40px;color:#9a4626;font-family:monospace;font-size:12px">Não foi possível carregar o PDF.js. Verifique sua conexão.</div>';
+    log('PDF.js script falhou ao carregar','error');
+  };
+  document.head.appendChild(s);
+}
+function openMaterialViewer(id){
+  const m=byId(DB.materials,id);if(!m)return;
+  const att=m.attachments?.[0];
+  const t=$('viewerTitle');const s=$('viewerSub');const f=$('viewerFrame');const dl=$('viewerDlBtn');const screen=$('viewerScreen');
+  if(!t||!s||!f||!screen)return;
+  t.textContent=m.title;
+  s.textContent=[m.type,att?.name].filter(Boolean).join(' · ');
+  f.innerHTML=buildViewerHtml(att,m.title,m.downloadAllowed!==false);
+  if(dl){
+    const hasDl=(att?.driveLink||att?.storageUrl)&&m.downloadAllowed!==false;
+    if(hasDl){dl.style.display='block';dl.id='viewerDlBtn';dl.onclick=()=>window.open(att.storageUrl||att.driveLink,'_blank')}
+    else{dl.style.display='none'}
+  }
+  screen.style.display='block';document.body.style.overflow='hidden';screen.scrollTop=0;
+  // Disparar renderizador PDF após o HTML estar no DOM
+  if(att?.storageUrl){
+    const isPdf=String(att.name||att.storageUrl).toLowerCase().endsWith('.pdf')||String(att.type||'').includes('pdf');
+    if(isPdf)setTimeout(()=>renderPdfViewer(att.storageUrl),0);
+  }
+}
 
 function sb(){if(!STATE.sb)STATE.sb=supabase.createClient(CONFIG.SB_URL,CONFIG.SB_KEY);return STATE.sb}
 async function sbRead(email){try{const {data,error}=await sb().from(CONFIG.SB_TABLE).select('data,updated_at').eq('user_email',String(email).toLowerCase()).maybeSingle();if(error)throw error;return data?.data||null}catch(e){STATE.lastError=e.message||String(e);log('Supabase read falhou: '+STATE.lastError,'error');return null}}
@@ -1689,7 +1745,7 @@ function studentFinancePage(fin){const pays=(fin.pays||[]).sort((a,b)=>String(b.
 function studentLessonCard(l,mats){const lm=mats.filter(m=>m.lessonId===l.id||!m.lessonId);return `<div class="student-lesson"><div class="student-lesson-title">${esc(fmtDate(l.date))}${l.startTime?' · '+esc(l.startTime):''}</div><div class="badges">${badge(l.title,'blue')}${badge(lm.length+' materiais','ok')}</div>${l.studentNotes?`<div class="student-panel" style="margin-top:10px;padding:10px;background:var(--paper-2,#f8f5f0);border-radius:4px"><div class="meta subtle" style="margin-bottom:4px"><b>Anotações da professora</b></div><div>${esc(l.studentNotes).replace(/\n/g,'<br>')}</div></div>`:''}${lm.slice(0,4).map(studentMaterialCard).join('')}</div>`}
 function studentMaterialCard(m){const att=m.attachments?.[0];const hasFile=att&&(att.driveLink||att.youtubeUrl||att.storageUrl);return `<div class="student-resource"><div class="item-title">${esc(m.title)}</div><div class="badges">${badge(m.type||'material','blue')}${badge(hasFile?'arquivo disponível':'arquivo a caminho',hasFile?'ok':'warn')}</div>${m.notes?`<div class="meta">${esc(m.notes)}</div>`:''}<div class="row-actions">${hasFile?`<button class="linkbtn" onclick="openStudentMaterial('${m.id}')">abrir</button>`:`<span class="subtle">A professora está preparando o arquivo.</span>`}</div></div>`}
 function openStudentMaterial(id){const snap=STATE.studentPortal;if(!snap)return;const m=(snap.materials||[]).find(x=>x.id===id);if(!m)return;const att=m.attachments?.[0];if(!att?.driveLink&&!att?.youtubeUrl&&!att?.storageUrl){toast('Arquivo ainda não disponível.');return}openMaterialViewer_raw(att,m.title,m.downloadAllowed!==false)}
-function openMaterialViewer_raw(att,title,downloadAllowed){const t=$('viewerTitle');const s=$('viewerSub');const f=$('viewerFrame');const dl=$('viewerDlBtn');const screen=$('viewerScreen');if(!t||!s||!f||!screen)return;t.textContent=title;s.textContent=att?.name||'';f.innerHTML=buildViewerHtml(att,title,downloadAllowed);if(dl){const fileUrl=att?.storageUrl||att?.driveLink;if(fileUrl&&downloadAllowed){dl.style.display='block';dl.onclick=()=>window.open(fileUrl,'_blank')}else{dl.style.display='none'}}screen.style.display='block';document.body.style.overflow='hidden';screen.scrollTop=0}
+function openMaterialViewer_raw(att,title,downloadAllowed){const t=$('viewerTitle');const s=$('viewerSub');const f=$('viewerFrame');const dl=$('viewerDlBtn');const screen=$('viewerScreen');if(!t||!s||!f||!screen)return;t.textContent=title;s.textContent=att?.name||'';f.innerHTML=buildViewerHtml(att,title,downloadAllowed);if(dl){const fileUrl=att?.storageUrl||att?.driveLink;if(fileUrl&&downloadAllowed){dl.style.display='block';dl.onclick=()=>window.open(fileUrl,'_blank')}else{dl.style.display='none'}}screen.style.display='block';document.body.style.overflow='hidden';screen.scrollTop=0;if(att?.storageUrl){const isPdf=String(att.name||att.storageUrl).toLowerCase().endsWith('.pdf')||String(att.type||'').includes('pdf');if(isPdf)setTimeout(()=>renderPdfViewer(att.storageUrl),0);}}
 
 function exportBackup(){saveLocal();const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_11_2_alpha_backup_'+today()+'.json';a.click();URL.revokeObjectURL(a.href);toast('Backup exportado.')}
 function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{DB=normalizeDB(JSON.parse(r.result));saveLocal();scheduleSave();toast('Backup importado.')}catch(e){toast('Erro ao importar.')}};r.readAsText(file)}
