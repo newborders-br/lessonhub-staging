@@ -1573,22 +1573,8 @@ async function saveMaterial(id=''){const existing=byId(DB.materials,id);const is
     else{const att=await driveUploadFile(file,m.studentId);if(att){m.attachments=[att];}else{m.attachments=[{id:uid('file'),name:file.name,type:file.type,size:file.size,createdAt:nowIso(),pendingUpload:true}];uploadWarning='Material salvo, mas upload pro Drive falhou. Verifique sua conexão e use "subir arquivo" no card pra tentar de novo.';}}
   }
 }if(!id)DB.materials.push(m);if(!isPlannedMat&&m.studentId&&m.studentVisible&&STATE.driveReady){const st=byId(DB.students,m.studentId);if(st?.email){for(const a of m.attachments||[]){if(a.driveId&&!a.sharedWith?.includes(st.email)){if(await driveShare(a.driveId,st.email,m.downloadAllowed!==false)){a.sharedWith=a.sharedWith||[];a.sharedWith.push(st.email);}}}}}closeModal();scheduleSave();if(uploadWarning){toast(uploadWarning);log(uploadWarning,'warn');}else{toast('Material salvo.');}}
-function replaceMaterial(id){STATE.currentMaterialId=id;$('materialFileInput').click()}
-async function attachFileToCurrentMaterial(file){const m=byId(DB.materials,STATE.currentMaterialId);if(!file||!m)return;const isPlannedMat=!!m.plannedLessonId&&!m.studentId;if(isPlannedMat){
-  // Material de ficha → Supabase Storage
-  toast('Enviando para Supabase Storage…');
-  // Apagar arquivo antigo se existir
-  if(m.attachments?.[0]?.storageKey)await sbStorageDelete(m.attachments[0].storageKey);
-  const att=await sbStorageUpload(file,m.plannedLessonId||'biblioteca');
-  if(att){m.attachments=[att];scheduleSave();toast('Arquivo enviado ao Supabase Storage.');}
-  else{toast('Falha no upload. Verifique se o bucket "course-materials" existe com policy de INSERT habilitada.');}
-}else{
-  // Material de aluno → Drive (comportamento original)
-  if(!STATE.driveReady){toast('Conecte o Google Drive primeiro (botão no topo) e tente novamente.');return}
-  const att=await driveUploadFile(file,m.studentId);
-  if(att){m.attachments=[att];if(m.studentId&&m.studentVisible){const st=byId(DB.students,m.studentId);if(st?.email&&att.driveId){if(await driveShare(att.driveId,st.email,true)){att.sharedWith=[st.email];}}}scheduleSave();toast('Arquivo enviado ao Drive.');}
-  else{toast('Falha no upload. Tente reconectar o Drive.');}
-}}
+function replaceMaterial(id){STATE.currentMaterialId=id;const inp=$('materialFileInput');if(!inp)return;inp.value='';inp.click()}
+async function attachFileToCurrentMaterial(file){if(!file){log('attachFile: nenhum arquivo recebido','warn');return}const m=byId(DB.materials,STATE.currentMaterialId);if(!m){log('attachFile: material nao encontrado (id='+STATE.currentMaterialId+')','warn');toast('Erro: material nao encontrado. Recarregue a pagina.');return}const isPlannedMat=!!m.plannedLessonId&&!m.studentId;log('attachFile: '+file.name+' ('+Math.round(file.size/1024)+'KB) to '+(isPlannedMat?'Storage':'Drive'),'info');if(isPlannedMat){toast('Enviando para Supabase Storage...');if(m.attachments?.[0]?.storageKey)await sbStorageDelete(m.attachments[0].storageKey);const att=await sbStorageUpload(file,m.plannedLessonId||'biblioteca');if(att){m.attachments=[att];scheduleSave();toast('Arquivo enviado ao Supabase Storage.');}else{toast('Falha no upload pro Storage. Veja os logs em Health.');}}else{if(!STATE.driveReady){toast('Conecte o Google Drive primeiro e tente novamente.');return}const att=await driveUploadFile(file,m.studentId);if(att){m.attachments=[att];if(m.studentId&&m.studentVisible){const st=byId(DB.students,m.studentId);if(st?.email&&att.driveId){if(await driveShare(att.driveId,st.email,true)){att.sharedWith=[st.email];}}}scheduleSave();toast('Arquivo enviado ao Drive.');}else{toast('Falha no upload. Tente reconectar o Drive.');}}}
 function toggleMaterial(id){const m=byId(DB.materials,id);if(!m)return;m.studentVisible=!m.studentVisible;scheduleSave()}
 function deleteItem(k,id){if(!confirm('Excluir item do LessonHub? Arquivos no Drive não serão apagados.'))return;if(k==='lessons'){DB.materials=DB.materials.filter(m=>m.lessonId!==id);}if(k==='materials'){const m=byId(DB.materials,id);if(m?.attachments?.[0]?.storageKey){sbStorageDelete(m.attachments[0].storageKey).catch(()=>{});}}DB[k]=DB[k].filter(x=>x.id!==id);scheduleSave();toast('Excluído.')}
 function previewStudent(id){const snap=snapshotForStudent(id);if(!snap)return toast('Aluno sem e-mail.');STATE.studentPortal=snap;showStudent()}
