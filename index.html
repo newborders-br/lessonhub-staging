@@ -6,39 +6,423 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="theme-color" content="#fbfaf7">
+<meta name="theme-color" content="#f5f1e9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.15.8-alpha — Cursos + Pagamento Vinculado</title>
+<title>LessonHub v1.16-alpha — New Borders</title>
 <style>
+/* ============================================================
+   LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
+   Bloco 0+1+2 do editorial.html
+   ============================================================ */
 :root{
-  --bg:#fbfaf7;--paper:#fffdf9;--ink:#181512;--muted:#777069;--soft:#aaa19a;
-  --line:rgba(24,21,18,.14);--line2:rgba(24,21,18,.08);--bad:#9d2d25;--ok:#28745a;--warn:#a06c1b;--blue:#315f8f;
-  --shadow:0 28px 80px rgba(35,28,20,.055)
+  --paper:#f5f1e9;
+  --paper2:#faf7f0;
+  --ink:#1a1714;
+  --ink2:#3a342d;
+  --muted:#857b71;
+  --soft:#b4aba0;
+  --line:rgba(26,23,20,.16);
+  --line2:rgba(26,23,20,.08);
+  --rust:#9a4626;
+  --rust-soft:#c97a55;
+  --ok:#3e6b4a;
+  --warn:#8a6312;
+  --bad:#9a4626;
+  --blue:#315f8f;
+  /* aliases de compatibilidade */
+  --bg:var(--paper);
+  --shadow:none;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{min-height:100vh;background:radial-gradient(circle at 15% -10%,rgba(190,165,126,.16),transparent 28%),radial-gradient(circle at 92% 0%,rgba(49,95,143,.08),transparent 30%),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(24,21,18,.025) 1px,transparent 1px);background-size:1px 44px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),transparent 82%)}
-button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}.hidden{display:none!important}
-.shell,.student-shell{width:min(1440px,calc(100% - 48px));margin:0 auto;padding:28px 0 60px}
-.mast{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;border-bottom:1px solid var(--ink);padding:18px 0 20px;margin-bottom:16px}
-.brand h1,.student-hero h2{font-family:Georgia,serif;font-weight:400;letter-spacing:-.07em}.brand h1{font-size:56px;line-height:.82}.brand p,.datebox{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);margin-top:13px}.datebox{text-align:right;line-height:1.6}
-.nav,.student-nav{display:flex;gap:14px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px}.nav button,.student-nav button,.linkbtn{border:0;background:transparent;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.15em;padding:0 0 4px;border-bottom:1px solid transparent}.nav button.active,.nav button:hover,.student-nav button.active,.student-nav button:hover,.linkbtn:hover{color:var(--ink);border-bottom-color:var(--ink)}.actions{margin-left:auto;display:flex;gap:12px;flex-wrap:wrap}.page{display:none}.page.active{display:block}
-.page-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px}.page-title h2{font-family:Georgia,serif;font-weight:400;font-size:34px;letter-spacing:-.045em}.page-title p{color:var(--muted);margin-top:6px;font-size:14px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.card,.panel,.item,.modal-box,.student-card,.student-panel{background:rgba(255,253,249,.72);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.card,.student-card{padding:22px;min-height:128px;display:flex;flex-direction:column;justify-content:space-between}.card .num,.student-card .num{font-family:Georgia,serif;font-size:38px;letter-spacing:-.06em;font-weight:400;line-height:.9}.label{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-top:12px}.subtle{color:var(--muted);font-size:13px;line-height:1.55}.panel,.student-panel{padding:20px;margin-bottom:16px}.panel-title,.student-panel-title{font-family:Georgia,serif;font-size:25px;font-weight:400;letter-spacing:-.04em;border-bottom:1px solid var(--ink);padding-bottom:11px;margin-bottom:14px}.form{display:grid;gap:12px}.field{display:grid;gap:6px}.field label,.micro{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}input,textarea,select{width:100%;background:rgba(255,255,255,.64);border:1px solid var(--line);padding:10px 11px;outline:none;color:var(--ink)}textarea{min-height:86px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--ink);background:#fff}.btn{background:transparent;border:1px solid var(--ink);color:var(--ink);padding:9px 13px;text-transform:uppercase;letter-spacing:.13em;font-size:11px}.btn:hover{background:var(--ink);color:var(--paper)}.btn.soft{border-color:var(--line);color:var(--muted)}.btn.danger{border-color:var(--bad);color:var(--bad)}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}.toolbar-left,.row-actions,.compact-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.search{max-width:460px}.list{display:grid;gap:10px}.item{padding:15px}.item-title{font-family:Georgia,serif;font-size:21px;font-weight:400;letter-spacing:-.035em}.item:hover{border-color:rgba(24,21,18,.28)}.meta{font-size:13px;color:var(--muted);line-height:1.5}.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.badge{border:1px solid var(--line);padding:3px 7px;font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);background:rgba(255,255,255,.35)}.badge.ok{color:var(--ok);border-color:rgba(40,116,90,.35)}.badge.bad{color:var(--bad);border-color:rgba(157,45,37,.35)}.badge.warn{color:var(--warn);border-color:rgba(160,108,27,.35)}.badge.blue{color:var(--blue);border-color:rgba(49,95,143,.35)}.empty{padding:34px;text-align:center;border:1px dashed var(--line);color:var(--soft);background:rgba(255,255,255,.35)}
-.modal{position:fixed;inset:0;background:rgba(24,21,18,.48);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:22px;z-index:80}.modal-box{width:min(880px,100%);max-height:90vh;overflow:auto;padding:24px}.modal-head{display:flex;justify-content:space-between;gap:16px;margin-bottom:14px;border-bottom:1px solid var(--ink);padding-bottom:12px}.modal-title{font-family:Georgia,serif;font-size:30px;letter-spacing:-.04em}.toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:var(--paper);padding:12px 14px;font-size:13px;display:none;z-index:100}.statusbar{position:fixed;left:18px;bottom:18px;z-index:70;border:1px solid var(--line);background:rgba(255,253,249,.9);backdrop-filter:blur(14px);padding:9px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);box-shadow:var(--shadow);display:none}
-#loginScreen{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;text-align:center}.login-logo{font-family:Georgia,serif;font-size:72px;font-weight:400;letter-spacing:-.07em;line-height:.85}.google-btn{display:flex;align-items:center;gap:12px;padding:14px 28px;background:#fff;border:1px solid #dadce0;border-radius:6px;font-size:15px;color:#3c4043;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15);font-family:sans-serif}.privacy-gate{position:fixed;inset:0;z-index:89;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;background:var(--bg);color:var(--ink)}.privacy-gate h2{font-family:Georgia,serif;font-size:clamp(36px,8vw,58px);line-height:.9;letter-spacing:-.06em;font-weight:400;margin-bottom:14px}.privacy-gate p{max-width:540px;margin:0 auto;color:var(--muted);font-size:13px;line-height:1.55}
-body.student-mode .shell{display:none}body:not(.student-mode) .student-shell{display:none}.student-hero{border:1px solid var(--ink);padding:24px;margin-bottom:16px;background:rgba(255,253,249,.72);box-shadow:var(--shadow)}.student-hero h2{font-size:46px;line-height:.95}.student-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.student-lesson,.student-resource{border:1px solid var(--line);background:rgba(255,255,255,.35);padding:15px;margin-bottom:10px}.student-lesson-title{font-family:Georgia,serif;font-size:24px;letter-spacing:-.04em}.viewer-frame iframe{width:min(1000px,calc(100vw - 28px));height:calc(100vh - 100px);border:0;background:white;box-shadow:0 25px 70px rgba(24,21,18,.12)}@media(max-width:700px){#viewerModal .modal-box{width:100%!important;height:100vh;max-height:100vh;border-radius:0;margin:0;display:flex;flex-direction:column}#viewerModal .modal-head{flex-shrink:0;padding:12px 16px}#viewerModal .viewer-frame{flex:1;overflow:hidden;display:flex;flex-direction:column}#viewerModal .viewer-frame iframe{width:100%!important;height:100%!important;flex:1}}.danger-note{border-left:1px solid var(--bad);padding-left:12px;color:var(--bad)}
-@media(max-width:900px){.shell,.student-shell{width:min(100% - 24px,1440px);padding-top:18px}.mast,.grid,.two,.three,.student-grid{grid-template-columns:1fr}.datebox{text-align:left}.brand h1{font-size:42px}.page-head{display:block}.actions{margin-left:0}.login-logo{font-size:56px}}
+html,body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Geist',ui-sans-serif,system-ui,sans-serif;
+  font-size:14.5px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","cv11";
+}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+a{color:inherit}
+.hidden{display:none!important}
+
+/* ---------- shell: rail + main ---------- */
+body.student-mode #adminShell{display:none}
+body:not(.student-mode) #studentShell{display:none}
+
+#adminShell{min-height:100vh;display:grid;grid-template-columns:88px 1fr}
+.rail{border-right:1px solid var(--line);padding:28px 0 28px 22px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:space-between;background:var(--paper)}
+.mark{font-family:'Instrument Serif',Georgia,serif;font-size:30px;line-height:.85;letter-spacing:-.04em;font-weight:400}
+.mark em{font-style:italic;color:var(--rust)}
+.rail-meta{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);line-height:1.6;margin-top:auto}
+.rail-foot{font-family:'Geist Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);line-height:1.6}
+.main-content{padding:28px 56px 80px;max-width:1280px;width:100%}
+
+/* ---------- topbar ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:18px;margin-bottom:28px;gap:24px;flex-wrap:wrap}
+.crumbs{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.crumbs b{color:var(--ink);font-weight:500}
+.topbar-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.datebox{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.7}
+.datebox b{color:var(--ink);font-weight:500}
+
+/* ---------- nav ---------- */
+.nav{display:flex;gap:20px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:28px;flex-wrap:wrap}
+.nav button,.linkbtn{font-family:'Geist',sans-serif;font-size:13.5px;color:var(--muted);padding-bottom:3px;border-bottom:1px solid transparent;transition:color .12s,border-color .12s;font-weight:400;letter-spacing:.01em}
+.nav button:hover,.linkbtn:hover{color:var(--ink)}
+.nav button.active{color:var(--ink);border-bottom-color:var(--rust)}
+.actions{margin-left:auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.page{display:none}.page.active{display:block}
+
+/* ---------- page head ---------- */
+.page-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:24px}
+.page-title h2{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-weight:400;font-size:54px;line-height:.9;
+  letter-spacing:-.035em;
+}
+.page-title p{
+  font-family:'Newsreader',Georgia,serif;
+  font-size:16px;color:var(--ink2);margin-top:8px;line-height:1.45;
+}
+
+/* ---------- layout grids ---------- */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+/* ---------- cards (KPI) ---------- */
+.card{
+  padding:22px;min-height:120px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border:1px solid var(--line);background:var(--paper2);
+}
+.card .num{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:42px;letter-spacing:-.04em;font-weight:400;line-height:.9;
+}
+.card .num em{font-style:italic;color:var(--rust)}
+.label{
+  font-family:'Geist Mono',ui-monospace,monospace;
+  font-size:10px;text-transform:uppercase;letter-spacing:.18em;
+  color:var(--muted);margin-top:10px;
+}
+
+/* ---------- panels ---------- */
+.panel{border:1px solid var(--line);background:var(--paper2);padding:20px;margin-bottom:16px}
+.panel-title{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:24px;font-weight:400;letter-spacing:-.03em;
+  border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:14px;
+}
+
+/* ---------- list items ---------- */
+.list{display:grid;gap:0}
+.item{
+  padding:16px 0;
+  border-bottom:1px solid var(--line);
+}
+.item:last-child{border-bottom:0}
+.item-title{
+  font-family:'Newsreader',Georgia,serif;
+  font-size:20px;font-weight:400;letter-spacing:-.015em;line-height:1.15;
+  margin-bottom:6px;
+}
+.item:hover{background:rgba(154,70,38,.025)}
+.meta{font-size:13.5px;color:var(--ink2);line-height:1.5}
+.subtle{color:var(--muted);font-size:13px;line-height:1.55}
+
+/* ---------- badges → estado tipográfico (bloco 4) ---------- */
+.badges{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0;align-items:baseline}
+/* manter compatibilidade .badge mas no novo visual */
+.badge{
+  font-family:'Geist Mono',ui-monospace,monospace;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);
+  /* sem caixa, sem fundo, sem borda — só tipografia */
+}
+.badge.ok{color:var(--ok)}
+.badge.warn{color:var(--warn)}
+.badge.bad,.badge.danger{color:var(--bad)}
+.badge.blue{color:var(--blue)}
+/* tag-state: alias explícito do bloco 4 */
+.tag-state{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+.tag-state.ok{color:var(--ok)}
+.tag-state.warn{color:var(--warn)}
+.tag-state.todo{color:var(--rust)}
+
+/* ---------- row-actions ---------- */
+.row-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.linkbtn{
+  font-family:'Geist Mono',ui-monospace,monospace;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid transparent;
+  transition:color .12s,border-color .12s;
+}
+.linkbtn:hover{color:var(--rust);border-bottom-color:var(--rust)}
+
+/* ---------- empty state ---------- */
+.empty{
+  padding:40px;text-align:center;
+  border:1px dashed var(--line);
+  color:var(--soft);
+  font-family:'Newsreader',Georgia,serif;
+  font-style:italic;font-size:16px;
+}
+
+/* ---------- toolbar + search ---------- */
+.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}
+input[type=text].search,input.search{
+  background:transparent;
+  border:0;border-bottom:1px solid var(--ink);
+  padding:6px 0;outline:none;
+  color:var(--ink);font-size:15px;
+  font-family:'Newsreader',Georgia,serif;
+  min-width:240px;
+}
+input[type=text].search::placeholder,input.search::placeholder{color:var(--soft);font-style:italic}
+input[type=text].search:focus,input.search:focus{border-bottom-color:var(--rust)}
+
+/* ---------- forms ---------- */
+.form{display:grid;gap:14px}
+.field{display:grid;gap:5px}
+.field label,.micro{
+  font-family:'Geist Mono',ui-monospace,monospace;
+  font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);
+}
+input:not(.search),textarea,select{
+  width:100%;
+  background:transparent;
+  border:0;border-bottom:1px solid var(--line);
+  padding:8px 0;outline:none;color:var(--ink);
+  font-size:14.5px;
+  border-radius:0;
+}
+textarea{min-height:80px;resize:vertical;border:1px solid var(--line);padding:10px}
+input:focus,textarea:focus,select:focus{border-bottom-color:var(--rust);background:transparent}
+textarea:focus{border-color:var(--rust)}
+
+/* ---------- botões ---------- */
+.btn{
+  border:1px solid var(--ink);
+  padding:10px 16px;
+  font-family:'Geist Mono',ui-monospace,monospace;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);
+  transition:all .12s;
+  border-radius:0;
+  background:transparent;
+}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.soft{border-color:var(--line);color:var(--muted)}
+.btn.soft:hover{border-color:var(--ink);color:var(--ink);background:transparent}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.btn.danger:hover{background:var(--bad);color:var(--paper)}
+.btn.rust{border-color:var(--rust);color:var(--rust)}
+.btn.rust:hover{background:var(--rust);color:var(--paper)}
+
+/* ---------- modal ---------- */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(26,23,20,.52);
+  display:none;align-items:center;justify-content:center;
+  padding:22px;z-index:80;
+}
+.modal-box{
+  width:min(880px,100%);max-height:90vh;overflow:auto;
+  padding:28px;
+  background:var(--paper2);
+  border:1px solid var(--ink);
+}
+.modal-head{
+  display:flex;justify-content:space-between;gap:16px;
+  margin-bottom:16px;border-bottom:1px solid var(--ink);padding-bottom:12px;
+}
+.modal-title{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:28px;letter-spacing:-.03em;font-weight:400;
+}
+.modal-sub{font-family:'Newsreader',Georgia,serif;font-size:15px;color:var(--ink2);margin-top:4px}
+
+/* ---------- toast + statusbar ---------- */
+.toast{
+  position:fixed;right:18px;bottom:18px;
+  background:var(--ink);color:var(--paper);
+  padding:12px 16px;font-size:12px;
+  font-family:'Geist Mono',ui-monospace,monospace;
+  letter-spacing:.1em;text-transform:uppercase;
+  display:none;z-index:100;
+}
+.statusbar{
+  position:fixed;left:18px;bottom:18px;z-index:70;
+  border:1px solid var(--line);background:var(--paper2);
+  padding:9px 14px;font-size:10px;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--muted);display:none;
+}
+
+/* ---------- login ---------- */
+#loginScreen{
+  position:fixed;inset:0;z-index:90;background:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:28px;text-align:center;
+}
+.login-logo{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:80px;font-weight:400;letter-spacing:-.05em;line-height:.85;
+}
+.login-logo em{font-style:italic;color:var(--rust)}
+.google-btn{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 28px;background:#fff;border:1px solid var(--line);
+  font-size:15px;color:var(--ink2);cursor:pointer;
+}
+.privacy-gate{
+  position:fixed;inset:0;z-index:89;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:28px;background:var(--paper);color:var(--ink);
+}
+.privacy-gate h2{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:clamp(36px,8vw,58px);line-height:.9;
+  letter-spacing:-.06em;font-weight:400;margin-bottom:16px;
+}
+.privacy-gate p{max-width:540px;margin:0 auto;color:var(--muted);font-size:14px;line-height:1.55}
+
+/* ---------- student portal shell ---------- */
+.student-shell{
+  min-height:100vh;display:grid;
+  grid-template-columns:88px 1fr;
+}
+body.portal-mode{background:#fbf9f3}
+body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
+.student-hero{
+  border-bottom:1px solid var(--ink);padding:28px 0 28px;margin-bottom:24px;
+}
+.student-hero h2{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:54px;line-height:.9;letter-spacing:-.035em;font-weight:400;
+}
+.student-hero h2 em{font-style:italic;color:var(--rust)}
+.student-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.student-card{
+  padding:20px;min-height:100px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border:1px solid var(--line);background:var(--paper2);
+}
+.student-card .num{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:38px;letter-spacing:-.04em;font-weight:400;line-height:.9;
+}
+.student-panel{border:1px solid var(--line);background:var(--paper2);padding:20px;margin-bottom:16px}
+.student-panel-title{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-size:22px;font-weight:400;letter-spacing:-.03em;
+  border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:14px;
+}
+.student-lesson,.student-resource{
+  border-bottom:1px solid var(--line);padding:14px 0;
+}
+.student-lesson-title{
+  font-family:'Newsreader',Georgia,serif;
+  font-size:20px;letter-spacing:-.015em;
+}
+
+/* ---------- student nav ---------- */
+.student-nav{display:flex;gap:20px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:24px;flex-wrap:wrap}
+.student-nav button{font-family:'Geist',sans-serif;font-size:13.5px;color:var(--muted);padding-bottom:3px;border-bottom:1px solid transparent;transition:color .12s,border-color .12s}
+.student-nav button.active{color:var(--ink);border-bottom-color:var(--rust)}
+.student-nav button:hover{color:var(--ink)}
+
+/* ---------- viewer ---------- */
+.viewer-frame iframe{
+  width:min(1000px,calc(100vw - 28px));
+  height:calc(100vh - 100px);
+  border:0;background:white;
+}
+@media(max-width:700px){
+  #viewerModal .modal-box{width:100%!important;height:100vh;max-height:100vh;border-radius:0;margin:0;display:flex;flex-direction:column}
+  #viewerModal .modal-head{flex-shrink:0;padding:12px 16px}
+  #viewerModal .viewer-frame{flex:1;overflow:hidden;display:flex;flex-direction:column}
+  #viewerModal .viewer-frame iframe{width:100%!important;height:100%!important;flex:1}
+}
+
+/* ---------- misc ---------- */
+.danger-note{border-left:2px solid var(--bad);padding-left:12px;color:var(--bad)}
+
+/* ---------- responsive ---------- */
+@media(max-width:1000px){
+  #adminShell,.student-shell{grid-template-columns:1fr}
+  .rail{position:static;height:auto;flex-direction:row;align-items:center;justify-content:space-between;padding:18px 22px;border-right:0;border-bottom:1px solid var(--line)}
+  .rail-meta{display:none}
+  .main-content{padding:24px 22px 60px}
+  .grid,.two,.three,.student-grid{grid-template-columns:1fr 1fr}
+  .page-title h2{font-size:38px}
+}
+@media(max-width:600px){
+  .grid,.two,.three,.student-grid{grid-template-columns:1fr}
+  .page-head{display:block}
+  .actions{margin-top:12px;margin-left:0}
+  .page-title h2{font-size:32px}
+}
 </style>
 </head>
 <body>
 <div id="privacyGate" class="privacy-gate"><div><h2>Carregando LessonHub…</h2><p id="privacyText">Aguardando autenticação. Nenhum dado sensível aparece antes do login.</p></div></div>
-<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.15.8-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
+<div id="loginScreen" class="hidden"><div><div class="login-logo">Lesson<br>Hub</div><p class="subtle" style="text-transform:uppercase;letter-spacing:.2em;margin-top:16px">v1.16-alpha · auto portal + materials fix</p></div><button id="googleSignInBtn" class="google-btn" onclick="driveSignIn()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.58-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Entrar com Google</button><p id="loginMsg" class="subtle" style="max-width:360px"></p></div>
 
-<div class="shell hidden" id="adminShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Teaching Journal · v1.15.8-alpha</p></div><div class="datebox" id="dateBox"></div></header><nav class="nav" id="nav"></nav><main><section id="page-dashboard" class="page active"></section><section id="page-students" class="page"></section><section id="page-lessons" class="page"></section><section id="page-courses" class="page"></section><section id="page-materials" class="page"></section><section id="page-finance" class="page"></section><section id="page-portal" class="page"></section><section id="page-health" class="page"></section></main></div>
+<div class="shell hidden" id="adminShell">
+  <aside class="rail">
+    <div class="mark">L<em>H</em></div>
+    <div class="rail-meta">New Borders · LessonHub</div>
+    <div class="rail-foot">v1.16<br>2026</div>
+  </aside>
+  <div class="main-content">
+    <div class="topbar">
+      <div class="crumbs" id="crumbs"><b>LessonHub</b> · Admin</div>
+      <div class="topbar-right">
+        <div class="datebox" id="dateBox"></div>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <main>
+      <section id="page-dashboard" class="page active"></section>
+      <section id="page-students" class="page"></section>
+      <section id="page-lessons" class="page"></section>
+      <section id="page-courses" class="page"></section>
+      <section id="page-materials" class="page"></section>
+      <section id="page-finance" class="page"></section>
+      <section id="page-portal" class="page"></section>
+      <section id="page-health" class="page"></section>
+    </main>
+  </div>
+</div>
 
-<div class="student-shell hidden" id="studentShell"><header class="mast"><div class="brand"><h1>Lesson<br>Hub</h1><p>Student Portal · v1.15.8-alpha</p></div><div class="datebox" id="studentEmailBox"></div></header><nav class="student-nav" id="studentNav"><button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button><button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button><button data-spage="materials" onclick="showStudentPage('materials')">Materials</button><button data-spage="finance" onclick="showStudentPage('finance')">Finance</button></nav><main id="studentApp"></main></div>
+<div class="student-shell hidden" id="studentShell">
+  <aside class="rail">
+    <div class="mark">L<em>H</em></div>
+    <div class="rail-meta">New Borders · Portal</div>
+    <div class="rail-foot">2026</div>
+  </aside>
+  <div class="main-content">
+    <div class="topbar">
+      <div class="crumbs"><b>New Borders</b> · Portal do Aluno</div>
+      <div class="datebox" id="studentEmailBox"></div>
+    </div>
+    <nav class="student-nav" id="studentNav">
+      <button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button>
+      <button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button>
+      <button data-spage="materials" onclick="showStudentPage('materials')">Materials</button>
+      <button data-spage="finance" onclick="showStudentPage('finance')">Finance</button>
+    </nav>
+    <main id="studentApp"></main>
+  </div>
+</div>
 
 <input type="file" id="backupInput" accept=".json" class="hidden" onchange="importBackup(this.files[0])">
 <input type="file" id="materialFileInput" class="hidden" onchange="attachFileToCurrentMaterial(this.files[0])">
@@ -76,7 +460,7 @@ function sanitizeEmail(email){return String(email||'').toLowerCase().replace(/[^
 function fmtDate(d){if(!d)return '—';const p=String(d).slice(0,10).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d}
 function fmtShort(d){if(!d)return '—';const p=String(d).slice(0,10).split('-');return p.length===3?`${p[2]}/${p[1]}`:d}
 function money(n){return (Number(n)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
-function badge(t,c=''){return `<span class="badge ${c}">${esc(t)}</span>`}
+function badge(t,c=''){if(!t)return '';const cls=c==='ok'?'ok':c==='warn'?'warn':c==='bad'||c==='danger'?'warn':c==='blue'?'':c;return `<span class="badge ${cls}">${esc(String(t))}</span>`}
 function byId(arr,id){return (arr||[]).find(x=>x.id===id)}
 function log(msg,type='info'){STATE.logs.unshift({at:nowIso(),msg,type});STATE.logs=STATE.logs.slice(0,60);console.log('[LessonHub]',msg);renderHealthSafe()}
 function toast(msg){const el=$('toast');el.textContent=msg;el.style.display='block';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',3000)}
@@ -169,7 +553,21 @@ async function bootStudent(email){status('Carregando portal do aluno…',0);let 
   try{const localDB=loadLocal();const st=(localDB.students||[]).find(s=>String(s.email||'').toLowerCase()===String(email).toLowerCase());if(st){const savedDB=DB;DB=localDB;const live=snapshotForStudent(st.id);DB=savedDB;if(live){STATE.studentPortal=live;cacheStudentPortal(email,live);showStudent();status('Portal gerado a partir dos dados locais deste navegador.',5000);log('Portal do aluno gerado do DB local para '+email,'ok');return}}}catch(e){}
   STATE.studentPortal={unauthorized:true,email};showStudent();status('Acesso não autorizado')}
 
-function buildNav(){const pages=[['dashboard','Today'],['students','Students'],['lessons','Lessons'],['courses','Courses'],['materials','Materials'],['finance','Finance'],['portal','Student Portal'],['health','Health']];const driveBtn=STATE.driveReady?`<button class="linkbtn" onclick="driveSignIn()" title="Drive conectado">Drive ✓</button>`:`<button class="btn soft" onclick="driveSignIn()" title="Conecte para enviar arquivos">⚠ conectar Drive</button>`;$('nav').innerHTML=pages.map(p=>`<button data-page="${p[0]}" onclick="showPage('${p[0]}')">${p[1]}</button>`).join('')+`<div class="actions"><button class="linkbtn" onclick="exportBackup()">backup</button><button class="linkbtn" onclick="backupInput.click()">importar</button>${driveBtn}<button class="linkbtn" onclick="forgetSession()">sair</button></div>`}
+function buildNav(){
+  const pages=[['dashboard','Today'],['students','Students'],['lessons','Lessons'],['courses','Courses'],['materials','Materials'],['finance','Finance'],['portal','Student Portal'],['health','Health']];
+  const driveBtn=STATE.driveReady
+    ?`<button class="linkbtn" onclick="driveSignIn()" title="Drive conectado">Drive ✓</button>`
+    :`<button class="btn soft" onclick="driveSignIn()" title="Conecte para enviar arquivos">⚠ Drive</button>`;
+  $('nav').innerHTML=pages.map(p=>`<button data-page="${p[0]}" onclick="showPage('${p[0]}')">${p[1]}</button>`).join('')
+    +`<div class="actions"><button class="linkbtn" onclick="exportBackup()">backup</button><button class="linkbtn" onclick="backupInput.click()">importar</button>${driveBtn}<button class="linkbtn" onclick="forgetSession()">sair</button></div>`;
+  // atualiza crumbs
+  const pageLabels={dashboard:'Today',students:'Students',lessons:'Lessons',courses:'Courses',materials:'Materials',finance:'Finance',portal:'Student Portal',health:'Health'};
+  if($('crumbs'))$('crumbs').innerHTML=`<b>LessonHub</b> · ${pageLabels[STATE.page]||'Admin'}`;
+  // data
+  const d=new Date();const dias=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  const meses=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  if($('dateBox'))$('dateBox').innerHTML=`${dias[d.getDay()]}<br><b>${d.getDate()} ${meses[d.getMonth()]} ${d.getFullYear()}</b>`;
+}
 function showPage(p){STATE.page=p;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p)?.classList.add('active');document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===p));render()}
 function pageHead(title,sub,actions=''){return `<div class="page-head"><div class="page-title"><h2>${title}</h2><p>${sub}</p></div><div class="toolbar-left">${actions}</div></div>`}
 function render(){if(STATE.mode!=='admin')return;buildNav();document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===STATE.page));renderDashboard();renderStudents();renderLessons();renderCourses();renderMaterials();renderFinanceAdmin();renderPortalAdmin();renderHealth()}
@@ -602,7 +1000,7 @@ function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planSta
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
 function boot(){
-  document.title='LessonHub v1.15.8-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.16-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
