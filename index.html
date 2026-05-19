@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-<title>LessonHub v1.17.3-alpha — New Borders</title>
+<title>LessonHub v1.17.4-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -413,7 +413,7 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .ff-input.ff-large{font-family:'Instrument Serif',serif;font-size:42px;line-height:1;letter-spacing:-.03em;font-weight:400;padding:8px 0 12px}
 .ff-textarea{resize:vertical;min-height:88px;line-height:1.55;font-size:16px}
 .ff-select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 10px) 60%,calc(100% - 5px) 60%;background-size:4px 4px;background-repeat:no-repeat;cursor:pointer;padding-right:20px}
-.ff-seg{display:inline-flex;border:1px solid var(--ink);width:fit-content;flex-wrap:wrap}
+.ff-seg{display:inline-flex;border:1px solid var(--ink);width:fit-content}
 .ff-seg .seglbl{padding:9px 14px;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-right:1px solid var(--ink);transition:all .12s;line-height:1;background:transparent;user-select:none}
 .ff-seg .seglbl:last-child{border-right:0}
 .ff-seg .seglbl:hover{color:var(--ink)}
@@ -2253,16 +2253,81 @@ function openStudentModal(id=''){
 }
 function saveStudent(id=''){if(!stName.value.trim())return toast('Nome obrigatório.');const existing=byId(DB.students,id);const oldEmail=existing?String(existing.email||'').toLowerCase():'';const s=existing||{id:uid('student'),createdAt:nowIso()};s.name=stName.value.trim();s.email=stEmail.value.trim().toLowerCase();s.status=stStatus.value;s.courseId=$('stCourseId')?.value||'';s.activeCourseLevel=stLevel.value.trim();const c=s.courseId?byId(DB.courses,s.courseId):null;s.activeCourseName=c?c.name:s.activeCourseLevel;s.defaultLessonValue=Number(stValue.value)||0;s.phone=stPhone.value.trim();s.goal=stGoal.value.trim();s.notes=stNotes.value.trim();if(!id)DB.students.push(s);if(oldEmail&&oldEmail!==s.email){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(oldEmail))}catch(e){}sbDelete(oldEmail).catch(()=>{});log('E-mail do aluno mudou de '+oldEmail+' para '+s.email+'. Linha antiga limpa.','ok');}closeModal();scheduleSave();toast('Aluno salvo.')}
 async function deleteStudent(id){const s=byId(DB.students,id);if(!s)return;if(!confirm(`Excluir ${s.name}? Aulas, materiais e pagamentos vinculados também serão removidos do LessonHub. Arquivos no Drive não serão apagados.`))return;const orphanEmail=s.email?String(s.email).toLowerCase():'';DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(x=>x.studentId!==id);DB.materials=DB.materials.filter(x=>x.studentId!==id);DB.packages=DB.packages.filter(x=>x.studentId!==id);DB.payments=DB.payments.filter(x=>x.studentId!==id);if(STATE.portalHashes)delete STATE.portalHashes[id];if(orphanEmail){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(orphanEmail))}catch(e){}sbDelete(orphanEmail).catch(()=>{});}scheduleSave();toast('Aluno excluído.')}
-function openLessonModal(studentId='',id=''){const l=byId(DB.lessons,id)||{};studentId=studentId||l.studentId||'';if(!studentId&&DB.students.length===1)studentId=DB.students[0].id;const st=byId(DB.students,studentId)||{};const fin=studentId?financeForStudent(studentId):null;const paymentBadge=l.paymentId?` <span class="subtle">· já vinculada a um pagamento</span>`:studentId&&fin&&fin.aCobrar.length>0?` <span class="subtle">· ${fin.aCobrar.length} aula(s) "a cobrar" deste aluno</span>`:'';const courseSelected=l.courseId||st.courseId||'';const courseOpts=`<option value="">— sem curso —</option>`+DB.courses.filter(c=>c.status!=='arquivado').map(c=>`<option value="${c.id}" ${courseSelected===c.id?'selected':''}>${esc(c.name)}</option>`).join('');const lessonStatus=l.status||'agendada';const planStatus=l.planStatus||'a planejar';
-  // monta dropdown de planejadas — filtra por curso se já tiver
+function openLessonModal(studentId='',id=''){
+  const l=byId(DB.lessons,id)||{};
+  studentId=studentId||l.studentId||'';
+  if(!studentId&&DB.students.length===1)studentId=DB.students[0].id;
+  const st=byId(DB.students,studentId)||{};
+  const fin=studentId?financeForStudent(studentId):null;
+  const courseSelected=l.courseId||st.courseId||'';
+  const courseOpts=`<option value="">— sem curso —</option>`+DB.courses.filter(c=>c.status!=='arquivado').map(c=>`<option value="${c.id}" ${courseSelected===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
+  const lessonStatus=l.status||'agendada';
+  const planStatus=l.planStatus||'a planejar';
+  const isCanceled=lessonStatus==='cancelada';
+  // planejadas
   const filterCourseId=courseSelected;
   const plannedByCourse={};
-  DB.plannedLessons.filter(p=>p.status!=='arquivado').forEach(p=>{if(filterCourseId&&p.courseId!==filterCourseId)return;const k=p.courseId||'sem curso';plannedByCourse[k]=plannedByCourse[k]||[];plannedByCourse[k].push(p)});
+  DB.plannedLessons.filter(p=>p.status!=='arquivado').forEach(p=>{
+    if(filterCourseId&&p.courseId!==filterCourseId)return;
+    const k=p.courseId||'sem curso';plannedByCourse[k]=plannedByCourse[k]||[];plannedByCourse[k].push(p);
+  });
   let plannedOpts='<option value="">— escolher aula planejada —</option>';
-  Object.keys(plannedByCourse).forEach(cid=>{const c=byId(DB.courses,cid);const unitMap={};plannedByCourse[cid].forEach(p=>{const k=p.unitId||'sem unidade';unitMap[k]=unitMap[k]||[];unitMap[k].push(p)});Object.keys(unitMap).forEach(uid=>{const u=byId(DB.units,uid);const label=(c?c.name:'sem curso')+(u?' › '+u.name:' › sem unidade');plannedOpts+=`<optgroup label="${esc(label)}">${unitMap[uid].sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)||String(a.code).localeCompare(String(b.code))).map(p=>`<option value="${p.id}">${p.code?esc(p.code)+' · ':''}${esc(p.title)}</option>`).join('')}</optgroup>`})});
-  const pullBlock=!id?`<div class="panel" style="margin-bottom:16px;padding:12px;background:var(--paper-2,#f8f5f0);border-radius:6px"><div class="panel-title" style="margin-bottom:8px">Puxar de aula planejada (opcional)</div><div class="field"><select id="pullPlanned">${plannedOpts}</select></div><div class="meta subtle" style="margin:8px 0 4px"><label style="margin-right:12px"><input type="checkbox" id="pullCopyText" checked> copiar título e conteúdo</label><label style="margin-right:12px"><input type="checkbox" id="pullCopyNotes" checked> copiar notas</label><label><input type="checkbox" id="pullCopyMats" checked> copiar materiais e homework</label></div><button class="btn soft" type="button" onclick="applyPlannedLesson()">aplicar</button></div>`:'';
-  openModal(id?'Editar aula':'Nova aula','Aula real vinculada ao aluno.'+paymentBadge,`<div class="form">${pullBlock}<div class="two"><div class="field"><label>Aluno</label>${studentOptions(studentId)}</div><div class="field"><label>Curso</label><select id="lessonCourseId">${courseOpts}</select></div></div><div class="two"><div class="field"><label>Data</label><input id="lessonDate" type="date" value="${esc(l.date||today())}"></div><div class="field"><label>Horário</label><input id="lessonTime" type="time" value="${esc(l.startTime||'')}"></div></div><div class="field"><label>Título</label><input id="lessonTitle" value="${esc(l.title||'Aula')}"></div><div class="two"><div class="field"><label>Nível</label><input id="lessonLevel" value="${esc(l.level||st.activeCourseLevel||'')}"></div><div class="field"><label>Unidade / tema</label><input id="lessonUnit" value="${esc(l.unit||'')}"></div></div><div class="two"><div class="field"><label>Valor da aula (R$)</label><input id="lessonValue" type="number" step="0.01" min="0" value="${l.value||st.defaultLessonValue||''}" placeholder="usado em sugestão de pagamento"></div><div class="field"><label>Tempo de preparação (min)</label><input id="lessonPrep" type="number" min="0" step="5" value="${l.prepMinutes||0}" placeholder="ex: 90"></div></div><div class="two"><div class="field"><label>Status</label><select id="lessonStatus">${['agendada','dada','cancelada','reposição','pendente'].map(x=>`<option ${x===lessonStatus?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Planejamento</label><select id="lessonPlanStatus">${['a planejar','preparada'].map(x=>`<option ${x===planStatus?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="field" id="lessonCancelWrap" style="display:${lessonStatus==='cancelada'?'block':'none'}"><label>Cancelamento (consome do pacote?)</label><select id="lessonCancel"><option value="false" ${!l.cancelNoticeOk?'selected':''}>sem aviso 3h+ (consome)</option><option value="true" ${l.cancelNoticeOk?'selected':''}>com aviso 3h+ (não consome)</option></select></div><div class="field"><label>Notas (privadas, só você)</label><textarea id="lessonNotes">${esc(l.notes||'')}</textarea></div><div class="field"><label>Notas visíveis ao aluno (aparecem no portal)</label><textarea id="lessonStudentNotes">${esc(l.studentNotes||'')}</textarea></div><button class="btn" onclick="saveLesson('${id}')">salvar</button></div>`);const stSelect=$('studentId'); if(stSelect)stSelect.addEventListener('change',()=>{const s=byId(DB.students,stSelect.value)||{};const lvl=$('lessonLevel'); if(lvl)lvl.value=s.activeCourseLevel||'';const cs=$('lessonCourseId'); if(cs&&s.courseId)cs.value=s.courseId;const vl=$('lessonValue'); if(vl&&!vl.value)vl.value=s.defaultLessonValue||''});const stEl=$('lessonStatus');if(stEl)stEl.addEventListener('change',()=>{const wrap=$('lessonCancelWrap');if(wrap)wrap.style.display=stEl.value==='cancelada'?'block':'none'})}
-async function applyPlannedLesson(){const pid=$('pullPlanned')?.value;if(!pid){toast('Escolha uma aula planejada primeiro.');return}const p=byId(DB.plannedLessons,pid);if(!p){toast('Aula planejada não encontrada.');return}const copyText=$('pullCopyText')?.checked;const copyNotes=$('pullCopyNotes')?.checked;const copyMats=$('pullCopyMats')?.checked;if(copyText){if($('lessonTitle'))$('lessonTitle').value=p.title;if($('lessonUnit')){const u=byId(DB.units,p.unitId);$('lessonUnit').value=p.content||(u?u.name:'')}if($('lessonLevel')&&p.level)$('lessonLevel').value=p.level;if($('lessonCourseId')&&p.courseId)$('lessonCourseId').value=p.courseId}if(copyNotes){if($('lessonNotes'))$('lessonNotes').value=p.privateNotes||'';if($('lessonStudentNotes'))$('lessonStudentNotes').value=p.studentNotes||''}STATE._pullPlannedId=pid;STATE._pullCopyMats=copyMats;toast('Aplicado. Salve a aula pra confirmar.'+(copyMats?' Materiais serão copiados ao salvar.':''))}
+  Object.keys(plannedByCourse).forEach(cid=>{
+    const c=byId(DB.courses,cid);const unitMap={};
+    plannedByCourse[cid].forEach(p=>{const k=p.unitId||'';unitMap[k]=unitMap[k]||[];unitMap[k].push(p)});
+    Object.keys(unitMap).forEach(uid=>{
+      const u=byId(DB.units,uid);
+      const label=(c?c.name:'sem curso')+(u?' › '+u.name:'');
+      plannedOpts+=`<optgroup label="${esc(label)}">${unitMap[uid].sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)||String(a.code).localeCompare(String(b.code))).map(p=>`<option value="${p.id}">${p.code?esc(p.code)+' · ':''}${esc(p.title)}</option>`).join('')}</optgroup>`;
+    });
+  });
+  const pullBlock=!id?`<div class="form-section" style="background:rgba(154,70,38,.04);padding:20px;margin:0 0 28px;border:1px solid rgba(154,70,38,.15)">
+    <div class="form-section-title" style="border-bottom-color:rgba(154,70,38,.3);color:var(--rust)">Puxar de aula planejada <span class="help" style="color:var(--rust-soft)">opcional</span></div>
+    <div class="form-row"><label class="ff-label">Aula planejada</label><select class="ff-select" id="pullPlanned">${plannedOpts}</select></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+      <label style="display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer"><input type="checkbox" id="pullCopyText" checked> título e conteúdo</label>
+      <label style="display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer"><input type="checkbox" id="pullCopyNotes" checked> notas</label>
+      <label style="display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer"><input type="checkbox" id="pullCopyMats" checked> materiais e homework</label>
+    </div>
+    <button class="btn" style="border-color:var(--rust);color:var(--rust)" type="button" onclick="applyPlannedLesson()">aplicar</button>
+  </div>`:'';
+  const statusSeg=['agendada','dada','cancelada'].map(x=>`<span class="seglbl ${lessonStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonStatus').value='${x}';document.getElementById('cancelRow').style.display='${x==='cancelada'?'block':'none'}">${x}</span>`).join('');
+  const planSeg=['a planejar','preparada'].map(x=>`<span class="seglbl ${planStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonPlanStatus').value='${x}'">${x}</span>`).join('');
+  openModal(id?'Editar aula':'Nova aula',id?'Editando aula de '+esc(st.name||''):'Aula real vinculada ao aluno.',`<div class="ff-modal-body">
+${pullBlock}
+<div class="form-section">
+<div class="form-row split">
+<div><label class="ff-label">Aluno <span class="req">*</span></label>${studentOptions(studentId)}</div>
+<div><label class="ff-label">Curso</label><select class="ff-select" id="lessonCourseId">${courseOpts}</select></div>
+</div>
+<div class="form-row split3">
+<div><label class="ff-label">Data <span class="req">*</span></label><input class="ff-input mono" id="lessonDate" type="date" value="${l.date||today()}"></div>
+<div><label class="ff-label">Horário</label><input class="ff-input mono" id="lessonTime" type="time" value="${l.startTime||''}"></div>
+<div><label class="ff-label">Valor (R$)</label><input class="ff-input mono" id="lessonValue" type="number" step="0.01" value="${l.value||st.defaultLessonValue||''}" placeholder="${st.defaultLessonValue||'0'}"></div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Conteúdo</div>
+<div class="form-row split">
+<div><label class="ff-label">Título da aula</label><input class="ff-input" id="lessonTitle" value="${esc(l.title||'')}" placeholder="ex. Daily Routines"></div>
+<div><label class="ff-label">Nível</label><input class="ff-input mono" id="lessonLevel" value="${esc(l.level||st.activeCourseLevel||'')}" placeholder="A1, B2…"></div>
+</div>
+<div class="form-row"><label class="ff-label">Tópico / unidade</label><input class="ff-input" id="lessonUnit" value="${esc(l.unit||'')}" placeholder="ex. Greetings & Introductions"></div>
+<div class="form-row"><label class="ff-label">Notas internas</label><textarea class="ff-textarea" id="lessonNotes" rows="3" placeholder="estratégia, pontos de atenção…">${esc(l.notes||'')}</textarea></div>
+<div class="form-row"><label class="ff-label">Nota visível ao aluno <span class="hint">aparece no portal</span></label><textarea class="ff-textarea" id="lessonStudentNotes" rows="2" placeholder="o que o aluno precisa saber…">${esc(l.studentNotes||'')}</textarea></div>
+<div class="form-row"><label class="ff-label">Prep (min)</label><input class="ff-input mono" id="lessonPrep" type="number" min="0" step="5" value="${l.prepMinutes||0}" placeholder="0"></div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Estado</div>
+<div class="form-row split">
+<div><label class="ff-label">Status da aula</label><div class="ff-seg">${statusSeg}</div><input type="hidden" id="lessonStatus" value="${lessonStatus}"></div>
+<div><label class="ff-label">Planejamento</label><div class="ff-seg">${planSeg}</div><input type="hidden" id="lessonPlanStatus" value="${planStatus}"></div>
+</div>
+<div id="cancelRow" style="display:${isCanceled?'block':'none'}"><label class="ff-label">Aviso de cancelamento</label><div class="ff-seg"><span class="seglbl ${l.cancelNoticeOk?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonCancel').value='true'">aviso ok (sem custo)</span><span class="seglbl ${!l.cancelNoticeOk?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonCancel').value='false'">sem aviso (cobrar)</span></div><input type="hidden" id="lessonCancel" value="${l.cancelNoticeOk?'true':'false'}"></div>
+</div>
+<div class="form-actions"><div class="form-meta">${l.paymentId?'· vinculada a pagamento':fin&&fin.aCobrar.length>0?fin.aCobrar.length+' aula(s) a cobrar deste aluno':''}</div><div class="right">${id?`<button class="linkbtn" style="color:var(--rust)" onclick="deleteItem('lessons','${id}');closeModal()">excluir</button>`:''}<button class="btn" onclick="saveLesson('${id}')">salvar →</button></div></div>
+</div>`,'ff-modal')
+}
 function saveLesson(id=''){
   try{
     const studentEl=$('studentId'), dateEl=$('lessonDate'), timeEl=$('lessonTime'), titleEl=$('lessonTitle'), levelEl=$('lessonLevel'), unitEl=$('lessonUnit'), statusEl=$('lessonStatus'), prepEl=$('lessonPrep'), cancelEl=$('lessonCancel'), notesEl=$('lessonNotes'), courseEl=$('lessonCourseId'), valueEl=$('lessonValue'), planEl=$('lessonPlanStatus'), studentNotesEl=$('lessonStudentNotes');
@@ -2491,7 +2556,7 @@ async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lesson
 function toggleUnitBlock(unitId){const el=document.getElementById('unit-'+unitId);if(el)el.classList.toggle('open')}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
 function boot(){
-  document.title='LessonHub v1.17.3-alpha — Supabase Storage + PDF Viewer';
+  document.title='LessonHub v1.17.4-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
