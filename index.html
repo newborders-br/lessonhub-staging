@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>LessonHub v1.16.6-alpha — New Borders</title>
+<title>LessonHub v1.16.7-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -398,7 +398,38 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .s-fin.warn{color:var(--rust)}
 .s-arrow{text-align:right;font-family:'Instrument Serif',Georgia,serif;font-size:22px;color:var(--soft);transition:color .12s,transform .12s}
 .student-row:hover .s-arrow{color:var(--rust);transform:translateX(3px)}
-/* ---------- portal aluno (bloco 13) ---------- */
+/* ---------- ficha do aluno (bloco 7) ---------- */
+.ficha-head{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:48px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:28px;margin-bottom:36px}
+.ficha-head h1{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(52px,8vw,96px);line-height:.85;letter-spacing:-.04em;font-weight:400}
+.ficha-head h1 em{font-style:italic;color:var(--rust)}
+.ficha-head .fid{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.ficha-head .fid b{color:var(--ink);font-weight:500}
+.ficha-meta{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}
+.ficha-meta dt{font-family:'Geist Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.ficha-meta dd{color:var(--ink2);font-family:'Geist Mono',monospace;font-size:12.5px;letter-spacing:.02em}
+.ficha-body{display:grid;grid-template-columns:minmax(0,1.6fr) 1px minmax(0,1fr);gap:0}
+.ficha-rule{background:var(--line);width:1px}
+.ficha-main{padding-right:48px}
+.ficha-side{padding-left:48px;display:flex;flex-direction:column;gap:36px}
+.goal-block{margin-bottom:40px}
+.goal-block .goal-label{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.goal-block .quote{font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:22px;line-height:1.35;color:var(--ink);border-left:2px solid var(--rust);padding-left:20px}
+.notes-block{font-family:'Newsreader',Georgia,serif;font-size:15px;line-height:1.55;color:var(--ink2)}
+.history-table{width:100%;border-collapse:collapse;margin-top:8px}
+.history-table th{font-family:'Geist Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:0 0 10px;border-bottom:1px solid var(--ink);text-align:left;font-weight:400}
+.history-table td{padding:12px 0;border-bottom:1px solid var(--line2);vertical-align:top;font-size:13.5px}
+.history-table td.hdate{font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:var(--muted);white-space:nowrap;padding-right:20px}
+.history-table td.htopic{color:var(--ink);font-family:'Newsreader',serif;font-size:15px;letter-spacing:-.005em}
+.history-table td.hstate{text-align:right;font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.ficha-back{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:0;background:none;padding:0}
+.ficha-back:hover{color:var(--rust)}
+@media(max-width:1000px){
+  .ficha-head,.ficha-body{grid-template-columns:1fr;gap:24px}
+  .ficha-head h1{font-size:54px}
+  .ficha-main{padding-right:0}
+  .ficha-side{padding-left:0}
+  .ficha-rule{display:none}
+}
 body.portal-mode{background:#fbf9f3}
 body.portal-mode .rail{background:#fbf9f3;border-right-color:rgba(26,23,20,.1)}
 .portal-greet{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:64px;align-items:end;margin-bottom:44px;padding-bottom:32px;border-bottom:1px solid var(--ink)}
@@ -731,6 +762,80 @@ function renderDashboard(){
       </aside>
     </div>`;
 }
+function showStudentFicha(id){
+  const s=byId(DB.students,id);
+  if(!s)return;
+  const fin=financeForStudent(id);
+  const course=s.courseId?byId(DB.courses,s.courseId):null;
+  const allLessons=DB.lessons.filter(l=>l.studentId===id).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+  const mats=DB.materials.filter(m=>m.studentId===id&&m.studentVisible).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+  const since=s.createdAt?new Date(s.createdAt).toLocaleDateString('pt-BR',{month:'short',year:'numeric'}):'';
+  const nomeParts=s.name.trim().split(' ');
+  const firstName=nomeParts[0];
+  const lastName=nomeParts.slice(1).join(' ');
+
+  const histRows=allLessons.slice(0,8).map(l=>{
+    const stateClass=l.status==='dada'?'ok':l.status==='cancelada'?'warn':l.planStatus==='a planejar'?'todo':'';
+    const stateLabel=l.status==='dada'?'dada':l.status==='cancelada'?(l.cancelNoticeOk?'cancelada · aviso ok':'cancelada · falta paga'):l.planStatus||l.status;
+    return `<tr>
+      <td class="hdate">${l.date?fmtDate(l.date).replace(/\//g,'.')+`${l.startTime?'<br>'+l.startTime.slice(0,5):''}`:''}</td>
+      <td class="htopic">${esc(l.unit||l.title||'Aula')}</td>
+      <td class="hstate"><span class="tag-state ${stateClass}">${stateLabel}</span></td>
+    </tr>`;
+  }).join('');
+
+  const matCards=mats.slice(0,4).map(m=>{
+    const att=m.attachments?.[0];
+    const hasFile=att&&(att.driveLink||att.youtubeUrl);
+    return `<div class="material-card">
+      <div><div class="mc-title">${esc(m.title)}</div><div class="mc-kind">${esc(m.type||'material')}</div></div>
+      ${hasFile?`<button class="mc-open" onclick="openMaterialViewer('${m.id}')">abrir →</button>`:`<span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)">em breve</span>`}
+    </div>`;
+  }).join('');
+
+  $('page-students').innerHTML=`
+    <button class="ficha-back" onclick="renderStudents()">← Students</button>
+    <div class="ficha-head">
+      <div>
+        <div class="fid"><b>${esc(s.id.slice(0,12).toUpperCase())}</b> · ${s.status}${since?' · desde '+since:''}</div>
+        <h1>${esc(firstName)}${lastName?`<br><em>${esc(lastName)}.</em>`:`.`}</h1>
+      </div>
+      <dl class="ficha-meta">
+        <div><dt>E-mail</dt><dd>${esc(s.email||'—')}</dd></div>
+        <div><dt>Curso ativo</dt><dd>${esc(course?.name||s.activeCourseName||'—')}${s.activeCourseLevel?' · '+esc(s.activeCourseLevel):''}</dd></div>
+        <div><dt>Valor da aula</dt><dd>${s.defaultLessonValue?money(s.defaultLessonValue):'—'}</dd></div>
+        <div><dt>Aulas dadas</dt><dd>${allLessons.filter(l=>l.status==='dada').length} · ${allLessons.filter(l=>l.date>=today()).length} agendadas</dd></div>
+        <div><dt>LTV</dt><dd>${money(fin.ltv)}</dd></div>
+        <div><dt>Status financeiro</dt><dd><span class="tag-state ${fin.status==='em dia'?'ok':fin.status==='pendente'?'warn':'todo'}">${fin.status}</span></dd></div>
+      </dl>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap">
+      <button class="btn" onclick="openStudentModal('${id}')">editar ficha</button>
+      <button class="btn soft" onclick="openLessonModal('${id}')">+ nova aula</button>
+      <button class="btn soft" onclick="openPaymentModal('${id}')">+ pagamento</button>
+      <button class="btn soft" onclick="previewStudent('${id}')">preview portal</button>
+    </div>
+    <div class="ficha-body">
+      <div class="ficha-main">
+        ${s.goal?`<div class="goal-block"><div class="goal-label">Objetivo declarado</div><div class="quote">${esc(s.goal)}</div></div>`:''}
+        <div class="section-title">Histórico <span class="count">últimas ${Math.min(8,allLessons.length)} aulas</span></div>
+        ${allLessons.length?`<table class="history-table"><thead><tr><th>Data</th><th>Tópico</th><th style="text-align:right">Estado</th></tr></thead><tbody>${histRows}</tbody></table>`:`<div class="empty">Sem aulas registradas.</div>`}
+        ${mats.length?`<div style="margin-top:40px"><div class="section-title">Materiais visíveis <span class="count">${mats.length}</span></div>${matCards}</div>`:''}
+      </div>
+      <div class="ficha-rule"></div>
+      <aside class="ficha-side">
+        ${s.notes?`<div><div class="section-title">Notas internas</div><p class="notes-block">${esc(s.notes).replace(/\n/g,'<br>')}</p></div>`:''}
+        <div>
+          <div class="section-title">Financeiro</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            ${[['LTV acumulado',money(fin.ltv)],['Pendente',money(fin.pending)],['Aulas a cobrar',fin.aCobrar.length+' aula(s)']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line2)"><span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">${k}</span><span style="font-family:'Geist Mono',monospace;font-size:12px">${v}</span></div>`).join('')}
+          </div>
+          <div style="margin-top:12px"><button class="linkbtn" onclick="openFinanceDetail('${id}')">ver histórico completo →</button></div>
+        </div>
+        ${s.phone?`<div><div class="section-title">Contato</div><p class="notes-block">${esc(s.phone)}</p></div>`:''}
+      </aside>
+    </div>`;
+}
 function renderStudents(q=''){
   const query=String(q||'').toLowerCase();
   const rows=DB.students.filter(s=>!query||(s.name+' '+s.email+' '+s.activeCourseName).toLowerCase().includes(query)).sort((a,b)=>a.name.localeCompare(b.name));
@@ -747,7 +852,7 @@ function renderStudents(q=''){
     const courseStr=course?.name||s.activeCourseName||'—';
     const levelStr=s.activeCourseLevel||'';
     const aulas=allLessons.length;
-    return `<div class="student-row" onclick="openStudentModal('${s.id}')">
+    return `<div class="student-row" onclick="showStudentFicha('${s.id}')">
       <div class="s-name">${esc(s.name)}<small>${sinceDate?'desde '+sinceDate:''}</small></div>
       <div class="s-course">${esc(courseStr)}<em>${levelStr?levelStr+' · ':''} ${aulas} aula${aulas!==1?'s':''}</em></div>
       <div class="s-next">${esc(nextStr)}<small>${esc(nextState)}</small></div>
@@ -755,11 +860,10 @@ function renderStudents(q=''){
       <div class="s-arrow">→</div>
     </div>`;
   }).join('');
-
   $('page-students').innerHTML=`
     <div class="hero" style="margin-bottom:28px">
       <h1>Students</h1>
-      <p class="lede">${rows.length} aluno${rows.length!==1?'s':''} encontrado${rows.length!==1?'s':''}. Clique numa linha pra editar.</p>
+      <p class="lede">${rows.length} aluno${rows.length!==1?'s':''} encontrado${rows.length!==1?'s':''}.</p>
     </div>
     <div class="students-toolbar">
       <input type="text" class="search" placeholder="buscar por nome, curso ou e-mail…" oninput="renderStudents(this.value)" value="${esc(q)}" style="min-width:280px">
@@ -1407,9 +1511,9 @@ function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()
 
 function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planStatus=l.planStatus==='preparada'?'a planejar':'preparada';scheduleSave();toast('Marcada como '+l.planStatus+'.')}
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
-Object.assign(window,{openStudentModal,saveStudent,deleteStudent,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
+Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson});
 function boot(){
-  document.title='LessonHub v1.16.6-alpha — Cursos + Pagamento Vinculado';
+  document.title='LessonHub v1.16.7-alpha — Cursos + Pagamento Vinculado';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>session cache + robust lesson save';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
