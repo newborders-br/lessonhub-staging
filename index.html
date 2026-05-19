@@ -234,71 +234,112 @@ function openRelatorioFinanceiro(){
 
 function gerarRelatorioMensal(ym){
   const biz=DB.meta?.business||{};
-  const [ano,mes]=ym.split('-');
   const nomeMes=new Date(ym+'-15').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
 
-  const pagamentosPagos=DB.payments.filter(p=>p.paid&&String(p.paidAt).slice(0,7)===ym);
-  const receita=pagamentosPagos.reduce((s,p)=>s+(Number(p.valor)||0),0);
-  const totalAulas=pagamentosPagos.reduce((s,p)=>s+(p.lessonIds?.length||0),0);
-  const ticketMedio=totalAulas?receita/totalAulas:0;
-
+  // Todas as aulas dadas no mês
   const aulasMes=DB.lessons.filter(l=>lessonCountsForPackage(l)&&String(l.date).slice(0,7)===ym);
+
+  // Para cada aula, calcular valor unitário (rateio) e status
+  const linhasAulas=[];
+  aulasMes.sort((a,b)=>String(a.date).localeCompare(String(b.date))).forEach(l=>{
+    const st=byId(DB.students,l.studentId);
+    const pay=DB.payments.find(p=>p.lessonIds?.includes(l.id));
+    const qtd=pay?.lessonIds?.length||1;
+    const valorUnit=pay?(Number(pay.valor)||0)/qtd:0;
+    const status=pay?.paid?'Pago':'A cobrar';
+    linhasAulas.push({data:fmtDate(l.date),aluno:st?.name||'—',titulo:l.title||'Aula',status,valor:valorUnit,pago:!!pay?.paid});
+  });
+
+  const totalReceita=linhasAulas.filter(r=>r.pago).reduce((s,r)=>s+r.valor,0);
+  const totalACobrar=linhasAulas.filter(r=>!r.pago).reduce((s,r)=>s+r.valor,0);
+  const totalBruto=totalReceita+totalACobrar;
+
+  // prep e horas
   const prepMin=aulasMes.reduce((s,l)=>s+(Number(l.prepMinutes)||0),0);
-  const totalHorasReais=(aulasMes.length)+(prepMin/60);
-  const ticketReal=totalHorasReais?receita/totalHorasReais:0;
-
-  const alunosAtivos=new Set(aulasMes.map(l=>l.studentId)).size;
+  const totalHorasReais=aulasMes.length+(prepMin/60);
   const semanasDoMes=4.33;
-  const horasSemana=(aulasMes.length/semanasDoMes).toFixed(1);
-  const horasReaisSemana=(totalHorasReais/semanasDoMes).toFixed(1);
+  const ticketMedio=aulasMes.length?totalReceita/aulasMes.length:0;
+  const ticketReal=totalHorasReais?totalReceita/totalHorasReais:0;
+  const alunosAtivos=new Set(aulasMes.map(l=>l.studentId)).size;
 
-  const alunosRows=DB.students.filter(s=>s.status==='ativo').map(st=>{
-    const aulas=aulasMes.filter(l=>l.studentId===st.id);
-    if(!aulas.length)return '';
-    const rec=pagamentosPagos.filter(p=>p.studentId===st.id).reduce((s,p)=>s+(Number(p.valor)||0),0);
-    return `<tr><td>${esc(st.name)}</td><td style="text-align:center">${aulas.length}</td><td style="text-align:right">${money(rec)}</td></tr>`;
-  }).filter(Boolean).join('');
+  const linhasHtml=linhasAulas.map(r=>`
+    <tr class="${r.pago?'pago':'acobrar'}">
+      <td>${r.data}</td>
+      <td>${esc(r.aluno)}</td>
+      <td>${esc(r.titulo)}</td>
+      <td class="status ${r.pago?'tag-pago':'tag-pend'}">${r.status}</td>
+      <td class="val">${money(r.valor)}</td>
+    </tr>`).join('');
 
-  const html=`<!doctype html><html><head><meta charset="utf-8"><title>Relatório Financeiro · ${nomeMes}</title><style>
-    body{font-family:Georgia,serif;max-width:680px;margin:32px auto;padding:24px;color:#222;line-height:1.6}
-    .head{border-bottom:2px solid #222;padding-bottom:16px;margin-bottom:28px}
-    .head h1{margin:0 0 4px;font-size:22px;letter-spacing:-.3px}
-    .head .sub{color:#777;font-size:13px}
-    h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#777;margin:28px 0 10px;border-bottom:1px solid #eee;padding-bottom:6px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:8px}
-    .kpi{background:#f9f9f9;border-radius:8px;padding:14px 16px}
-    .kpi .val{font-size:22px;font-weight:bold;margin-bottom:2px}
-    .kpi .lbl{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.06em}
-    table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-    th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#999;padding:6px 8px;border-bottom:2px solid #eee}
-    td{padding:7px 8px;border-bottom:1px solid #f0f0f0}
-    .foot{margin-top:48px;border-top:1px solid #ddd;padding-top:14px;font-size:11px;color:#aaa;text-align:center}
-    @media print{body{margin:0}}
+  const html=`<!doctype html><html><head><meta charset="utf-8">
+  <title>Relatório · ${nomeMes}</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Georgia,serif;max-width:720px;margin:40px auto;padding:32px;color:#1a1a1a;font-size:13px;line-height:1.6}
+    .head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #1a1a1a;padding-bottom:14px;margin-bottom:28px}
+    .head h1{font-size:20px;letter-spacing:-.3px}
+    .head .meta{text-align:right;color:#666;font-size:12px;line-height:1.8}
+    h2{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#999;margin:28px 0 8px;padding-bottom:6px;border-bottom:1px solid #e8e8e8}
+    table{width:100%;border-collapse:collapse}
+    th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#aaa;padding:6px 10px;border-bottom:2px solid #e8e8e8;text-align:left;font-weight:normal}
+    td{padding:8px 10px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+    tr.acobrar td{color:#888}
+    .val{text-align:right;font-variant-numeric:tabular-nums;font-family:Georgia,serif}
+    th.val{text-align:right}
+    .status{text-align:center}
+    .tag-pago{color:#2a7a4b;font-size:11px;font-style:italic}
+    .tag-pend{color:#b45309;font-size:11px;font-style:italic}
+    .sumario{margin-top:28px;border-top:2px solid #1a1a1a;padding-top:16px}
+    .sum-row{display:flex;justify-content:space-between;padding:5px 10px;font-size:13px}
+    .sum-row.destaque{font-size:15px;font-weight:bold;margin-top:4px}
+    .sum-row.subtracao{color:#b45309}
+    .sum-row.total{border-top:1px solid #1a1a1a;margin-top:6px;padding-top:10px}
+    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+    .kpi{border:1px solid #e8e8e8;border-radius:6px;padding:12px 14px}
+    .kpi .v{font-size:18px;font-family:Georgia,serif;margin-bottom:2px}
+    .kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#aaa}
+    .foot{margin-top:48px;padding-top:14px;border-top:1px solid #e8e8e8;font-size:11px;color:#bbb;text-align:center}
+    @media print{body{margin:0;padding:24px}.kpis{break-inside:avoid}}
   </style></head><body>
-    <div class="head">
+  <div class="head">
+    <div>
       <h1>Relatório Financeiro</h1>
-      <div class="sub">${esc(biz.razaoSocial||'[configure em Finance · dados fiscais]')} &nbsp;·&nbsp; ${nomeMes}</div>
+      <div style="color:#666;font-size:12px;margin-top:4px">${nomeMes}</div>
     </div>
-    <h2>Receita & KPIs</h2>
-    <div class="grid">
-      <div class="kpi"><div class="val">${money(receita)}</div><div class="lbl">Receita</div></div>
-      <div class="kpi"><div class="val">${totalAulas}</div><div class="lbl">Aulas pagas</div></div>
-      <div class="kpi"><div class="val">${alunosAtivos}</div><div class="lbl">Alunos ativos</div></div>
-      <div class="kpi"><div class="val">${money(ticketMedio)}</div><div class="lbl">Ticket médio/aula</div></div>
-      <div class="kpi"><div class="val">${money(ticketReal)}</div><div class="lbl">Ticket real/hora</div></div>
-      <div class="kpi"><div class="val">${(prepMin/Math.max(aulasMes.length,1)).toFixed(0)}min</div><div class="lbl">Prep média/aula</div></div>
+    <div class="meta">
+      <div>${esc(biz.razaoSocial||'[configure em dados fiscais]')}</div>
+      ${biz.cnpj?`<div>CNPJ ${esc(biz.cnpj)}</div>`:''}
+      <div>Gerado em ${new Date().toLocaleDateString('pt-BR')}</div>
     </div>
-    <h2>Carga horária</h2>
-    <div class="grid">
-      <div class="kpi"><div class="val">${aulasMes.length}h</div><div class="lbl">Horas de aula</div></div>
-      <div class="kpi"><div class="val">${horasSemana}h</div><div class="lbl">Horas/semana</div></div>
-      <div class="kpi"><div class="val">${horasReaisSemana}h</div><div class="lbl">Horas reais/semana</div></div>
-    </div>
-    <h2>Por aluno</h2>
-    <table><thead><tr><th>Aluno</th><th style="text-align:center">Aulas</th><th style="text-align:right">Receita</th></tr></thead>
-    <tbody>${alunosRows||'<tr><td colspan="3" style="color:#aaa;text-align:center">Nenhuma aula registrada no período.</td></tr>'}</tbody></table>
-    <div class="foot">Gerado pelo LessonHub · ${new Date().toLocaleDateString('pt-BR')} · Documento interno, não substitui nota fiscal.</div>
-  <script>window.print()<\/script></body></html>`;
+  </div>
+
+  <h2>Aulas do período — regime de competência</h2>
+  <table>
+    <thead><tr>
+      <th>Data</th><th>Aluno</th><th>Aula</th><th class="status">Status</th><th class="val">Valor</th>
+    </tr></thead>
+    <tbody>${linhasHtml||'<tr><td colspan="5" style="text-align:center;color:#ccc;padding:20px">Nenhuma aula no período.</td></tr>'}</tbody>
+  </table>
+
+  <div class="sumario">
+    <div class="sum-row"><span>Total bruto do período</span><span>${money(totalBruto)}</span></div>
+    <div class="sum-row subtracao"><span>A cobrar (−)</span><span>−${money(totalACobrar)}</span></div>
+    <div class="sum-row total destaque"><span>Receita realizada</span><span>${money(totalReceita)}</span></div>
+  </div>
+
+  <h2>KPIs operacionais</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="v">${aulasMes.length}</div><div class="l">Aulas no mês</div></div>
+    <div class="kpi"><div class="v">${alunosAtivos}</div><div class="l">Alunos ativos</div></div>
+    <div class="kpi"><div class="v">${(prepMin/Math.max(aulasMes.length,1)).toFixed(0)}min</div><div class="l">Prep média/aula</div></div>
+    <div class="kpi"><div class="v">${money(ticketMedio)}</div><div class="l">Ticket médio/aula</div></div>
+    <div class="kpi"><div class="v">${money(ticketReal)}</div><div class="l">Ticket real/hora</div></div>
+    <div class="kpi"><div class="v">${(totalHorasReais/semanasDoMes).toFixed(1)}h</div><div class="l">Horas reais/semana</div></div>
+  </div>
+
+  <div class="foot">LessonHub · Documento interno · Não substitui nota fiscal eletrônica quando exigida por lei.</div>
+  <script>window.print()<\/script>
+</body></html>`;
 
   const w=window.open('','_blank');
   if(!w){toast('Permita popups para gerar o relatório.');return}
