@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-<title>LessonHub v1.17.5-alpha — New Borders</title>
+<title>LessonHub v1.17.7-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -413,8 +413,8 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .ff-input.ff-large{font-family:'Instrument Serif',serif;font-size:42px;line-height:1;letter-spacing:-.03em;font-weight:400;padding:8px 0 12px}
 .ff-textarea{resize:vertical;min-height:88px;line-height:1.55;font-size:16px}
 .ff-select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 10px) 60%,calc(100% - 5px) 60%;background-size:4px 4px;background-repeat:no-repeat;cursor:pointer;padding-right:20px}
-.ff-seg{display:inline-flex;border:1px solid var(--ink);width:fit-content}
-.ff-seg .seglbl{padding:9px 14px;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-right:1px solid var(--ink);transition:all .12s;line-height:1;background:transparent;user-select:none}
+.ff-seg{display:inline-flex;border:1px solid var(--ink);white-space:nowrap;overflow:hidden}
+.ff-seg .seglbl{padding:9px 14px;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-right:1px solid var(--ink);transition:all .12s;line-height:1;background:transparent;user-select:none;white-space:nowrap;flex-shrink:0}
 .ff-seg .seglbl:last-child{border-right:0}
 .ff-seg .seglbl:hover{color:var(--ink)}
 .ff-seg .seglbl.on{background:var(--ink);color:var(--paper)}
@@ -2595,9 +2595,35 @@ function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()
 function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planStatus=l.planStatus==='preparada'?'a planejar':'preparada';scheduleSave();toast('Marcada como '+l.planStatus+'.')}
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 function toggleUnitBlock(unitId){const el=document.getElementById('unit-'+unitId);if(el)el.classList.toggle('open')}
+function applyPlannedLesson(){
+  const pid=$('pullPlanned')?.value;
+  if(!pid){toast('Escolha uma aula planejada primeiro.');return}
+  const p=byId(DB.plannedLessons,pid);
+  if(!p){toast('Aula planejada não encontrada.');return}
+  const copyText=$('pullCopyText')?.checked!==false;
+  const copyNotes=$('pullCopyNotes')?.checked!==false;
+  const copyMats=$('pullCopyMats')?.checked!==false;
+  if(copyText){
+    const title=$('lessonTitle');if(title&&p.title)title.value=p.title;
+    const level=$('lessonLevel');if(level&&p.level)level.value=p.level;
+    const unit=$('lessonUnit');if(unit&&p.content)unit.value=p.content.split(';')[0].trim();
+    const course=$('lessonCourseId');if(course&&p.courseId)course.value=p.courseId;
+  }
+  if(copyNotes){
+    const notes=$('lessonNotes');if(notes&&p.privateNotes)notes.value=p.privateNotes;
+    const sn=$('lessonStudentNotes');if(sn&&p.studentNotes)sn.value=p.studentNotes;
+  }
+  STATE._pullPlannedId=pid;
+  STATE._pullCopyMats=copyMats;
+  toast('Ficha aplicada. Salve a aula para confirmar.');
+}
+
+// garantia explícita antes do Object.assign
+window.applyPlannedLesson=applyPlannedLesson;
+window.toggleUnitBlock=toggleUnitBlock;
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
 function boot(){
-  document.title='LessonHub v1.17.5-alpha — Supabase Storage + PDF Viewer';
+  document.title='LessonHub v1.17.7-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
