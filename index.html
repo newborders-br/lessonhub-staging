@@ -849,7 +849,7 @@ let DB=blankDB();
 let STATE={page:'dashboard',mode:'boot',userEmail:'',tokenClient:null,accessToken:null,driveReady:false,driveFolderId:null,driveDataFileId:null,drivePortalFolderId:null,sb:null,saveTimer:null,source:'none',logs:[],studentPortal:null,studentPage:'today',currentMaterialId:null,lastSupabaseSave:null,lastDriveSave:null,lastError:'',silentTried:false,coursesView:{level:'courses',courseId:'',unitId:''}};
 function $(id){return document.getElementById(id)}
 function uid(p='id'){return p+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
-function today(){return new Date().toISOString().slice(0,10)}
+function today(){return new Date().toLocaleDateString('sv-SE',{timeZone:'America/Sao_Paulo'})}
 function nowIso(){return new Date().toISOString()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function slug(s){return String(s||'arquivo').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'arquivo'}
@@ -1733,7 +1733,7 @@ function renderMaterials(q=''){
 
     unitIds.forEach(uid2=>{
       const u=byId(DB.units,uid2);
-      html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${esc(u?.code||'')} ${esc(u?.name||'Unidade')}</span></div>`;
+      const uLabel=u?(u.code&&u.code.trim().toUpperCase()!==u.name.trim().toUpperCase()?esc(u.code)+' '+esc(u.name):esc(u.name)):'Unidade';html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${uLabel}</span></div>`;
 
       const {planned,outras:outrasFicha}=units[uid2];
 
@@ -1745,7 +1745,7 @@ function renderMaterials(q=''){
 
       planIds.forEach(pid=>{
         const pl=byId(DB.plannedLessons,pid);
-        html+=`<div style="margin:6px 0 2px;padding:4px 8px;background:var(--paper-2,#f5f2eb);font-size:12px"><b>${esc(pl?.code||'')} ${esc(pl?.title||'Aula planejada')}</b></div>`;
+        const plLabel=pl?(pl.code&&pl.code.trim().toUpperCase()!==pl.title.trim().toUpperCase()?esc(pl.code)+' '+esc(pl.title):esc(pl.title)):'Aula planejada';html+=`<div style="margin:6px 0 2px;padding:4px 8px;background:var(--paper-2,#f5f2eb);font-size:12px"><b>${plLabel}</b></div>`;
         html+=`<div class="list" style="margin-bottom:4px">${planned[pid].map(materialCard).join('')}</div>`;
       });
 
@@ -2113,26 +2113,50 @@ function gerarRelatorioMensal(ym){
 }
 
 function autoCreatePendingPayments(){
-  let changed=false;
+  // IDs dos pagamentos auto nao pagos que serao removidos (para limpar lesson.paymentId)
+  const removedAutoIds=new Set(DB.payments.filter(p=>p.auto&&!p.paid).map(p=>p.id));
+
+  // Remove TODOS os pagamentos auto nao pagos - reconstroi limpo a cada chamada
+  // Pagamentos manuais e auto ja pagos nunca sao tocados
+  DB.payments=DB.payments.filter(p=>!(p.auto&&!p.paid));
+
+  // allLinkedIds calculado UMA VEZ, fora do loop, so com pagamentos manuais/pagos
+  const allLinkedIds=new Set(DB.payments.flatMap(p=>p.lessonIds||[]));
+
   DB.students.filter(s=>s.status==='ativo').forEach(st=>{
-    const allLinkedIds=new Set(DB.payments.flatMap(p=>p.lessonIds||[]));
     const unpaid=DB.lessons.filter(l=>l.studentId===st.id&&lessonCountsForPackage(l)&&!allLinkedIds.has(l.id));
-    const existingPending=DB.payments.find(p=>p.studentId===st.id&&!p.paid&&p.auto);
-    if(unpaid.length){
-      if(existingPending){
-        const newIds=unpaid.map(l=>l.id);
-        const same=newIds.length===existingPending.lessonIds.length&&newIds.every(id=>existingPending.lessonIds.includes(id));
-        if(!same){existingPending.lessonIds=newIds;existingPending.valor=unpaid.length*(Number(st.defaultLessonValue)||0);changed=true;}
-      } else {
-        DB.payments.push({id:uid('pay'),studentId:st.id,paid:false,paidAt:'',method:'',notes:'',valor:unpaid.length*(Number(st.defaultLessonValue)||0),lessonIds:unpaid.map(l=>l.id),createdAt:nowIso(),auto:true});
-        changed=true;
-      }
-    } else if(existingPending){
-      DB.payments=DB.payments.filter(p=>p.id!==existingPending.id);
-      changed=true;
-    }
+    if(!unpaid.length)return;
+    const newPay={
+      id:uid('pay'),
+      studentId:st.id,
+      paid:false,
+      paidAt:'',
+      method:'',
+      notes:'',
+      valor:unpaid.length*(Number(st.defaultLessonValue)||0),
+      lessonIds:unpaid.map(l=>l.id),
+      createdAt:nowIso(),
+      auto:true
+    };
+    DB.payments.push(newPay);
+    // Mantém lesson.paymentId em sincronia (antes so payment.lessonIds era atualizado)
+    unpaid.forEach(l=>l.paymentId=newPay.id);
+    // Adiciona ao set para que o proximo aluno nao reclame as mesmas aulas
+    unpaid.forEach(l=>allLinkedIds.add(l.id));
   });
-  if(changed)saveLocal();
+
+  // Limpa paymentId de aulas que pertenciam a pagamentos auto removidos
+  // e que nao foram re-vinculadas acima
+  if(removedAutoIds.size){
+    DB.lessons.forEach(l=>{
+      if(removedAutoIds.has(l.paymentId)){
+        const reassigned=DB.payments.find(p=>p.auto&&p.lessonIds.includes(l.id));
+        l.paymentId=reassigned?reassigned.id:'';
+      }
+    });
+  }
+
+  saveLocal();
 }
 
 function renderFinanceAdmin(){
