@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-<title>LessonHub v1.17.4-alpha — New Borders</title>
+<title>LessonHub v1.17.5-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -430,7 +430,20 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .modal-box.ff-modal{padding:36px;max-width:min(800px,100%)}
 .ff-modal .modal-head{margin-bottom:28px}
 @media(max-width:700px){.form-row.split,.form-row.split3,.form-row.split2-1{grid-template-columns:1fr}.ff-sched-row{grid-template-columns:1fr 1fr;gap:14px}.ff-input.ff-large{font-size:28px}}
-/* ---------- curso detalhe (bloco 10) ---------- */
+/* ---------- ficha edit inline (bloco 8) ---------- */
+.ficha-display{display:block}
+.ficha-edit{display:none}
+.page-students.editing .ficha-display{display:none}
+.page-students.editing .ficha-edit{display:block}
+.edit-banner{display:none;align-items:center;justify-content:space-between;gap:18px;padding:12px 20px;border:1px solid var(--rust);background:rgba(154,70,38,.06);margin-bottom:24px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);position:sticky;top:0;z-index:10}
+.page-students.editing .edit-banner{display:flex}
+.edit-banner .eb-actions{display:flex;gap:10px}
+.edit-banner button{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--rust);background:transparent;color:var(--rust);cursor:pointer;line-height:1}
+.edit-banner button.primary{background:var(--rust);color:var(--paper)}
+.edit-banner button.ghost{border-color:var(--line);color:var(--muted);background:transparent}
+.edit-banner button.ghost:hover{border-color:var(--ink);color:var(--ink)}
+.ficha-edit-btn{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;line-height:1;display:inline-flex;align-items:center;gap:6px}
+.ficha-edit-btn:hover{background:var(--ink);color:var(--paper)}
 .course-head{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:48px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:28px;margin-bottom:36px}
 .course-head h1{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(48px,7vw,84px);line-height:.88;letter-spacing:-.04em;font-weight:400}
 .course-head h1 em{font-style:italic;color:var(--rust)}
@@ -1493,69 +1506,97 @@ function showStudentFicha(id){
   const nomeParts=s.name.trim().split(' ');
   const firstName=nomeParts[0];
   const lastName=nomeParts.slice(1).join(' ');
-
   const histRows=allLessons.slice(0,8).map(l=>{
     const stateClass=l.status==='dada'?'ok':l.status==='cancelada'?'warn':l.planStatus==='a planejar'?'todo':'';
     const stateLabel=l.status==='dada'?'dada':l.status==='cancelada'?(l.cancelNoticeOk?'cancelada · aviso ok':'cancelada · falta paga'):l.planStatus||l.status;
-    return `<tr>
-      <td class="hdate">${l.date?fmtDate(l.date).replace(/\//g,'.')+`${l.startTime?'<br>'+l.startTime.slice(0,5):''}`:''}</td>
-      <td class="htopic">${esc(l.unit||l.title||'Aula')}</td>
-      <td class="hstate"><span class="tag-state ${stateClass}">${stateLabel}</span></td>
-    </tr>`;
+    return `<tr><td class="hdate">${l.date?fmtDate(l.date).replace(/\//g,'.')+`${l.startTime?'<br>'+l.startTime.slice(0,5):''}`:''}</td><td class="htopic">${esc(l.unit||l.title||'Aula')}</td><td class="hstate"><span class="tag-state ${stateClass}">${stateLabel}</span></td></tr>`;
+  }).join('');
+  const matCards=mats.slice(0,4).map(m=>{
+    const att=m.attachments?.[0];const hasFile=att&&(att.driveLink||att.youtubeUrl||att.storageUrl);
+    return `<div class="material-card"><div><div class="mc-title">${esc(m.title)}</div><div class="mc-kind">${esc(m.type||'material')}</div></div>${hasFile?`<button class="mc-open" onclick="openMaterialViewer('${m.id}')">abrir →</button>`:`<span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)">em breve</span>`}</div>`;
   }).join('');
 
-  const matCards=mats.slice(0,4).map(m=>{
-    const att=m.attachments?.[0];
-    const hasFile=att&&(att.driveLink||att.youtubeUrl);
-    return `<div class="material-card">
-      <div><div class="mc-title">${esc(m.title)}</div><div class="mc-kind">${esc(m.type||'material')}</div></div>
-      ${hasFile?`<button class="mc-open" onclick="openMaterialViewer('${m.id}')">abrir →</button>`:`<span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)">em breve</span>`}
-    </div>`;
-  }).join('');
+  // --- CAMADA EDIT ---
+  const courseOpts=`<option value="">— sem curso —</option>`+DB.courses.filter(c=>c.status!=='arquivado').map(c=>`<option value="${c.id}" ${s.courseId===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
+  const statusSeg=['ativo','pausado','arquivado'].map(x=>`<span class="seglbl ${(s.status||'ativo')===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('stStatus').value='${x}'">${x}</span>`).join('');
+  const fichaEdit=`<div class="ficha-edit">
+<div class="form-section">
+<div class="form-row split2-1">
+<div><label class="ff-label">Nome completo <span class="req">*</span></label><input class="ff-input ff-large" id="stName" value="${esc(s.name||'')}" placeholder="Nome completo"></div>
+<div><label class="ff-label">Status</label><div class="ff-seg">${statusSeg}</div><input type="hidden" id="stStatus" value="${s.status||'ativo'}"></div>
+</div>
+<div class="form-row split">
+<div><label class="ff-label">E-mail do portal <span class="hint">login da aluna</span></label><input class="ff-input mono" id="stEmail" value="${esc(s.email||'')}" placeholder="aluna@gmail.com"></div>
+<div><label class="ff-label">WhatsApp<span class="hint">opcional</span></label><input class="ff-input mono" id="stPhone" value="${esc(s.phone||'')}" placeholder="(11) 9 ____-____"></div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Curso atual</div>
+<div class="form-row split3">
+<div><label class="ff-label">Curso</label><select class="ff-select" id="stCourseId">${courseOpts}</select></div>
+<div><label class="ff-label">Nível</label><input class="ff-input mono" id="stLevel" value="${esc(s.activeCourseLevel||'')}" placeholder="A1, B2…"></div>
+<div><label class="ff-label">Valor da aula</label><input class="ff-input mono" id="stValue" type="number" step="0.01" value="${s.defaultLessonValue||''}" placeholder="R$ 0,00"></div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-title">Notas internas <span class="help">só você vê</span></div>
+<div class="form-row"><label class="ff-label">Objetivo</label><input class="ff-input" id="stGoal" value="${esc(s.goal||'')}" placeholder="ex. viagem pra Lisboa em outubro…"></div>
+<div style="margin-top:20px"><label class="ff-label">Anotações</label><textarea class="ff-textarea" id="stNotes" rows="4">${esc(s.notes||'')}</textarea></div>
+</div>
+<div style="display:flex;gap:10px;margin-top:16px">
+<button class="btn" onclick="saveStudent('${id}');document.getElementById('page-students').classList.remove('editing')">salvar →</button>
+<button class="btn soft" onclick="document.getElementById('page-students').classList.remove('editing')">cancelar</button>
+</div>
+</div>`;
 
   $('page-students').innerHTML=`
-    <button class="ficha-back" onclick="renderStudents()">← Students</button>
-    <div class="ficha-head">
-      <div>
-        <div class="fid"><b>${esc(s.id.slice(0,12).toUpperCase())}</b> · ${s.status}${since?' · desde '+since:''}</div>
-        <h1>${esc(firstName)}${lastName?`<br><em>${esc(lastName)}.</em>`:`.`}</h1>
+<div class="edit-banner"><span>● Editando ficha · alterações não salvas</span><div class="eb-actions"><button class="ghost" onclick="document.getElementById('page-students').classList.remove('editing')">cancelar</button><button class="primary" onclick="saveStudent('${id}');document.getElementById('page-students').classList.remove('editing')">salvar alterações</button></div></div>
+<button class="ficha-back" onclick="renderStudents()">← Students</button>
+<div style="display:flex;justify-content:flex-end;margin-bottom:16px;gap:10px">
+  <button class="ficha-edit-btn" onclick="document.getElementById('page-students').classList.toggle('editing');window.scrollTo({top:0,behavior:'smooth'})">✎ editar ficha</button>
+  <button class="btn soft" onclick="openLessonModal('${id}')">+ nova aula</button>
+  <button class="btn soft" onclick="openPaymentModal('${id}')">+ pagamento</button>
+  <button class="btn soft" onclick="previewStudent('${id}')">preview portal</button>
+</div>
+<div class="ficha-display">
+<div class="ficha-head">
+  <div>
+    <div class="fid"><b>${esc(s.id.slice(0,12).toUpperCase())}</b> · ${s.status}${since?' · desde '+since:''}</div>
+    <h1>${esc(firstName)}${lastName?`<br><em>${esc(lastName)}.</em>`:`.`}</h1>
+  </div>
+  <dl class="ficha-meta">
+    <div><dt>E-mail</dt><dd>${esc(s.email||'—')}</dd></div>
+    <div><dt>Curso ativo</dt><dd>${esc(course?.name||s.activeCourseName||'—')}${s.activeCourseLevel?' · '+esc(s.activeCourseLevel):''}</dd></div>
+    <div><dt>Valor da aula</dt><dd>${s.defaultLessonValue?money(s.defaultLessonValue):'—'}</dd></div>
+    <div><dt>Aulas dadas</dt><dd>${allLessons.filter(l=>l.status==='dada').length} · ${allLessons.filter(l=>l.date>=today()).length} agendadas</dd></div>
+    <div><dt>LTV</dt><dd>${money(fin.ltv)}</dd></div>
+    <div><dt>Status financeiro</dt><dd><span class="tag-state ${fin.status==='em dia'?'ok':fin.status==='pendente'?'warn':'todo'}">${fin.status}</span></dd></div>
+  </dl>
+</div>
+<div class="ficha-body">
+  <div class="ficha-main">
+    ${s.goal?`<div class="goal-block"><div class="goal-label">Objetivo declarado</div><div class="quote">${esc(s.goal)}</div></div>`:''}
+    <div class="section-title">Histórico <span class="count">últimas ${Math.min(8,allLessons.length)} aulas</span></div>
+    ${allLessons.length?`<table class="history-table"><thead><tr><th>Data</th><th>Tópico</th><th style="text-align:right">Estado</th></tr></thead><tbody>${histRows}</tbody></table>`:`<div class="empty">Sem aulas registradas.</div>`}
+    ${mats.length?`<div style="margin-top:40px"><div class="section-title">Materiais visíveis <span class="count">${mats.length}</span></div>${matCards}</div>`:''}
+  </div>
+  <div class="ficha-rule"></div>
+  <aside class="ficha-side">
+    ${s.notes?`<div><div class="section-title">Notas internas</div><p class="notes-block">${esc(s.notes).replace(/\n/g,'<br>')}</p></div>`:''}
+    <div>
+      <div class="section-title">Financeiro</div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        ${[['LTV acumulado',money(fin.ltv)],['Pendente',money(fin.pending)],['Aulas a cobrar',fin.aCobrar.length+' aula(s)']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line2)"><span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">${k}</span><span style="font-family:'Geist Mono',monospace;font-size:12px">${v}</span></div>`).join('')}
       </div>
-      <dl class="ficha-meta">
-        <div><dt>E-mail</dt><dd>${esc(s.email||'—')}</dd></div>
-        <div><dt>Curso ativo</dt><dd>${esc(course?.name||s.activeCourseName||'—')}${s.activeCourseLevel?' · '+esc(s.activeCourseLevel):''}</dd></div>
-        <div><dt>Valor da aula</dt><dd>${s.defaultLessonValue?money(s.defaultLessonValue):'—'}</dd></div>
-        <div><dt>Aulas dadas</dt><dd>${allLessons.filter(l=>l.status==='dada').length} · ${allLessons.filter(l=>l.date>=today()).length} agendadas</dd></div>
-        <div><dt>LTV</dt><dd>${money(fin.ltv)}</dd></div>
-        <div><dt>Status financeiro</dt><dd><span class="tag-state ${fin.status==='em dia'?'ok':fin.status==='pendente'?'warn':'todo'}">${fin.status}</span></dd></div>
-      </dl>
+      <div style="margin-top:14px"><button class="linkbtn" onclick="openFinanceDetail('${id}')">ver histórico completo →</button></div>
     </div>
-    <div style="display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap">
-      <button class="btn" onclick="openStudentModal('${id}')">editar ficha</button>
-      <button class="btn soft" onclick="openLessonModal('${id}')">+ nova aula</button>
-      <button class="btn soft" onclick="openPaymentModal('${id}')">+ pagamento</button>
-      <button class="btn soft" onclick="previewStudent('${id}')">preview portal</button>
-    </div>
-    <div class="ficha-body">
-      <div class="ficha-main">
-        ${s.goal?`<div class="goal-block"><div class="goal-label">Objetivo declarado</div><div class="quote">${esc(s.goal)}</div></div>`:''}
-        <div class="section-title">Histórico <span class="count">últimas ${Math.min(8,allLessons.length)} aulas</span></div>
-        ${allLessons.length?`<table class="history-table"><thead><tr><th>Data</th><th>Tópico</th><th style="text-align:right">Estado</th></tr></thead><tbody>${histRows}</tbody></table>`:`<div class="empty">Sem aulas registradas.</div>`}
-        ${mats.length?`<div style="margin-top:40px"><div class="section-title">Materiais visíveis <span class="count">${mats.length}</span></div>${matCards}</div>`:''}
-      </div>
-      <div class="ficha-rule"></div>
-      <aside class="ficha-side">
-        ${s.notes?`<div><div class="section-title">Notas internas</div><p class="notes-block">${esc(s.notes).replace(/\n/g,'<br>')}</p></div>`:''}
-        <div>
-          <div class="section-title">Financeiro</div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            ${[['LTV acumulado',money(fin.ltv)],['Pendente',money(fin.pending)],['Aulas a cobrar',fin.aCobrar.length+' aula(s)']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line2)"><span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">${k}</span><span style="font-family:'Geist Mono',monospace;font-size:12px">${v}</span></div>`).join('')}
-          </div>
-          <div style="margin-top:12px"><button class="linkbtn" onclick="openFinanceDetail('${id}')">ver histórico completo →</button></div>
-        </div>
-        ${s.phone?`<div><div class="section-title">Contato</div><p class="notes-block">${esc(s.phone)}</p></div>`:''}
-      </aside>
-    </div>`;
+    ${s.phone?`<div><div class="section-title">Contato</div><p class="notes-block">${esc(s.phone)}</p></div>`:''}
+  </aside>
+</div>
+</div>
+${fichaEdit}`;
 }
+
 function renderStudents(q=''){
   const query=String(q||'').toLowerCase();
   const rows=DB.students.filter(s=>!query||(s.name+' '+s.email+' '+s.activeCourseName).toLowerCase().includes(query)).sort((a,b)=>a.name.localeCompare(b.name));
@@ -2556,7 +2597,7 @@ async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lesson
 function toggleUnitBlock(unitId){const el=document.getElementById('unit-'+unitId);if(el)el.classList.toggle('open')}
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
 function boot(){
-  document.title='LessonHub v1.17.4-alpha — Supabase Storage + PDF Viewer';
+  document.title='LessonHub v1.17.5-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
