@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
-<title>LessonHub v1.17.7-alpha — New Borders</title>
+<title>LessonHub v1.17.8-alpha — New Borders</title>
 <style>
 /* ============================================================
    LessonHub v1.16 · Sprint 1 — Tokens + Tipografia
@@ -2332,7 +2332,7 @@ function openLessonModal(studentId='',id=''){
     </div>
     <button class="btn" style="border-color:var(--rust);color:var(--rust)" type="button" onclick="applyPlannedLesson()">aplicar</button>
   </div>`:'';
-  const statusSeg=['agendada','dada','cancelada'].map(x=>`<span class="seglbl ${lessonStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonStatus').value='${x}';document.getElementById('cancelRow').style.display='${x==='cancelada'?'block':'none'}">${x}</span>`).join('');
+  const statusSeg=['agendada','dada','cancelada'].map(x=>`<span class="seglbl ${lessonStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonStatus').value='${x}';var cr=document.getElementById('cancelRow');if(cr)cr.style.display='${x==='cancelada'?'block':'none'}">${x}</span>`).join('');
   const planSeg=['a planejar','preparada'].map(x=>`<span class="seglbl ${planStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonPlanStatus').value='${x}'">${x}</span>`).join('');
   openModal(id?'Editar aula':'Nova aula',id?'Editando aula de '+esc(st.name||''):'Aula real vinculada ao aluno.',`<div class="ff-modal-body">
 ${pullBlock}
@@ -2623,7 +2623,7 @@ window.applyPlannedLesson=applyPlannedLesson;
 window.toggleUnitBlock=toggleUnitBlock;
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
 function boot(){
-  document.title='LessonHub v1.17.7-alpha — Supabase Storage + PDF Viewer';
+  document.title='LessonHub v1.17.8-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
   const sess=lastSession();
   const hasLocal=(()=>{try{return !!localStorage.getItem(CONFIG.LOCAL_KEY)||!!localStorage.getItem('lessonhub_v1_4_data')}catch(e){return false}})();
