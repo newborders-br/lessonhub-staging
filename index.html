@@ -735,6 +735,95 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 .pay-table td.val{font-family:'Geist Mono',ui-monospace,monospace;font-size:14px;letter-spacing:.02em}
 .pay-table td.pay-state{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;text-align:right;color:var(--ok)}
 .pay-table td.pay-state.warn{color:var(--rust)}
+
+/* ---------- variant tabs ---------- */
+.variant-tabs{display:inline-flex;align-items:stretch;border:1px solid var(--ink);margin-bottom:28px;font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;line-height:1}
+.variant-tabs .vlabel{padding:9px 14px;color:var(--soft);border-right:1px solid var(--ink);background:var(--paper2);display:flex;align-items:center;white-space:nowrap}
+.variant-tabs button{padding:9px 16px;color:var(--muted);border-right:1px solid var(--ink);background:transparent;line-height:1;display:flex;align-items:center;white-space:nowrap}
+.variant-tabs button:last-child{border-right:0}
+.variant-tabs button:hover{color:var(--ink)}
+.variant-tabs button.on{background:var(--ink);color:var(--paper)}
+.v-pane{display:none}.v-pane.on{display:block;animation:vpfade .22s ease}
+@keyframes vpfade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* ---------- report trigger ---------- */
+.report-trigger{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;border:1px solid var(--ink);padding:18px 22px;margin-bottom:32px;background:var(--paper2)}
+.rt-label .rt-h{font-family:'Newsreader',serif;font-size:18px;display:block;letter-spacing:-.01em;margin-bottom:3px;font-style:italic}
+.rt-label .rt-sub{font-size:12.5px;color:var(--muted);line-height:1.5;max-width:52ch}
+.rt-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rt-mono{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.rt-month{font-family:'Geist',sans-serif;font-size:13.5px;color:var(--ink);background:transparent;border:1px solid var(--line);padding:8px 12px;cursor:pointer;outline:0;border-radius:0;border-radius:0;-webkit-appearance:none;appearance:none}
+.rt-month:hover{border-color:var(--ink)}
+.rt-dl{border:1px solid var(--rust);color:var(--rust);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:9px 14px;cursor:pointer;background:transparent;transition:all .12s;white-space:nowrap}
+.rt-dl:hover{background:var(--rust);color:var(--paper)}
+
+/* ---------- report doc (imprimível) ---------- */
+.report-doc{max-width:1000px;margin:0 auto;border:1px solid var(--ink);padding:48px 56px;background:var(--paper2);box-shadow:0 12px 40px rgba(26,23,20,.05)}
+.report-doc .rh{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:24px;margin-bottom:36px}
+.report-doc h1{font-family:'Instrument Serif',serif;font-size:64px;line-height:.9;letter-spacing:-.035em;font-weight:400}
+.report-doc h1 em{font-style:italic;color:var(--rust)}
+.report-doc .rkicker{font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.report-doc .rh .rmeta{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.85}
+.report-doc .rh .rmeta b{color:var(--ink);font-weight:500}
+.report-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-bottom:40px}
+.report-kpis .k{padding:24px 24px 24px 0;border-right:1px solid var(--line)}
+.report-kpis .k:first-child{padding-left:0}
+.report-kpis .k:last-child{border-right:0;padding-right:0}
+.report-kpis .k .n{font-family:'Instrument Serif',serif;font-size:48px;line-height:.95;letter-spacing:-.025em}
+.report-kpis .k .n em{font-style:italic;color:var(--rust)}
+.report-kpis .k .l{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.report-kpis .k .s{font-family:'Newsreader',serif;font-style:italic;font-size:13px;color:var(--ink2);margin-top:4px;line-height:1.45}
+.report-section{margin-bottom:40px}
+.report-section h3{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:baseline}
+.report-section h3 .rc{color:var(--muted);font-size:10px;font-weight:400}
+.rep-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.rep-table th{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:400;padding:10px 12px 10px 0}
+.rep-table th.r,.rep-table td.r{text-align:right}
+.rep-table td{padding:13px 12px 13px 0;border-bottom:1px solid var(--line2);vertical-align:top}
+.rep-table td.who{font-family:'Newsreader',serif;font-size:16px;line-height:1.25}
+.rep-table td.who small{display:block;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:3px}
+.rep-table td.rmono{font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--ink);letter-spacing:.02em}
+.rep-table td.rmono.warn{color:var(--rust)}
+.rep-table tfoot td{font-family:'Geist Mono',monospace;font-size:13px;border-top:1px solid var(--ink);border-bottom:0;padding-top:14px;font-weight:500;color:var(--ink)}
+.report-closing{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);font-family:'Newsreader',serif;font-size:16.5px;line-height:1.6;color:var(--ink2)}
+.report-closing .rch{font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.report-closing p{margin-bottom:10px;font-style:italic;text-wrap:pretty}
+.report-closing .sig{font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;color:var(--ink);margin-top:14px;letter-spacing:-.015em}
+.ractions{display:flex;gap:10px;justify-content:flex-end;margin-bottom:20px}
+
+/* ---------- year grid ---------- */
+.year-wrap{max-width:1140px;margin:0 auto}
+.year-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-bottom:32px}
+.year-cell{aspect-ratio:.55;border:1px solid var(--line);padding:10px 8px;display:flex;flex-direction:column;justify-content:space-between;background:var(--paper2);position:relative;overflow:hidden}
+.year-cell::before{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--fill,0%);background:linear-gradient(to top,rgba(154,70,38,.2),rgba(154,70,38,.04));z-index:0}
+.year-cell>*{position:relative;z-index:1}
+.year-cell .ym{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.year-cell .yv{font-family:'Instrument Serif',serif;font-size:19px;line-height:1;letter-spacing:-.02em;color:var(--ink);margin-top:auto}
+.year-cell .yvs{font-family:'Geist Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:.04em;margin-top:3px}
+.year-cell.cur{border-color:var(--ink);border-width:2px}
+.year-cell.cur .yv{color:var(--rust)}
+.year-cell.cur .ym{color:var(--ink)}
+.year-cell.future{opacity:.45}.year-cell.future::before{display:none}
+.year-cell.peak .yv::after{content:" ★";color:var(--rust);font-size:12px;font-style:italic}
+.year-totals{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-bottom:32px}
+.year-totals .yt{padding:20px 20px 20px 0;border-right:1px solid var(--line)}
+.year-totals .yt:first-child{padding-left:0}
+.year-totals .yt:last-child{border-right:0;padding-right:0}
+.year-totals .yt .n{font-family:'Instrument Serif',serif;font-size:38px;line-height:.95;letter-spacing:-.025em}
+.year-totals .yt .n em{font-style:italic;color:var(--rust)}
+.year-totals .yt .l{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.year-totals .yt .s{font-size:12.5px;color:var(--ink2);margin-top:4px;font-family:'Newsreader',serif;font-style:italic}
+.annot-strip{display:flex;flex-direction:column}
+.annot-row{display:grid;grid-template-columns:56px 1fr auto;gap:16px;padding:12px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.annot-row:last-child{border-bottom:0}
+.annot-row .am{font-family:'Geist Mono',monospace;font-size:11px;color:var(--rust);letter-spacing:.08em;text-transform:uppercase}
+.annot-row .at{font-family:'Newsreader',serif;font-size:15px;line-height:1.5;color:var(--ink2)}
+.annot-row .av{font-family:'Geist Mono',monospace;font-size:11.5px;color:var(--ink);letter-spacing:.04em}
+@media print{
+  .ractions{display:none}
+  .report-doc{border:0;box-shadow:none;padding:0}
+  .report-kpis .k .n{font-size:36px}
+}
 @media(max-width:1000px){
   .hero,.cols-2{grid-template-columns:1fr;gap:28px}
   .hero h1{font-size:52px}
@@ -1980,137 +2069,235 @@ function savePlannedLesson(courseId,unitId,id,tab){const p=byId(DB.plannedLesson
 function archivePlannedLesson(id){const p=byId(DB.plannedLessons,id);if(!p)return;p.status=p.status==='arquivado'?'ativo':'arquivado';scheduleSave();toast(p.status==='arquivado'?'Aula planejada arquivada.':'Reativada.')}
 function deletePlannedLesson(id){const p=byId(DB.plannedLessons,id);if(!p)return;const matsCount=DB.materials.filter(m=>m.plannedLessonId===id&&!m.studentId).length;if(!confirm(`Excluir "${p.title}"?${matsCount>0?' '+matsCount+' material(is) anexado(s) também serão excluídos.':''}`))return;DB.materials=DB.materials.filter(m=>m.plannedLessonId!==id||m.studentId);DB.plannedLessons=DB.plannedLessons.filter(x=>x.id!==id);scheduleSave();toast('Aula planejada excluída.')}
 
-function openRelatorioFinanceiro(){
-  const meses=[];const hoje=today();
-  for(let i=0;i<12;i++){const d=new Date(hoje);d.setMonth(d.getMonth()-i);meses.push(d.toISOString().slice(0,7));}
-  const ym=prompt('Mês do relatório (AAAA-MM):',hoje.slice(0,7));
-  if(!ym||!/^\d{4}-\d{2}$/.test(ym)){if(ym!==null)toast('Formato inválido. Use AAAA-MM.');return;}
-  gerarRelatorioMensal(ym);
+/* ── Relatório inline: estado global ── */
+let _reportYm='';
+
+function _buildReportMonthOptions(selected){
+  const hoje=today();let opts='';
+  for(let i=0;i<24;i++){
+    const d=new Date(hoje.slice(0,7)+'-15');d.setMonth(d.getMonth()-i);
+    const ym=d.toISOString().slice(0,7);
+    const label=d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+    opts+=`<option value="${ym}" ${ym===selected?'selected':''}>${label}</option>`;
+  }
+  return opts;
 }
 
-function gerarRelatorioMensal(ym){
+function _calcMonth(ym){
   const biz=DB.meta?.business||{};
-  const nomeMes=new Date(ym+'-15').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
-
-  // Aulas dadas no mês (dada ou falta paga) — regime de competência
   const aulasMes=DB.lessons.filter(l=>lessonCountsForPackage(l)&&String(l.date).slice(0,7)===ym);
-
-  // Para cada aula: valor rateado do pagamento vinculado, ou valor unitário da aula, ou defaultLessonValue do aluno
-  const linhasAulas=[];
+  const cancelMes=DB.lessons.filter(l=>l.status==='cancelada'&&l.cancelNoticeOk===true&&String(l.date).slice(0,7)===ym);
+  const linhas=[];
   aulasMes.sort((a,b)=>String(a.date).localeCompare(String(b.date))).forEach(l=>{
     const st=byId(DB.students,l.studentId);
     const pay=DB.payments.find(p=>p.lessonIds?.includes(l.id)&&!(p.auto&&!p.valor));
     const qtd=pay?.lessonIds?.length||1;
-    // Valor: rateio do pagamento > valor da aula > valor padrão do aluno > 0
     const valorUnit=pay?(Number(pay.valor)||0)/qtd:(Number(l.value)||Number(st?.defaultLessonValue)||0);
-    const status=pay?.paid?'Pago':pay?'Aguardando pagamento':'A cobrar';
-    linhasAulas.push({data:fmtDate(l.date),aluno:st?.name||'—',titulo:l.title||'Aula',status,valor:valorUnit,pago:!!pay?.paid,temPagamento:!!pay});
+    linhas.push({l,st,pay,valorUnit,pago:!!pay?.paid});
   });
-
-  // Regime de competência: receita = valor de TODAS as aulas dadas no mês (pagas ou não)
-  // Isso reflete o trabalho feito, independente de quando o dinheiro entrou
-  const totalBruto=linhasAulas.reduce((s,r)=>s+r.valor,0);
-  const totalPago=linhasAulas.filter(r=>r.pago).reduce((s,r)=>s+r.valor,0);
-  const totalACobrar=linhasAulas.filter(r=>!r.pago).reduce((s,r)=>s+r.valor,0);
-
-  // KPIs baseados no total de aulas dadas (não só pagas)
+  const totalBruto=linhas.reduce((s,r)=>s+r.valorUnit,0);
+  const totalPago=linhas.filter(r=>r.pago).reduce((s,r)=>s+r.valorUnit,0);
+  const totalACobrar=linhas.filter(r=>!r.pago).reduce((s,r)=>s+r.valorUnit,0);
   const prepMin=aulasMes.reduce((s,l)=>s+(Number(l.prepMinutes)||0),0);
   const totalHorasReais=aulasMes.length+(prepMin/60);
-  const semanasDoMes=4.33;
-  // Ticket médio = receita bruta do mês ÷ aulas dadas (regime competência)
   const ticketMedio=aulasMes.length?totalBruto/aulasMes.length:0;
-  // Ticket real = receita bruta ÷ horas totais (aula + prep)
   const ticketReal=totalHorasReais?totalBruto/totalHorasReais:0;
-  const alunosAtivos=new Set(aulasMes.map(l=>l.studentId)).size;
-  const horasSemanais=totalHorasReais/semanasDoMes;
-
-  const linhasHtml=linhasAulas.map(r=>`
-    <tr class="${r.pago?'pago':'acobrar'}">
-      <td>${r.data}</td>
-      <td>${esc(r.aluno)}</td>
-      <td>${esc(r.titulo)}</td>
-      <td class="status ${r.pago?'tag-pago':'tag-pend'}">${r.status}</td>
-      <td class="val">${money(r.valor)}</td>
-    </tr>`).join('');
-
-  const html=`<!doctype html><html><head><meta charset="utf-8">
-  <title>Relatório · ${nomeMes}</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Georgia,serif;max-width:720px;margin:40px auto;padding:32px;color:#1a1a1a;font-size:13px;line-height:1.6}
-    .head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #1a1a1a;padding-bottom:14px;margin-bottom:28px}
-    .head h1{font-size:20px;letter-spacing:-.3px}
-    .head .meta{text-align:right;color:#666;font-size:12px;line-height:1.8}
-    h2{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#999;margin:28px 0 8px;padding-bottom:6px;border-bottom:1px solid #e8e8e8}
-    table{width:100%;border-collapse:collapse}
-    th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#aaa;padding:6px 10px;border-bottom:2px solid #e8e8e8;text-align:left;font-weight:normal}
-    td{padding:8px 10px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
-    tr.acobrar td{color:#888}
-    .val{text-align:right;font-variant-numeric:tabular-nums;font-family:Georgia,serif}
-    th.val{text-align:right}
-    .status{text-align:center}
-    .tag-pago{color:#2a7a4b;font-size:11px;font-style:italic}
-    .tag-pend{color:#b45309;font-size:11px;font-style:italic}
-    .sumario{margin-top:28px;border-top:2px solid #1a1a1a;padding-top:16px}
-    .sum-row{display:flex;justify-content:space-between;padding:5px 10px;font-size:13px}
-    .sum-row.destaque{font-size:15px;font-weight:bold;margin-top:4px}
-    .sum-row.subtracao{color:#b45309}
-    .sum-row.total{border-top:1px solid #1a1a1a;margin-top:6px;padding-top:10px}
-    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
-    .kpi{border:1px solid #e8e8e8;border-radius:6px;padding:12px 14px}
-    .kpi .v{font-size:18px;font-family:Georgia,serif;margin-bottom:2px}
-    .kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#aaa}
-    .foot{margin-top:48px;padding-top:14px;border-top:1px solid #e8e8e8;font-size:11px;color:#bbb;text-align:center}
-    @media print{body{margin:0;padding:24px}.kpis{break-inside:avoid}}
-  </style></head><body>
-  <div class="head">
-    <div>
-      <h1>Relatório Financeiro</h1>
-      <div style="color:#666;font-size:12px;margin-top:4px">${nomeMes}</div>
-    </div>
-    <div class="meta">
-      <div>${esc(biz.razaoSocial||'[configure em dados fiscais]')}</div>
-      ${biz.cnpj?`<div>CNPJ ${esc(biz.cnpj)}</div>`:''}
-      <div>Gerado em ${new Date().toLocaleDateString('pt-BR')}</div>
-    </div>
-  </div>
-
-  <h2>Aulas do período — regime de competência</h2>
-  <table>
-    <thead><tr>
-      <th>Data</th><th>Aluno</th><th>Aula</th><th class="status">Status</th><th class="val">Valor</th>
-    </tr></thead>
-    <tbody>${linhasHtml||'<tr><td colspan="5" style="text-align:center;color:#ccc;padding:20px">Nenhuma aula no período.</td></tr>'}</tbody>
-  </table>
-
-  <div class="sumario">
-    <div class="sum-row"><span>Total bruto do período</span><span>${money(totalBruto)}</span></div>
-    <div class="sum-row subtracao"><span>A cobrar / aguardando pagamento (−)</span><span>−${money(totalACobrar)}</span></div>
-    <div class="sum-row total destaque"><span>Já recebido</span><span>${money(totalPago)}</span></div>
-  </div>
-
-  <h2>KPIs operacionais</h2>
-  <div class="kpis">
-    <div class="kpi"><div class="v">${aulasMes.length}</div><div class="l">Aulas no mês</div></div>
-    <div class="kpi"><div class="v">${alunosAtivos}</div><div class="l">Alunos ativos</div></div>
-    <div class="kpi"><div class="v">${(prepMin/Math.max(aulasMes.length,1)).toFixed(0)}min</div><div class="l">Prep média/aula</div></div>
-    <div class="kpi"><div class="v">${money(ticketMedio)}</div><div class="l">Ticket médio/aula</div></div>
-    <div class="kpi"><div class="v">${money(ticketReal)}</div><div class="l">Ticket real/hora</div></div>
-    <div class="kpi"><div class="v">${(totalHorasReais/semanasDoMes).toFixed(1)}h</div><div class="l">Horas reais/semana</div></div>
-  </div>
-
-  <div class="foot">LessonHub · Documento interno · Não substitui nota fiscal eletrônica quando exigida por lei.</div>
-  <script>window.print()<\/script>
-</body></html>`;
-
-  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='relatorio-'+ym+'.html';
-  document.body.appendChild(a);a.click();
-  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},200);
-  toast('Relatório baixado. Abra o arquivo pra imprimir.');
+  const alunosAtivos=new Set(aulasMes.map(l=>l.studentId));
+  return{biz,aulasMes,cancelMes,linhas,totalBruto,totalPago,totalACobrar,prepMin,totalHorasReais,ticketMedio,ticketReal,alunosAtivos};
 }
+
+function _buildReportHtml(ym){
+  const {biz,aulasMes,cancelMes,linhas,totalBruto,totalPago,totalACobrar,prepMin,totalHorasReais,ticketMedio,ticketReal,alunosAtivos}=_calcMonth(ym);
+  const nomeMes=new Date(ym+'-15').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const nomeMesCap=nomeMes.charAt(0).toUpperCase()+nomeMes.slice(1);
+  const hoje=today();
+  const nomeBiz=biz.razaoSocial||'New Borders · Erik · MEI';
+
+  // Agrupar por aluno para tabela por aluno
+  const porAluno={};
+  linhas.forEach(r=>{
+    const sid=r.l.studentId||'_';
+    if(!porAluno[sid])porAluno[sid]={st:r.st,rows:[]};
+    porAluno[sid].rows.push(r);
+  });
+
+  const sectionsHtml=Object.values(porAluno).map(({st,rows})=>{
+    const recebido=rows.filter(r=>r.pago).reduce((s,r)=>s+r.valorUnit,0);
+    const aRec=rows.filter(r=>!r.pago).reduce((s,r)=>s+r.valorUnit,0);
+    const trRows=rows.map(r=>`<tr>
+      <td class="who">${esc(r.st?.name||'—')}</td>
+      <td class="rmono">${r.l.date?String(r.l.date).slice(8,10)+'/'+String(r.l.date).slice(5,7):'—'}</td>
+      <td class="rmono">${r.pago?'<span style="color:var(--ok)">pago</span>':'<span style="color:var(--rust)">a receber</span>'}</td>
+      <td class="rmono r">${money(r.valorUnit)}</td>
+    </tr>`).join('');
+    return `<div class="report-section">
+      <h3>${esc(st?.name||'Aluno')} <span class="rc">${rows.length} aula${rows.length!==1?'s':''}</span></h3>
+      <table class="rep-table">
+        <thead><tr><th>Aluno</th><th>Data</th><th>Status</th><th class="r">Valor</th></tr></thead>
+        <tbody>${trRows}</tbody>
+        <tfoot><tr><td colspan="2"></td><td class="rmono" style="color:var(--ok)">${money(recebido)}</td><td class="rmono r">${money(recebido+aRec)}</td></tr></tfoot>
+      </table>
+    </div>`;
+  }).join('');
+
+  const cancelHtml=cancelMes.length?`<div class="report-section">
+    <h3>Cancelamentos com aviso <span class="rc">${cancelMes.length} sem cobrança</span></h3>
+    <table class="rep-table">
+      <thead><tr><th>Aluno</th><th>Data</th><th>Aula</th></tr></thead>
+      <tbody>${cancelMes.map(l=>{const st=byId(DB.students,l.studentId);return`<tr><td class="who">${esc(st?.name||'—')}</td><td class="rmono">${fmtDate(l.date)}</td><td>${esc(l.title||'—')}</td></tr>`}).join('')}</tbody>
+    </table>
+  </div>`:'';
+
+  // Estado da casa — texto de leitura sintético
+  const situacao=totalACobrar>0?`R$ ${money(totalACobrar).replace('R$\u00a0','').replace('R$ ','')} ainda a receber de ${alunosAtivos.size} aluno${alunosAtivos.size!==1?'s':''}.`:'Todos os valores realizados foram recebidos.';
+
+  return `<div class="ractions">
+    <button class="btn soft" onclick="gerarCSVRelatorio('${ym}')">↓ csv</button>
+    <button class="btn" onclick="imprimirRelatorio()">imprimir ↗</button>
+  </div>
+  <div class="report-doc" id="reportDocInner">
+    <div class="rh">
+      <div>
+        <div class="rkicker">${esc(nomeBiz)}</div>
+        <h1>Fechamento ${nomeMesCap.split(' ')[0].toLowerCase()} · <em>${ym.slice(0,4)}.</em></h1>
+      </div>
+      <div class="rmeta">
+        <dl style="display:grid;gap:6px;text-align:right">
+          <div><dt style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">Período</dt><dd style="color:var(--ink);font-weight:500">${ym.slice(5)}/${ym.slice(0,4)}</dd></div>
+          <div><dt style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">Emissão</dt><dd style="color:var(--ink);font-weight:500">${fmtDate(hoje)}</dd></div>
+          ${biz.cnpj?`<div><dt style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">CNPJ</dt><dd style="color:var(--ink)">${esc(biz.cnpj)}</dd></div>`:''}
+        </dl>
+      </div>
+    </div>
+    <div class="report-kpis">
+      <div class="k"><div class="n">${money(totalPago).replace('R$\u00a0','').replace('R$ ','')}</div><div class="l">Receita realizada</div><div class="s">regime de competência</div></div>
+      <div class="k"><div class="n"><em>${money(totalACobrar).replace('R$\u00a0','').replace('R$ ','')}</em></div><div class="l">A receber</div><div class="s">${linhas.filter(r=>!r.pago).length} aula${linhas.filter(r=>!r.pago).length!==1?'s':''} pendentes</div></div>
+      <div class="k"><div class="n">${aulasMes.length}</div><div class="l">Aulas dadas</div><div class="s">${alunosAtivos.size} aluno${alunosAtivos.size!==1?'s':''} ativos</div></div>
+      <div class="k"><div class="n">${money(ticketMedio).replace('R$\u00a0','').replace('R$ ','')}</div><div class="l">Ticket médio</div><div class="s">${money(ticketReal)} real/hora</div></div>
+    </div>
+    ${sectionsHtml}
+    ${cancelHtml}
+    <div class="report-closing">
+      <div class="rch">Estado da casa</div>
+      <p>${nomeMesCap}: ${aulasMes.length} aula${aulasMes.length!==1?'s':''} realizadas, receita bruta de ${money(totalBruto)}, ${money(totalPago)} confirmado${totalPago>0?'s':''}. ${situacao} Prep média de ${aulasMes.length?Math.round(prepMin/aulasMes.length):0} min por aula.</p>
+      <div class="sig">— E.</div>
+    </div>
+  </div>`;
+}
+
+function _buildYearHtml(ym){
+  const ano=ym.slice(0,4);
+  const hoje=today();const ymHoje=hoje.slice(0,7);
+  // Calcular receita de todos os 12 meses do ano
+  const meses=[];let maxReceita=0;
+  for(let m=1;m<=12;m++){
+    const ymMes=ano+'-'+(m<10?'0':'')+m;
+    const {totalBruto,totalPago,aulasMes}=_calcMonth(ymMes);
+    meses.push({ym:ymMes,mes:m,totalBruto,totalPago,n:aulasMes.length});
+    if(totalBruto>maxReceita)maxReceita=totalBruto;
+  }
+  const peakVal=Math.max(...meses.map(x=>x.totalBruto));
+  const MESES_PT=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+  const cellsHtml=meses.map(({ym:ymM,mes,totalBruto:tb,totalPago:tp,n})=>{
+    const isCur=ymM===ymHoje;
+    const isFuture=ymM>ymHoje;
+    const isPeak=!isFuture&&tb===peakVal&&peakVal>0;
+    const fill=maxReceita>0?Math.round((tb/maxReceita)*100):0;
+    const cls=(isCur?'cur':'')+(isFuture?' future':'')+(isPeak&&!isFuture?' peak':'');
+    return `<div class="year-cell ${cls}" style="--fill:${fill}%">
+      <div class="ym">${MESES_PT[mes-1]}</div>
+      <div>
+        <div class="yv">${tb>0?money(tb).replace('R$\u00a0','').replace('R$ ',''):'—'}</div>
+        <div class="yvs">${n?n+' aula'+(n!==1?'s':''):''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const totalAnoBruto=meses.reduce((s,m)=>s+m.totalBruto,0);
+  const totalAnoPago=meses.reduce((s,m)=>s+m.totalPago,0);
+  const totalAulas=meses.reduce((s,m)=>s+m.n,0);
+  const ticketAno=totalAulas?totalAnoBruto/totalAulas:0;
+
+  // Marcos do ano: primeiro aluno, primeiro pagamento, mês de pico
+  const marcos=[];
+  const primeiraAula=DB.lessons.filter(l=>String(l.date).startsWith(ano)).sort((a,b)=>String(a.date).localeCompare(String(b.date)))[0];
+  if(primeiraAula){const st=byId(DB.students,primeiraAula.studentId);marcos.push({m:String(primeiraAula.date).slice(5,7),t:`Primeira aula do ano — ${esc(st?.name||'aluno')}`,v:money(Number(primeiraAula.value)||0)})}
+  if(peakVal>0){const pm=meses.find(x=>x.totalBruto===peakVal&&x.totalBruto>0);if(pm)marcos.push({m:MESES_PT[pm.mes-1],t:`Mês de pico`,v:money(pm.totalBruto)})}
+
+  const anotacaoHtml=marcos.length?`<div class="annot-strip">${marcos.map(({m,t,v})=>`<div class="annot-row"><div class="am">${m}</div><div class="at">${t}</div><div class="av">${v}</div></div>`).join('')}</div>`:'';
+
+  return `<div class="year-wrap">
+    <div class="year-grid">${cellsHtml}</div>
+    <div class="year-totals">
+      <div class="yt"><div class="n">${money(totalAnoBruto).replace('R$\u00a0','').replace('R$ ','')}</div><div class="l">Receita bruta ${ano}</div></div>
+      <div class="yt"><div class="n"><em>${money(totalAnoPago).replace('R$\u00a0','').replace('R$ ','')}</em></div><div class="l">Recebido no ano</div></div>
+      <div class="yt"><div class="n">${totalAulas}</div><div class="l">Aulas no ano</div></div>
+      <div class="yt"><div class="n">${money(ticketAno).replace('R$\u00a0','').replace('R$ ','')}</div><div class="l">Ticket médio/aula</div></div>
+    </div>
+    ${anotacaoHtml}
+  </div>`;
+}
+
+function renderReportSection(){
+  const ym=_reportYm||today().slice(0,7);
+  const wrap=$('reportWrap');if(!wrap)return;
+  wrap.innerHTML=`
+    <div class="variant-tabs" data-group="report" style="margin-bottom:28px">
+      <div class="vlabel">Relat.</div>
+      <button data-v="mensal" class="on" onclick="switchReportTab('mensal')">Fechamento mensal</button>
+      <button data-v="anual" onclick="switchReportTab('anual')">Vista anual</button>
+    </div>
+    <div class="v-pane on" data-group="report" data-pane="mensal" id="reportPaneMensal">
+      ${_buildReportHtml(ym)}
+    </div>
+    <div class="v-pane" data-group="report" data-pane="anual" id="reportPaneAnual">
+      ${_buildYearHtml(ym)}
+    </div>`;
+}
+
+function switchReportTab(v){
+  document.querySelectorAll('.variant-tabs[data-group="report"] button[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.querySelectorAll('.v-pane[data-group="report"]').forEach(p=>p.classList.toggle('on',p.dataset.pane===v));
+}
+
+function setReportMonth(ym){_reportYm=ym;renderReportSection()}
+
+function imprimirRelatorio(){
+  const inner=$('reportDocInner');if(!inner)return;
+  const w=window.open('','_blank');
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Fechamento ${_reportYm||today().slice(0,7)}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Geist:wght@300..600&family=Geist+Mono:wght@400..500&display=swap" rel="stylesheet">
+  <style>
+    :root{--paper:#f5f1e9;--paper2:#faf7f0;--ink:#1a1714;--ink2:#3a342d;--muted:#857b71;--soft:#b4aba0;--line:rgba(26,23,20,.16);--line2:rgba(26,23,20,.08);--rust:#9a4626;--ok:#3e6b4a}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--paper);color:var(--ink);font-family:'Geist',sans-serif;font-size:13px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:40px}
+    ${document.querySelector('style').textContent.split('@media print')[0]}
+    .ractions{display:none}
+    @media print{body{padding:24px}}
+  </style></head><body>${inner.outerHTML}<script>window.print()<\/script></body></html>`);
+  w.document.close();
+}
+
+function gerarCSVRelatorio(ym){
+  const {linhas}=_calcMonth(ym);
+  const rows=[['Data','Aluno','Aula','Status','Valor'],...linhas.map(r=>[r.l.date||'',r.st?.name||'—',r.l.title||'Aula',r.pago?'pago':'a receber',String(r.valorUnit).replace('.',',')])];
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fechamento-'+ym+'.csv';
+  document.body.appendChild(a);a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(a.href)},200);
+  toast('CSV exportado.');
+}
+
+function openRelatorioFinanceiro(){
+  const ym=prompt('Mês do relatório (AAAA-MM):',today().slice(0,7));
+  if(!ym||!/^\d{4}-\d{2}$/.test(ym)){if(ym!==null)toast('Formato inválido. Use AAAA-MM.');return;}
+  _reportYm=ym;
+  showPage('finance');
+  setTimeout(()=>{const w=$('reportWrap');if(w)w.scrollIntoView({behavior:'smooth'})},200);
+}
+function gerarRelatorioMensal(ym){openRelatorioFinanceiro()}
 
 function autoCreatePendingPayments(){
   // IDs dos pagamentos auto nao pagos que serao removidos (para limpar lesson.paymentId)
@@ -2161,6 +2348,7 @@ function autoCreatePendingPayments(){
 
 function renderFinanceAdmin(){
   autoCreatePendingPayments();
+  if(!_reportYm)_reportYm=today().slice(0,7);
   const ativos=DB.students.filter(s=>s.status==='ativo');
   const rows=ativos.map(s=>{const fin=financeForStudent(s.id);return{s,fin}});
   const ym=today().slice(0,7);
@@ -2180,33 +2368,45 @@ function renderFinanceAdmin(){
   const ticketReal=totalRealHours?totalRevenueAll/totalRealHours:0;
   const ocupacao=Math.round((monthLessonsDadas.length/(4.33*8))*100);
   $('page-finance').innerHTML=`
-    <div class="hero" style="margin-bottom:28px">
-      <h1>Finance</h1>
-      <p class="lede">Fechamento ${ym}. Pagamentos vinculados a aulas, KPIs operacionais.</p>
+    <div class="hero" style="margin-bottom:36px">
+      <div>
+        <h1>Finance</h1>
+        <p class="lede">Fechamento ${ym}. Pagamentos vinculados a aulas, KPIs operacionais.</p>
+      </div>
     </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px">
-      <button class="btn" onclick="closeMonth()">fechar mês</button>
-      <button class="btn soft" onclick="openRelatorioFinanceiro()">relatório mensal</button>
-      <button class="btn soft" onclick="openBusinessSettings()">dados fiscais</button>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink);margin-bottom:40px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-bottom:40px">
       ${[
-        [money(recebido),'recebido em '+ym.slice(5)],
-        [money(pendente),'pendente'],
-        [aCobrarTotal+' aula'+(aCobrarTotal!==1?'s':''),'a cobrar'],
-        [money(totalRevenueAll),'LTV total']
-      ].map(([n,l])=>`<div style="border-right:1px solid var(--line);padding:20px 0;padding-right:20px"><div style="font-family:'Instrument Serif',serif;font-size:42px;line-height:.9;letter-spacing:-.03em">${n}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px">${l}</div></div>`).join('')}
+        [money(recebido),'recebido em '+ym.slice(5),'<em>'],
+        [money(pendente),'pendente',''],
+        [aCobrarTotal+' aula'+(aCobrarTotal!==1?'s':''),'a cobrar',''],
+        [money(totalRevenueAll),'LTV total','']
+      ].map(([n,l,em],i)=>`<div style="border-right:1px solid var(--line);padding:28px 20px 28px 0${i===0?';padding-left:0':''}"><div style="font-family:'Instrument Serif',serif;font-size:52px;line-height:.9;letter-spacing:-.03em">${em?n.replace('R$','<em style=\'font-style:italic;color:var(--rust)\'>R$</em>'):n}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px">${l}</div></div>`).join('')}
     </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);margin-bottom:40px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);margin-bottom:48px">
       ${[
         [money(ticketMedio),'ticket médio/aula'],
         [money(ticketReal),'ticket real/hora'],
         [avgPrep+'min','prep média/aula'],
         [ocupacao+'%','ocupação teto 8h']
-      ].map(([n,l])=>`<div style="border-right:1px solid var(--line);padding:20px 0;padding-right:20px"><div style="font-family:'Instrument Serif',serif;font-size:36px;line-height:.9;letter-spacing:-.03em">${n}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px">${l}</div></div>`).join('')}
+      ].map(([n,l])=>`<div style="border-right:1px solid var(--line);padding:18px 16px 18px 0"><div style="font-family:'Instrument Serif',serif;font-size:32px;line-height:.9;letter-spacing:-.025em">${n}</div><div style="font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:7px">${l}</div></div>`).join('')}
     </div>
-    <div class="section-title">Alunos <span class="count">${ativos.length} ativos</span></div>
-    ${rows.map(({s,fin})=>financeStudentCard(s,fin)).join('')||'<div class="empty">Nenhum aluno ativo.</div>'}`;
+    <div class="section-title" style="margin-bottom:24px">Pagamentos por aluno <span class="count">${ativos.length} ativos</span><span style="margin-left:auto;display:flex;gap:10px"><button class="linkbtn" onclick="closeMonth()">fechar mês</button><button class="linkbtn" onclick="openBusinessSettings()">dados fiscais</button></span></div>
+    ${rows.map(({s,fin})=>financeStudentCard(s,fin)).join('')||'<div class="empty">Nenhum aluno ativo.</div>'}
+    <div style="margin-top:48px">
+      <div class="report-trigger">
+        <div class="rt-label">
+          <span class="rt-h">Relatório de fechamento</span>
+          <span class="rt-sub">Documento formal imprimível com KPIs, tabela por aluno, estado da casa e vista anual.</span>
+        </div>
+        <div class="rt-controls">
+          <span class="rt-mono">Mês</span>
+          <select class="rt-month" id="rtMonthSelect" onchange="setReportMonth(this.value)">${_buildReportMonthOptions(_reportYm)}</select>
+          <button class="rt-dl" onclick="setReportMonth($('rtMonthSelect').value);document.getElementById('reportWrap').scrollIntoView({behavior:'smooth'})">↓ ver relatório</button>
+        </div>
+      </div>
+      <div id="reportWrap"></div>
+    </div>`;
+  renderReportSection();
 }
 function financeStudentCard(s,fin){
   const course=s.courseId?byId(DB.courses,s.courseId):null;
@@ -2645,7 +2845,7 @@ function applyPlannedLesson(){
 // garantia explícita antes do Object.assign
 window.applyPlannedLesson=applyPlannedLesson;
 window.toggleUnitBlock=toggleUnitBlock;
-Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock});
+Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock,setReportMonth,switchReportTab,imprimirRelatorio,gerarCSVRelatorio});
 function boot(){
   document.title='LessonHub v1.17.8-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
