@@ -62,7 +62,7 @@ body:not(.student-mode) #studentShell{display:none}
 .mark em{font-style:italic;color:var(--rust)}
 .rail-meta{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);line-height:1.6;margin-top:auto}
 .rail-foot{font-family:'Geist Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);line-height:1.6}
-.main-content{padding:28px 56px 80px;max-width:1280px;width:100%}
+.main-content{padding:28px 56px 80px;max-width:1280px;width:100%;margin:0 auto}
 
 /* ---------- topbar ---------- */
 .topbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:18px;margin-bottom:28px;gap:24px;flex-wrap:wrap}
@@ -350,6 +350,10 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 
 /* ---------- misc ---------- */
 .danger-note{border-left:2px solid var(--bad);padding-left:12px;color:var(--bad)}
+.lesson-row--done{opacity:.6}
+.lesson-row--done .lesson-time{color:var(--muted)}
+.linkbtn--done{color:var(--ok)!important}
+.linkbtn--done:hover{color:var(--ok)!important;border-bottom-color:var(--ok)!important}
 
 /* ---------- hero (bloco 5 Today) ---------- */
 .hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:64px;align-items:end;margin-bottom:44px;padding-bottom:32px;border-bottom:1px solid var(--line)}
@@ -1575,9 +1579,10 @@ function renderDashboard(){
     const time=l.startTime||'—';
     const hh=time.slice(0,5);
     const period=Number(time.slice(0,2))<12?'manhã':Number(time.slice(0,2))<18?'tarde':'noite';
-    const stateClass=l.planStatus==='preparada'?'ok':l.planStatus==='a planejar'?'todo':'';
-    const stateLabel=l.planStatus==='preparada'?'preparada':'a planejar';
-    return `<div class="lesson-row">
+    const isDone=l.status==='dada';
+    const stateClass=isDone?'ok':l.planStatus==='a planejar'?'todo':'';
+    const stateLabel=isDone?'dada':l.planStatus==='preparada'?'preparada':'a planejar';
+    return `<div class="lesson-row${isDone?' lesson-row--done':''}">
       <div class="lesson-time">${esc(hh)}<span class="ampm">${period}</span></div>
       <div class="lesson-body">
         <div class="name">${esc(st?.name||'Aluno')}</div>
@@ -1587,6 +1592,7 @@ function renderDashboard(){
       <div class="lesson-meta">
         <span class="tag-state ${stateClass}">${stateLabel}</span>
         <span class="val">${money(l.value||byId(DB.students,l.studentId)?.defaultLessonValue||0)}</span>
+        <button class="linkbtn${isDone?' linkbtn--done':''}" onclick="markLessonDone('${l.id}')">${isDone?'desmarcar':'marcar dada'}</button>
         <button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button>
       </div>
     </div>`;
@@ -2911,6 +2917,7 @@ function exportBackup(){saveLocal();const blob=new Blob([JSON.stringify(DB,null,
 function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{DB=normalizeDB(JSON.parse(r.result));saveLocal();scheduleSave();toast('Backup importado.')}catch(e){toast('Erro ao importar.')}};r.readAsText(file)}
 
 function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planStatus=l.planStatus==='preparada'?'a planejar':'preparada';scheduleSave();toast('Marcada como '+l.planStatus+'.')}
+function markLessonDone(id){const l=byId(DB.lessons,id);if(!l)return;l.status=l.status==='dada'?'agendada':'dada';scheduleSave();renderDashboard();toast(l.status==='dada'?'Aula marcada como dada ✓':'Aula desmarcada.');}
 async function syncMaterialsFromPlanned(lessonId){const l=byId(DB.lessons,lessonId);if(!l||!l.plannedLessonId)return;const st=byId(DB.students,l.studentId);const sourceMats=DB.materials.filter(m=>m.plannedLessonId===l.plannedLessonId&&!m.studentId);if(!sourceMats.length){toast('Ficha não tem materiais pra copiar.');return}let copied=0,shared=0;for(const sm of sourceMats){const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);if(exists)continue;const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);copied++;if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}}}}scheduleSave();toast(copied>0?`${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com aluno':''}. Portal atualizado.`:'Materiais já estavam copiados.');}
 function toggleUnitBlock(unitId){const el=document.getElementById('unit-'+unitId);if(el)el.classList.toggle('open')}
 function applyPlannedLesson(){
@@ -2939,7 +2946,7 @@ function applyPlannedLesson(){
 // garantia explícita antes do Object.assign
 window.applyPlannedLesson=applyPlannedLesson;
 window.toggleUnitBlock=toggleUnitBlock;
-Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,setCourseView,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock,setReportMonth,switchReportTab,imprimirRelatorio,gerarCSVRelatorio});
+Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,markLessonDone,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,setCourseView,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock,setReportMonth,switchReportTab,imprimirRelatorio,gerarCSVRelatorio});
 function boot(){
   document.title='LessonHub v1.17.8-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
