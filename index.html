@@ -2618,6 +2618,75 @@ function openStudentModal(id=''){
 }
 function saveStudent(id=''){if(!stName.value.trim())return toast('Nome obrigatório.');const existing=byId(DB.students,id);const oldEmail=existing?String(existing.email||'').toLowerCase():'';const s=existing||{id:uid('student'),createdAt:nowIso()};s.name=stName.value.trim();s.email=stEmail.value.trim().toLowerCase();s.status=stStatus.value;s.courseId=$('stCourseId')?.value||'';s.activeCourseLevel=stLevel.value.trim();const c=s.courseId?byId(DB.courses,s.courseId):null;s.activeCourseName=c?c.name:s.activeCourseLevel;s.defaultLessonValue=Number(stValue.value)||0;s.phone=stPhone.value.trim();s.goal=stGoal.value.trim();s.notes=stNotes.value.trim();if(!id)DB.students.push(s);if(oldEmail&&oldEmail!==s.email){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(oldEmail))}catch(e){}sbDelete(oldEmail).catch(()=>{});log('E-mail do aluno mudou de '+oldEmail+' para '+s.email+'. Linha antiga limpa.','ok');}closeModal();scheduleSave();toast('Aluno salvo.')}
 async function deleteStudent(id){const s=byId(DB.students,id);if(!s)return;if(!confirm(`Excluir ${s.name}? Aulas, materiais e pagamentos vinculados também serão removidos do LessonHub. Arquivos no Drive não serão apagados.`))return;const orphanEmail=s.email?String(s.email).toLowerCase():'';DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(x=>x.studentId!==id);DB.materials=DB.materials.filter(x=>x.studentId!==id);DB.packages=DB.packages.filter(x=>x.studentId!==id);DB.payments=DB.payments.filter(x=>x.studentId!==id);if(STATE.portalHashes)delete STATE.portalHashes[id];if(orphanEmail){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(orphanEmail))}catch(e){}sbDelete(orphanEmail).catch(()=>{});}scheduleSave();toast('Aluno excluído.')}
+function lessonSwitchTab(tab){
+  ['ficha','materiais'].forEach(t=>{
+    const panel=document.getElementById('ltab-panel-'+t);
+    const btn=document.getElementById('ltab-'+t);
+    if(!panel||!btn)return;
+    const active=t===tab;
+    panel.style.display=active?'block':'none';
+    btn.style.borderBottomColor=active?'var(--rust)':'transparent';
+    btn.style.color=active?'var(--rust)':'var(--muted)';
+  });
+  if(tab==='materiais'){const p=document.getElementById('ltab-panel-materiais');if(p)p.innerHTML=lessonMaterialsPanel(p.dataset.lessonId||(p.getAttribute('data-lesson-id')||''));}
+}
+function lessonMaterialsPanel(lessonId){
+  if(!lessonId)return'<p style="color:var(--muted);font-size:13px;padding:12px 0">Salve a aula primeiro para gerenciar materiais.</p>';
+  const mats=DB.materials.filter(m=>m.lessonId===lessonId);
+  if(!mats.length)return`<div style="padding:12px 0">
+    <p style="color:var(--muted);font-size:13px;margin:0 0 12px">Nenhum material vinculado a esta aula.</p>
+    <button class="btn" style="font-size:12px" onclick="openMaterialModal('','','${lessonId}')">+ adicionar material</button>
+  </div>`;
+  const rows=mats.map(m=>{
+    const att=m.attachments?.[0];
+    const icon=m.type==='audio'?'🎵':m.type==='video'?'🎬':m.type==='homework'?'✏️':'📎';
+    const visLabel=m.studentVisible
+      ?`<span style="color:var(--green,#4caf50);font-size:11px">visível${m.releasedAt?' desde '+new Date(m.releasedAt).toLocaleDateString('pt-BR'):''}</span>`
+      :`<span style="color:var(--muted);font-size:11px">${m.releaseAt?'agendado: '+new Date(m.releaseAt).toLocaleDateString('pt-BR'):'oculto'}</span>`;
+    const toggleBtn=m.studentVisible
+      ?`<button class="linkbtn" style="font-size:11px;color:var(--rust)" onclick="toggleLessonMaterial('${m.id}',false)">ocultar</button>`
+      :`<button class="linkbtn" style="font-size:11px;color:var(--rust)" onclick="toggleLessonMaterial('${m.id}',true)">liberar agora</button>`;
+    const dateInput=!m.studentVisible?`<input type="date" class="ff-input mono" style="font-size:11px;padding:3px 7px;width:auto;display:inline-block;margin-left:6px" value="${m.releaseAt||''}" onchange="setMaterialReleaseDate('${m.id}',this.value)" placeholder="liberar em…">`:'';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:18px;flex-shrink:0">${icon}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(m.title)}</div>
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:2px">${visLabel}${dateInput}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">${toggleBtn}<button class="linkbtn" style="font-size:11px" onclick="openMaterialModal('','${m.id}','')">editar</button></div>
+    </div>`;
+  }).join('');
+  return `<div>
+    <div style="margin-bottom:6px">${rows}</div>
+    <div style="padding-top:8px"><button class="btn" style="font-size:12px" onclick="openMaterialModal('','','${lessonId}')">+ adicionar material</button></div>
+  </div>`;
+}
+function toggleLessonMaterial(matId,visible){
+  const m=byId(DB.materials,matId);if(!m)return;
+  m.studentVisible=visible;
+  if(visible){m.releasedAt=nowIso();m.releaseAt=null;}
+  saveLocal();scheduleSave();
+  // Re-render panel
+  const panel=document.getElementById('ltab-panel-materiais');
+  if(panel)panel.innerHTML=lessonMaterialsPanel(m.lessonId);
+  toast(visible?'Material liberado para o aluno ✓':'Material ocultado.');
+}
+function setMaterialReleaseDate(matId,dateVal){
+  const m=byId(DB.materials,matId);if(!m)return;
+  m.releaseAt=dateVal||null;
+  saveLocal();scheduleSave();
+  toast(dateVal?'Liberação agendada para '+new Date(dateVal).toLocaleDateString('pt-BR'):'Agendamento removido.');
+}
+function checkScheduledMaterialReleases(){
+  const now=new Date().toISOString().slice(0,10);
+  let released=0;
+  DB.materials.forEach(m=>{
+    if(!m.studentVisible&&m.releaseAt&&m.releaseAt<=now){
+      m.studentVisible=true;m.releasedAt=nowIso();m.releaseAt=null;released++;
+    }
+  });
+  if(released>0){saveLocal();scheduleSave();log(released+' material(is) liberado(s) automaticamente por data','ok');}
+}
 function openLessonModal(studentId='',id=''){
   const l=byId(DB.lessons,id)||{};
   studentId=studentId||l.studentId||'';
@@ -2652,13 +2721,21 @@ function openLessonModal(studentId='',id=''){
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px">
       <label style="display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer"><input type="checkbox" id="pullCopyText" checked> título e conteúdo</label>
       <label style="display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer"><input type="checkbox" id="pullCopyNotes" checked> notas</label>
-      <label style="display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer"><input type="checkbox" id="pullCopyMats" checked> materiais e homework</label>
+
     </div>
     <button class="btn" style="border-color:var(--rust);color:var(--rust)" type="button" onclick="applyPlannedLesson()">aplicar</button>
   </div>`:'';
   const statusSeg=['agendada','dada','cancelada'].map(x=>{const disp=x==='cancelada'?'block':'none';return `<span class="seglbl ${lessonStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonStatus').value='${x}';var cr=document.getElementById('cancelRow');if(cr)cr.style.display='${disp}'">${x}</span>`;}).join('');
   const planSeg=['a planejar','preparada'].map(x=>`<span class="seglbl ${planStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonPlanStatus').value='${x}'">${x}</span>`).join('');
+  const matsTab=id?`<div id="lessonTabNav" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px">
+    <button id="ltab-ficha" onclick="lessonSwitchTab('ficha')" style="padding:8px 18px;background:none;border:none;border-bottom:2px solid var(--rust);color:var(--rust);font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer">ficha</button>
+    <button id="ltab-materiais" onclick="lessonSwitchTab('materiais')" style="padding:8px 18px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer">materiais</button>
+  </div>
+  <div id="ltab-panel-materiais" data-lesson-id="${id}" style="display:none">${lessonMaterialsPanel(id)}</div>
+  <div id="ltab-panel-ficha">`:'';
+  const matsTabClose=id?'</div>':'';
   openModal(id?'Editar aula':'Nova aula',id?'Editando aula de '+esc(st.name||''):'Aula real vinculada ao aluno.',`<div class="ff-modal-body">
+${matsTab}
 ${pullBlock}
 <div class="form-section">
 <div class="form-row split">
@@ -2691,7 +2768,7 @@ ${pullBlock}
 <div id="cancelRow" style="display:${isCanceled?'block':'none'}"><label class="ff-label">Aviso de cancelamento</label><div class="ff-seg"><span class="seglbl ${l.cancelNoticeOk?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonCancel').value='true'">aviso ok (sem custo)</span><span class="seglbl ${!l.cancelNoticeOk?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonCancel').value='false'">sem aviso (cobrar)</span></div><input type="hidden" id="lessonCancel" value="${l.cancelNoticeOk?'true':'false'}"></div>
 </div>
 <div class="form-actions"><div class="form-meta">${l.paymentId?'· vinculada a pagamento':fin&&fin.aCobrar.length>0?fin.aCobrar.length+' aula(s) a cobrar deste aluno':''}</div><div class="right">${id?`<button class="linkbtn" style="color:var(--rust)" onclick="deleteItem('lessons','${id}');closeModal()">excluir</button>`:''}<button class="btn" onclick="saveLesson('${id}')">salvar →</button></div></div>
-</div>`,'ff-modal')
+</div>${matsTabClose}`,'ff-modal')
 }
 function saveLesson(id=''){
   try{
@@ -2720,15 +2797,18 @@ function saveLesson(id=''){
     if(!l.paymentId)l.paymentId='';
     // Aplicar puxada de aula planejada (se houve)
     const isNew=!id&&!DB.lessons.some(x=>x.id===l.id);
-    if(isNew&&STATE._pullPlannedId&&STATE._pullCopyMats){
+    if(isNew&&STATE._pullPlannedId){
+      l.plannedLessonId=STATE._pullPlannedId;
       const sourceMats=DB.materials.filter(m=>m.plannedLessonId===STATE._pullPlannedId&&!m.studentId);
-      const st=byId(DB.students,sid);
-      sourceMats.forEach(sm=>{const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:sid,lessonId:l.id,plannedLessonId:'',studentVisible:sm.studentVisible,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};DB.materials.push(newMat);
-      if(st?.email&&newMat.studentVisible&&STATE.driveReady){for(const a of newMat.attachments||[]){if(a.driveId){driveShare(a.driveId,st.email,newMat.downloadAllowed!==false).then(ok=>{if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);scheduleSave();}});}}}});
-      log('Materiais copiados da aula planejada: '+sourceMats.length,'ok');
+      sourceMats.forEach(sm=>{
+        const alreadyExists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.studentId===sid&&m.lessonId===l.id);
+        if(alreadyExists)return;
+        const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:sid,lessonId:l.id,plannedLessonId:'',studentVisible:false,releaseAt:null,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};
+        DB.materials.push(newMat);
+      });
+      log('Materiais vinculados da ficha (ocultos): '+sourceMats.length,'ok');
     }
-    if(isNew&&STATE._pullPlannedId){l.plannedLessonId=STATE._pullPlannedId}
-    STATE._pullPlannedId=null;STATE._pullCopyMats=false;
+    STATE._pullPlannedId=null;
     if(isNew)DB.lessons.push(l);
     saveLocal();
     closeModal();
@@ -2927,7 +3007,6 @@ function applyPlannedLesson(){
   if(!p){toast('Aula planejada não encontrada.');return}
   const copyText=$('pullCopyText')?.checked!==false;
   const copyNotes=$('pullCopyNotes')?.checked!==false;
-  const copyMats=$('pullCopyMats')?.checked!==false;
   if(copyText){
     const title=$('lessonTitle');if(title&&p.title)title.value=p.title;
     const level=$('lessonLevel');if(level&&p.level)level.value=p.level;
@@ -2939,12 +3018,14 @@ function applyPlannedLesson(){
     const sn=$('lessonStudentNotes');if(sn&&p.studentNotes)sn.value=p.studentNotes;
   }
   STATE._pullPlannedId=pid;
-  STATE._pullCopyMats=copyMats;
   toast('Ficha aplicada. Salve a aula para confirmar.');
 }
 
 // garantia explícita antes do Object.assign
 window.applyPlannedLesson=applyPlannedLesson;
+window.lessonSwitchTab=lessonSwitchTab;
+window.toggleLessonMaterial=toggleLessonMaterial;
+window.setMaterialReleaseDate=setMaterialReleaseDate;
 window.toggleUnitBlock=toggleUnitBlock;
 Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,markLessonDone,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,setCourseView,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock,setReportMonth,switchReportTab,imprimirRelatorio,gerarCSVRelatorio});
 function boot(){
@@ -2956,6 +3037,7 @@ function boot(){
     STATE.userEmail=sess.email;
     STATE.source='local session';
     DB=loadLocal();
+    checkScheduledMaterialReleases();
     showAdmin();
     status('Sessão local restaurada. Reconectando o Drive…',4500);
     log('Sessão local restaurada para '+sess.email,'ok');
