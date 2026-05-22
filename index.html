@@ -2656,7 +2656,7 @@ function openLessonModal(studentId='',id=''){
     </div>
     <button class="btn" style="border-color:var(--rust);color:var(--rust)" type="button" onclick="applyPlannedLesson()">aplicar</button>
   </div>`:'';
-  const statusSeg=['agendada','dada','cancelada'].map(x=>`<span class="seglbl ${lessonStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonStatus').value='${x}';var cr=document.getElementById('cancelRow');if(cr)cr.style.display='${x==='cancelada'?'block':'none'}">${x}</span>`).join('');
+  const statusSeg=['agendada','dada','cancelada'].map(x=>{const disp=x==='cancelada'?'block':'none';return `<span class="seglbl ${lessonStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonStatus').value='${x}';var cr=document.getElementById('cancelRow');if(cr)cr.style.display='${disp}'">${x}</span>`;}).join('');
   const planSeg=['a planejar','preparada'].map(x=>`<span class="seglbl ${planStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonPlanStatus').value='${x}'">${x}</span>`).join('');
   openModal(id?'Editar aula':'Nova aula',id?'Editando aula de '+esc(st.name||''):'Aula real vinculada ao aluno.',`<div class="ff-modal-body">
 ${pullBlock}
