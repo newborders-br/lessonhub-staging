@@ -62,7 +62,7 @@ body:not(.student-mode) #studentShell{display:none}
 .mark em{font-style:italic;color:var(--rust)}
 .rail-meta{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);line-height:1.6;margin-top:auto}
 .rail-foot{font-family:'Geist Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);line-height:1.6}
-.main-content{padding:28px 56px 80px;max-width:1280px;width:100%;margin:0 auto}
+.main-content{padding:28px 56px 80px;max-width:1600px;width:100%;margin:0 auto}
 
 /* ---------- topbar ---------- */
 .topbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--ink);padding-bottom:18px;margin-bottom:28px;gap:24px;flex-wrap:wrap}
@@ -952,7 +952,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.17.9-alpha',
+  VERSION:'1.18.0-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -1863,7 +1863,9 @@ function renderMaterials(q=''){
 
     unitIds.forEach(uid2=>{
       const u=byId(DB.units,uid2);
-      const uLabel=u?(u.code&&u.code.trim().toUpperCase()!==u.name.trim().toUpperCase()?esc(u.code)+' '+esc(u.name):esc(u.name)):'Unidade';html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${uLabel}</span></div>`;
+      const uCode=u?.code?esc(u.code)+' — ':'';
+      const uName=u?esc(u.name):'Unidade';
+      html+=`<div style="margin:10px 0 4px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)"><span class="subtle" style="font-size:11px;text-transform:uppercase;letter-spacing:.08em">${uCode}${uName}</span></div>`;
 
       const {planned,outras:outrasFicha}=units[uid2];
 
@@ -1910,7 +1912,43 @@ function renderMaterials(q=''){
 
   $('page-materials').innerHTML=pageHead('Materials','Metadados no Supabase, arquivos no Drive.',`<button class="btn" onclick="openMaterialModal()">novo material</button>`)+`<div class="toolbar"><input class="search" placeholder="buscar material..." oninput="renderMaterials(this.value)" value="${esc(q)}"></div>${html||'<div class="empty">Sem materiais.</div>'}`
 }
-function materialCard(m){const att=m.attachments?.[0];const pending=att&&att.pendingUpload;const hasStorage=att&&att.storageUrl;const hasDrive=att&&att.driveLink;const hasFile=att&&(hasDrive||att.youtubeUrl||hasStorage);const fileBadge=pending?badge('upload pendente','warn'):hasStorage?badge('Storage','ok'):hasDrive?badge('Drive','ok'):att?.youtubeUrl?badge('YouTube','ok'):badge('sem arquivo','warn');const openBtn=hasFile?`<button class="linkbtn" onclick="openMaterialViewer('${m.id}')">abrir</button>`:'';const uploadBtn=pending?`<button class="linkbtn" onclick="replaceMaterial('${m.id}')">subir arquivo</button>`:`<button class="linkbtn" onclick="replaceMaterial('${m.id}')">${hasFile?'substituir arquivo':'anexar arquivo'}</button>`;return `<div class="item"><div class="item-title">${esc(m.title)}</div><div class="badges">${badge(m.type,'blue')}${badge(studentName(m.studentId))}${badge(m.studentVisible?'visível aluno':'interno',m.studentVisible?'ok':'warn')}${fileBadge}</div><div class="meta">${esc(m.notes||'')}${att?`<br>Arquivo: ${esc(att.name||'arquivo')}${pending?' (aguardando upload)':''}${hasStorage?' <span style="font-size:10px;color:var(--ok);font-family:monospace">· Storage</span>':''}`:''}</div><div class="row-actions">${openBtn}<button class="linkbtn" onclick="openMaterialModal('${m.studentId||''}','${m.id}','${m.lessonId||''}')">editar</button>${uploadBtn}<button class="linkbtn" onclick="toggleMaterial('${m.id}')">${m.studentVisible?'ocultar':'mostrar'}</button><button class="linkbtn" onclick="deleteItem('materials','${m.id}')">excluir</button></div></div>`}
+function materialCard(m){
+  const att=m.attachments?.[0];
+  const pending=att&&att.pendingUpload;
+  const hasStorage=!!(att?.storageUrl);
+  const hasDrive=!!(att?.driveLink);
+  const hasYT=!!(att?.youtubeUrl);
+  const hasFile=hasStorage||hasDrive||hasYT;
+  const destLabel=pending?'upload pendente':hasStorage?'Storage':hasDrive?'Drive':hasYT?'YouTube':'sem arquivo';
+  const destClass=pending?'warn':hasFile?'ok':'warn';
+  const visLabel=m.studentVisible?'visível ao aluno':'interno';
+  const visClass=m.studentVisible?'ok':'';
+  const stName=studentName(m.studentId)||'';
+  return `<div class="item" style="padding:14px 0">
+    <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start">
+      <div>
+        <div class="item-title" style="font-size:18px;margin-bottom:5px">${esc(m.title)}</div>
+        <div class="badges">
+          <span class="badge blue">${esc(m.type||'material')}</span>
+          ${stName?`<span class="badge">${esc(stName)}</span>`:''}
+          <span class="badge ${visClass}">${visLabel}</span>
+          <span class="badge ${destClass}">${destLabel}</span>
+        </div>
+        ${m.notes?`<div class="subtle" style="margin-top:5px;font-size:12px">${esc(m.notes)}</div>`:''}
+        ${att?.name?`<div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--muted);margin-top:4px">${esc(att.name)}${pending?' · aguardando upload':''}</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        ${hasFile?`<button class="mc-open" onclick="openMaterialViewer('${m.id}')">abrir →</button>`:''}
+      </div>
+    </div>
+    <div class="row-actions" style="margin-top:10px">
+      <button class="linkbtn" onclick="openMaterialModal('${m.studentId||''}','${m.id}','${m.lessonId||''}')">editar</button>
+      <button class="linkbtn" onclick="replaceMaterial('${m.id}')">${hasFile?'substituir arquivo':'anexar arquivo'}</button>
+      <button class="linkbtn" onclick="toggleMaterial('${m.id}')">${m.studentVisible?'ocultar':'mostrar'}</button>
+      <button class="linkbtn" onclick="deleteItem('materials','${m.id}')">excluir</button>
+    </div>
+  </div>`;
+}
 function renderPortalAdmin(){const rows=DB.students.filter(s=>s.email);$('page-portal').innerHTML=pageHead('Student Portal','Os portais são publicados automaticamente sempre que você salva uma aula, material ou aluno.','')+`<div class="panel"><div class="panel-title">Portais dos alunos</div><div class="list">${rows.map(s=>{const snap=snapshotForStudent(s.id);const pub=(STATE.portalHashes&&STATE.portalHashes[s.id]);return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.email,'blue')}${badge((snap?.lessons||[]).length+' aulas')}${badge((snap?.materials||[]).length+' materiais','ok')}${badge(pub?'publicado':'aguardando 1º save',pub?'ok':'warn')}</div><div class="meta">${pub?'Portal sincronizado. O aluno vê a versão mais recente ao entrar.':'Salve uma aula ou material deste aluno para publicar o portal.'}</div><div class="row-actions"><button class="linkbtn" onclick="previewStudent('${s.id}')">preview</button></div></div>`}).join('')||'<div class="empty">Cadastre alunos com e-mail para que tenham portal.</div>'}</div></div>`}
 function renderHealth(){const html=pageHead('Health','Diagnóstico do núcleo consolidado.',`<button class="btn" onclick="manualSaveAll()">salvar agora</button><button class="btn soft" onclick="exportBackup()">backup JSON</button>`)+`<div class="grid"><div class="card"><div class="num">${CONFIG.VERSION}</div><div class="label">versão</div></div><div class="card"><div class="num">${STATE.source}</div><div class="label">fonte inicial</div></div><div class="card"><div class="num">${STATE.driveReady?'OK':'—'}</div><div class="label">Drive files</div></div><div class="card"><div class="num">${sizeOf()}</div><div class="label">bytes JSON</div></div></div><div class="two"><div class="panel"><div class="panel-title">Arquitetura</div><div class="meta"><b>Supabase DB:</b> backend JSON de dados e portais.<br><b>Supabase Storage (bucket: course-materials):</b> arquivos de materiais de fichas de aula planejada. Upload direto, viewer PDF.js, sem depender do Drive.<br><b>Drive:</b> arquivos de materiais de alunos individuais e fallback JSON/portal.<br><b>localStorage:</b> cache operacional.<br><b>Usuário:</b> ${esc(STATE.userEmail||'—')}<br><b>Último Supabase:</b> ${STATE.lastSupabaseSave?STATE.lastSupabaseSave.toLocaleTimeString('pt-BR'):'—'}<br><b>Último Drive:</b> ${STATE.lastDriveSave?STATE.lastDriveSave.toLocaleTimeString('pt-BR'):'—'}<br><b>Erro:</b> ${esc(STATE.lastError||'—')}</div></div><div class="panel"><div class="panel-title">Logs</div>${logList()}</div></div>`;$('page-health').innerHTML=html}
 function renderHealthSafe(){if(STATE.mode==='admin'&&STATE.page==='health')try{renderHealth()}catch(e){}}
