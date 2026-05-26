@@ -455,7 +455,24 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .course-head dl dt{font-family:'Geist Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .course-head dl dd{font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--ink2);letter-spacing:.02em}
 .course-head dl dd em{font-style:italic;color:var(--rust)}
-/* ---------- variant-tabs ---------- */
+/* ---------- assessments (v1.19) ---------- */
+.assess-header{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line);margin-bottom:20px}
+.assess-score{font-family:'Instrument Serif',serif;font-size:64px;line-height:.88;letter-spacing:-.04em;font-weight:400}
+.assess-score em{font-style:italic;color:var(--rust)}
+.assess-score small{display:block;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.assess-sections{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:12px;margin:16px 0}
+.assess-sec{border:1px solid var(--line);padding:12px;text-align:center}
+.assess-sec .sval{font-family:'Instrument Serif',serif;font-size:28px;letter-spacing:-.03em;line-height:1}
+.assess-sec .slbl{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.assess-tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.assess-tag{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--rust);color:var(--rust)}
+.assess-comment{font-family:'Newsreader',serif;font-style:italic;font-size:15px;line-height:1.6;color:var(--ink2);border-left:2px solid var(--rust);padding-left:16px;margin:16px 0}
+.assess-history{display:flex;flex-direction:column;gap:0}
+.assess-row{display:grid;grid-template-columns:90px 1fr auto;gap:16px;padding:12px 0;border-bottom:1px solid var(--line2);align-items:center}
+.assess-row:last-child{border-bottom:0}
+.assess-date{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.assess-test{font-family:'Newsreader',serif;font-size:15px;letter-spacing:-.01em}
+.assess-total{font-family:'Instrument Serif',serif;font-size:24px;letter-spacing:-.03em}
 .variant-tabs{display:flex;gap:0;border-bottom:1px solid var(--ink);margin-bottom:32px}
 .vtab{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;padding:10px 20px;background:transparent;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;color:var(--muted);transition:color .12s,border-color .12s}
 .vtab:hover{color:var(--ink)}
@@ -995,7 +1012,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.18.3-alpha',
+  VERSION:'1.19.0-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -1747,9 +1764,14 @@ function showStudentFicha(id){
   <button class="ficha-edit-btn" onclick="document.getElementById('page-students').classList.toggle('editing');window.scrollTo({top:0,behavior:'smooth'})">✎ editar ficha</button>
   <button class="btn soft" onclick="openLessonModal('${id}')">+ nova aula</button>
   <button class="btn soft" onclick="openPaymentModal('${id}')">+ pagamento</button>
+  <button class="btn soft" onclick="importAssessment('${id}')">↑ avaliação</button>
   <button class="btn soft" onclick="previewStudent('${id}')">preview portal</button>
 </div>
-<div class="ficha-display">
+<div class="variant-tabs" style="margin-bottom:28px">
+  <button class="vtab on" id="ftab-ficha" onclick="switchFichaTab('ficha','${id}')">Ficha</button>
+  <button class="vtab" id="ftab-assess" onclick="switchFichaTab('assess','${id}')">Assessments${DB.assessments.filter(a=>a.studentId==='${id}').length?` <span style="font-family:'Geist Mono',monospace;font-size:9px;color:var(--rust)">${DB.assessments.filter(a=>a.studentId==='${id}').length}</span>`:''}</button>
+</div>
+<div id="ftab-ficha-panel">
 <div class="ficha-head">
   <div>
     <div class="fid"><b>${esc(s.id.slice(0,12).toUpperCase())}</b> · ${s.status}${since?' · desde '+since:''}</div>
@@ -1785,7 +1807,9 @@ function showStudentFicha(id){
   </aside>
 </div>
 </div>
-${fichaEdit}`;
+</div>
+${fichaEdit}
+<div id="ftab-assess-panel" style="display:none">${renderAssessmentTab(id)}</div>`;
 }
 
 function renderStudents(q=''){
@@ -3182,6 +3206,99 @@ function applyPlannedLesson(){
   toast('Ficha aplicada. Salve a aula para confirmar.');
 }
 
+function importAssessment(studentId){
+  const input=document.createElement('input');
+  input.type='file';input.accept='.json';
+  input.onchange=async e=>{
+    const file=e.target.files[0];if(!file)return;
+    try{
+      const text=await file.text();
+      const data=JSON.parse(text);
+      if(!data.schema?.startsWith('new-borders-test-runner')){toast('JSON inválido — exporte do Test Runner NB.');return;}
+      const assess={
+        id:uid('assess'),
+        studentId,
+        schema:data.schema,
+        test:data.test||'',
+        level:data.level||'',
+        date:data.date||today(),
+        teacher:data.teacher||'',
+        totalScore:Number(data.totalScore)||0,
+        scores:data.scores||{},
+        gaps:[...(data.writing?.tags||[]),...(data.speaking?.tags||[])],
+        finalComment:data.finalComment||'',
+        writing:{score:data.writing?.score||0,notes:data.writing?.notes||'',corrections:data.writing?.corrections||''},
+        speaking:{score:data.speaking?.score||0,notes:data.speaking?.notes||''},
+        importedAt:nowIso(),
+        source:file.name
+      };
+      DB.assessments.push(assess);
+      scheduleSave();
+      toast('Avaliação importada: '+assess.test+' · '+assess.date);
+      showStudentFicha(studentId);
+    }catch(err){toast('Erro ao ler JSON: '+err.message);}
+  };
+  input.click();
+}
+function deleteAssessment(id,studentId){
+  if(!confirm('Excluir esta avaliação?'))return;
+  DB.assessments=DB.assessments.filter(a=>a.id!==id);
+  scheduleSave();
+  showStudentFicha(studentId);
+}
+function renderAssessmentTab(studentId){
+  const assessments=DB.assessments.filter(a=>a.studentId===studentId).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  if(!assessments.length){
+    return `<div style="padding:32px 0">
+      <div class="empty">Nenhuma avaliação importada ainda.</div>
+      <div style="margin-top:20px"><button class="btn" onclick="importAssessment('${studentId}')">↑ importar JSON do Test Runner</button></div>
+    </div>`;
+  }
+  const latest=assessments[0];
+  const maxTotal=100;
+  const pct=Math.round(latest.totalScore);
+  const scoreColor=pct>=80?'var(--ok)':pct>=70?'var(--warn)':'var(--rust)';
+  const secKeys=Object.keys(latest.scores||{});
+  const sectionsHtml=secKeys.map(k=>{
+    const v=Number(latest.scores[k])||0;
+    const maxMap={Grammar:20,Vocabulary:20,Pronunciation:10,Reading:15,Listening:10,Writing:10,Speaking:15};
+    const max=maxMap[k]||10;
+    return `<div class="assess-sec"><div class="assess-sval" style="color:${v/max>=.8?'var(--ok)':v/max>=.6?'var(--warn)':'var(--rust)'}">${v}<small style="font-family:'Geist Mono',monospace;font-size:9px;color:var(--muted)">/${max}</small></div><div class="assess-slbl">${k}</div></div>`;
+  }).join('');
+  const tagsHtml=latest.gaps?.length?`<div><div class="section-title" style="margin-top:20px">Gaps identificados</div><div class="assess-tags">${latest.gaps.map(t=>`<span class="assess-tag">${esc(t)}</span>`).join('')}</div></div>`:'';
+  const commentHtml=latest.finalComment?`<div class="assess-comment">${esc(latest.finalComment).replace(/\n/g,'<br>')}</div>`:'';
+  const historyHtml=assessments.length>1?`<div style="margin-top:32px">
+    <div class="section-title">Histórico <span class="count">${assessments.length} avaliações</span></div>
+    <div class="assess-history">${assessments.map(a=>`<div class="assess-row">
+      <div class="assess-date">${a.date?fmtDate(a.date):''}</div>
+      <div><div class="assess-test">${esc(a.test)} <span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted)">${esc(a.level)}</span></div></div>
+      <div style="display:flex;align-items:center;gap:12px"><span class="assess-total" style="color:${Number(a.totalScore)>=80?'var(--ok)':Number(a.totalScore)>=70?'var(--warn)':'var(--rust)'}">${a.totalScore}</span><button class="linkbtn" onclick="deleteAssessment('${a.id}','${studentId}')">excluir</button></div>
+    </div>`).join('')}</div>
+  </div>`:'';
+  return `<div>
+    <div class="assess-header">
+      <div class="assess-score" style="color:${scoreColor}">${pct}<em>/100</em><small>${latest.test} · ${esc(latest.level)}</small></div>
+      <div><div style="font-size:13px;color:var(--muted)">${latest.date?fmtDate(latest.date):''} · ${esc(latest.teacher||'')}</div>${tagsHtml}${commentHtml}</div>
+      <div><button class="btn soft" onclick="importAssessment('${studentId}')">↑ nova avaliação</button></div>
+    </div>
+    <div class="section-title">Por seção</div>
+    <div class="assess-sections">${sectionsHtml}</div>
+    ${latest.writing?.notes?`<div style="margin-top:16px"><div class="section-title">Writing</div><p class="notes-block">${esc(latest.writing.notes)}</p></div>`:''}
+    ${latest.speaking?.notes?`<div style="margin-top:16px"><div class="section-title">Speaking</div><p class="notes-block">${esc(latest.speaking.notes)}</p></div>`:''}
+    ${historyHtml}
+  </div>`;
+}
+function switchFichaTab(tab,studentId){
+  ['ficha','assess'].forEach(t=>{
+    const panel=document.getElementById('ftab-'+t+'-panel');
+    const btn=document.getElementById('ftab-'+t);
+    if(panel)panel.style.display=t===tab?'block':'none';
+    if(btn)btn.className='vtab'+(t===tab?' on':'');
+  });
+}
+window.importAssessment=importAssessment;
+window.deleteAssessment=deleteAssessment;
+window.switchFichaTab=switchFichaTab;
 // garantia explícita antes do Object.assign
 window.applyPlannedLesson=applyPlannedLesson;
 window.lessonSwitchTab=lessonSwitchTab;
