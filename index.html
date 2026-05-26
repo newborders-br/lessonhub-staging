@@ -559,6 +559,10 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .vb-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end}
 .vb-dl{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer;background:transparent;border:0;padding:0}
 .vb-dl:hover{color:var(--ink)}
+.vb-toggle{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer;background:transparent;border:1px solid var(--line);padding:4px 10px;display:flex;align-items:center;gap:6px;transition:all .12s}
+.vb-toggle:hover{border-color:var(--ink);color:var(--ink)}
+.vb-toggle.done{border-color:var(--ok);color:var(--ok);background:rgba(62,107,74,.06)}
+.vb-toggle .chk{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border:1px solid currentColor;font-size:9px;line-height:1}
 
 /* cinema: YouTube e Drive continuam com fundo escuro */
 .cinema-frame{background:#141210;color:#e7decd;position:relative;min-height:82vh;display:flex;align-items:flex-start;justify-content:center;overflow:hidden;padding:0}
@@ -985,13 +989,13 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <input type="file" id="backupInput" accept=".json" class="hidden" onchange="importBackup(this.files[0])">
 <input type="file" id="materialFileInput" class="hidden" onchange="attachFileToCurrentMaterial(this.files[0])">
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><div><div class="modal-title" id="modalTitle"></div><div class="subtle" id="modalSub"></div></div><button class="linkbtn" onclick="closeModal()">fechar</button></div><div id="modalBody"></div></div></div>
-<div id="viewerScreen" style="display:none;position:fixed;inset:0;z-index:90;background:var(--paper);overflow-y:auto"><div id="viewerHeader"><div class="viewer-bar"><button class="vb-back" onclick="closeViewer()">← voltar</button><div class="vb-title"><b id="viewerTitle">Material</b><small id="viewerSub"></small></div><div class="vb-actions"><button class="vb-dl" id="viewerDlBtn" style="display:none">↓ baixar</button></div></div></div><div id="viewerFrame"></div></div>
+<div id="viewerScreen" style="display:none;position:fixed;inset:0;z-index:90;background:var(--paper);overflow-y:auto"><div id="viewerHeader"><div class="viewer-bar"><button class="vb-back" onclick="closeViewer()">← voltar</button><div class="vb-title"><b id="viewerTitle">Material</b><small id="viewerSub"></small></div><div class="vb-actions"><button class="vb-toggle" id="viewerDoneBtn" style="display:none" onclick="toggleViewerDone()"><span class="chk" id="viewerDoneChk"></span><span id="viewerDoneLbl">concluído</span></button><button class="vb-dl" id="viewerDlBtn" style="display:none">↓ baixar</button></div></div></div><div id="viewerFrame"></div></div>
 <div class="toast" id="toast"></div><div class="statusbar" id="statusbar"></div>
 
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.18.2-alpha',
+  VERSION:'1.18.3-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -1510,20 +1514,38 @@ function renderPdfViewer(url,materialId){
   s.onerror=()=>{const sc=document.getElementById('pdfScrollArea');if(sc)sc.innerHTML='<div style="text-align:center;padding:40px;color:#9a4626;font-family:monospace;font-size:12px">Não foi possível carregar o PDF.js.</div>';log('PDF.js falhou','error');};
   document.head.appendChild(s);
 }
+function _doneKey(matId){return 'lh_done_'+(STATE.userEmail||STATE.studentPortal?.student?.email||'anon')+'_'+matId}
+function toggleViewerDone(){
+  const matId=window._viewerMatId;if(!matId)return;
+  const key=_doneKey(matId);
+  const done=localStorage.getItem(key)==='1';
+  localStorage.setItem(key,done?'0':'1');
+  _updateDoneBtn(!done);
+}
+function _updateDoneBtn(done){
+  const btn=$('viewerDoneBtn');const chk=$('viewerDoneChk');const lbl=$('viewerDoneLbl');
+  if(!btn)return;
+  btn.className='vb-toggle'+(done?' done':'');
+  if(chk)chk.textContent=done?'✓':'';
+  if(lbl)lbl.textContent=done?'concluído':'marcar concluído';
+}
 function openMaterialViewer(id){
   const m=byId(DB.materials,id);
   if(!m){toast('Material não encontrado ou excluído.');return;}
   const att=m.attachments?.[0];
   const t=$('viewerTitle');const s=$('viewerSub');const f=$('viewerFrame');const dl=$('viewerDlBtn');const screen=$('viewerScreen');
   if(!t||!s||!f||!screen)return;
+  window._viewerMatId=id;
   t.textContent=m.title;
   s.textContent=[m.type,att?.name].filter(Boolean).join(' · ');
   f.innerHTML=buildViewerHtml(att,m.title,m.downloadAllowed!==false);
   if(dl){
     const hasDl=(att?.driveLink||att?.storageUrl)&&m.downloadAllowed!==false;
-    if(hasDl){dl.style.display='block';dl.id='viewerDlBtn';dl.onclick=()=>window.open(att.storageUrl||att.driveLink,'_blank')}
+    if(hasDl){dl.style.display='block';dl.onclick=()=>window.open(att.storageUrl||att.driveLink,'_blank')}
     else{dl.style.display='none'}
   }
+  const doneBtn=$('viewerDoneBtn');
+  if(doneBtn){doneBtn.style.display='flex';_updateDoneBtn(localStorage.getItem(_doneKey(id))==='1');}
   screen.style.display='block';document.body.style.overflow='hidden';screen.scrollTop=0;
   if(att?.storageUrl){
     const isPdf=String(att.name||att.storageUrl).toLowerCase().endsWith('.pdf')||String(att.type||'').includes('pdf');
@@ -3164,6 +3186,8 @@ function applyPlannedLesson(){
 window.applyPlannedLesson=applyPlannedLesson;
 window.lessonSwitchTab=lessonSwitchTab;
 window.toggleLessonExpand=toggleLessonExpand;
+window.toggleViewerDone=toggleViewerDone;
+window._updateDoneBtn=_updateDoneBtn;
 window.toggleLessonMaterial=toggleLessonMaterial;
 window.setMaterialReleaseDate=setMaterialReleaseDate;
 window.toggleUnitBlock=toggleUnitBlock;
