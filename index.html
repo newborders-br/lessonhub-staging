@@ -455,6 +455,45 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 .course-head dl dt{font-family:'Geist Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .course-head dl dd{font-family:'Geist Mono',monospace;font-size:12.5px;color:var(--ink2);letter-spacing:.02em}
 .course-head dl dd em{font-style:italic;color:var(--rust)}
+/* ---------- variant-tabs ---------- */
+.variant-tabs{display:flex;gap:0;border-bottom:1px solid var(--ink);margin-bottom:32px}
+.vtab{font-family:'Geist Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;padding:10px 20px;background:transparent;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;color:var(--muted);transition:color .12s,border-color .12s}
+.vtab:hover{color:var(--ink)}
+.vtab.on{color:var(--ink);border-bottom-color:var(--rust)}
+/* ---------- grade (V2) ---------- */
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.unit-card{padding:22px 22px 18px;border:1px solid var(--line);background:var(--paper2);cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:14px;min-height:200px}
+.unit-card:hover{border-color:var(--ink);transform:translateY(-2px)}
+.unit-card.cur{border-color:var(--rust)}
+.unit-card .uc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.unit-card .uno{font-family:'Instrument Serif',serif;font-size:46px;line-height:1;letter-spacing:-.03em}
+.unit-card.cur .uno{color:var(--rust)}
+.unit-card .ust{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.unit-card.cur .ust{color:var(--rust)}
+.unit-card .un{font-family:'Newsreader',serif;font-size:19px;line-height:1.2;letter-spacing:-.015em}
+.unit-card .ustats{display:flex;gap:18px;border-top:1px solid var(--line);padding-top:12px;font-family:'Geist Mono',monospace;font-size:11px;color:var(--ink);letter-spacing:.04em;margin-top:auto}
+.unit-card .ustats span{display:flex;flex-direction:column;gap:2px}
+.unit-card .ustats span small{font-size:9px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase}
+.unit-card .stuchips{display:flex;flex-wrap:wrap;gap:6px}
+.unit-card .stuchip{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:3px 8px;border:1px solid var(--line);white-space:nowrap}
+.unit-card .stuchip.on{color:var(--rust);border-color:var(--rust);background:rgba(154,70,38,.04)}
+/* ---------- trilha (V3) ---------- */
+.trilha{position:relative}
+.trilha::before{content:"";position:absolute;left:48px;top:18px;bottom:18px;width:1px;background:var(--line)}
+.trilha-unit{display:grid;grid-template-columns:100px 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line2)}
+.trilha-unit:last-child{border-bottom:0}
+.trilha-unit .tmark{font-family:'Instrument Serif',serif;font-size:38px;line-height:1;letter-spacing:-.03em;color:var(--ink);position:relative}
+.trilha-unit.cur .tmark{color:var(--rust)}
+.trilha-unit .tmark::before{content:"";position:absolute;left:38px;top:14px;width:9px;height:9px;background:var(--paper);border:2px solid var(--soft);border-radius:50%}
+.trilha-unit.cur .tmark::before{background:var(--rust);border-color:var(--rust)}
+.trilha-unit .tmark small{display:block;font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.trilha-unit.cur .tmark small{color:var(--rust)}
+.trilha-body .uname{font-family:'Newsreader',serif;font-size:22px;line-height:1.2;letter-spacing:-.015em;margin-bottom:6px}
+.trilha-body .udesc{font-size:14px;color:var(--muted);line-height:1.55;max-width:62ch;margin-bottom:14px}
+.trilha-lessons{display:flex;flex-wrap:wrap;gap:6px}
+.tl{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--line);color:var(--muted)}
+.tl.cur{border-color:var(--rust);color:var(--rust);background:rgba(154,70,38,.06)}
+.tl em{font-style:normal;color:inherit}
 .unit-block{border-top:1px solid var(--line);padding:0}
 .unit-block:first-of-type{border-top:1px solid var(--ink)}
 .unit-block .uh{display:grid;grid-template-columns:96px 1fr auto auto;gap:24px;align-items:baseline;cursor:pointer;padding:20px 0;transition:background .12s;user-select:none}
@@ -952,7 +991,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.18.0-alpha',
+  VERSION:'1.18.1-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -1999,16 +2038,21 @@ function renderCoursesLevelB(){
   if(!c){STATE.coursesView={level:'courses',courseId:'',unitId:''};return renderCourses()}
   const units=DB.units.filter(u=>u.courseId===c.id&&u.status!=='arquivado').sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)||a.name.localeCompare(b.name));
   const arquivadas=DB.units.filter(u=>u.courseId===c.id&&u.status==='arquivado');
+  const tod=today();
+  const todayLessons=DB.lessons.filter(l=>l.date===tod&&l.courseId===c.id);
   const studentsCount=DB.students.filter(s=>s.courseId===c.id).length;
   const allPlanned=DB.plannedLessons.filter(p=>p.courseId===c.id&&p.status!=='arquivado').length;
   const allMats=DB.materials.filter(m=>m.plannedLessonId&&DB.plannedLessons.find(p=>p.courseId===c.id&&p.id===m.plannedLessonId)).length;
-  const todayStr=today();
-  const todayLessons=DB.lessons.filter(l=>l.date===todayStr&&l.courseId===c.id);
-  const cid=c.id;
-  const courseColor=c.color||'var(--rust)';
 
-  // ── V1 Índice (accordion) ────────────────────────────────────────
-  const unitBlocks=units.map(u=>{
+  const curTab=STATE._courseTab||'indice';
+  const tabs=[['indice','Índice'],['grade','Grade'],['trilha','Trilha']];
+  const vtabs=tabs.map(([k,l])=>`<button class="vtab ${curTab===k?'on':''}" onclick="STATE._courseTab='${k}';renderCoursesLevelB()">${l}</button>`).join('');
+
+  const nomePartes=c.name.split(' ');
+  const nomeDisplay=nomePartes.length>1?nomePartes.slice(0,-1).join(' ')+'<br><em>'+nomePartes[nomePartes.length-1]+'.</em>':esc(c.name)+'.';
+
+  // ---------- ÍNDICE (V1) ----------
+  const unitBlocksHtml=units.map(u=>{
     const planned=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status!=='arquivado').sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)||String(a.code).localeCompare(String(b.code)));
     const uMats=DB.materials.filter(m=>planned.some(p=>p.id===m.plannedLessonId)).length;
     const lessonItems=planned.map(p=>{
@@ -2019,112 +2063,90 @@ function renderCoursesLevelB(){
         <div class="lcode">${esc(p.code||'—')}</div>
         <div class="ltitle">${esc(p.title||'Aula planejada')}${isCurrent&&curStudent?`<span class="cur-tag">hoje · ${esc(curStudent.name.split(' ')[0])}</span>`:''}<small>${esc(p.content?p.content.substring(0,60)+(p.content.length>60?'…':''):'')}</small></div>
         <div class="lmat">${pMats?pMats+' mat':'—'}</div>
-        <button class="ledit" onclick="event.stopPropagation();openPlannedLessonModal('${cid}','${u.id}','${p.id}')">editar</button>
+        <button class="ledit" onclick="event.stopPropagation();openPlannedLessonModal('${c.id}','${u.id}','${p.id}')">editar</button>
       </div>`;
     }).join('');
     return `<div class="unit-block" id="unit-${u.id}">
       <div class="uh" onclick="toggleUnitBlock('${u.id}')">
         <div class="uno">${esc(u.code||String(units.indexOf(u)+1).padStart(2,'0'))}</div>
-        <div class="un">${esc(u.name)}<small>${esc(u.description?u.description.substring(0,50)+(u.description.length>50?'…':''):u.kind||'')}</small></div>
+        <div class="un">${esc(u.name)}<small>${esc(u.description||u.kind||'')}</small></div>
         <div class="ucount">${planned.length} aula${planned.length!==1?'s':''} · ${uMats} mat${uMats!==1?'s':''}</div>
         <div class="uchev">›</div>
       </div>
       <div class="ubody">
         ${u.description?`<p class="udesc">${esc(u.description)}</p>`:''}
-        <div class="lesson-list">${lessonItems||`<div class="empty" style="padding:12px 0;font-size:13px">Nenhuma aula planejada. <button class="linkbtn" onclick="openPlannedLessonModal('${cid}','${u.id}','')">criar →</button></div>`}</div>
+        <div class="lesson-list">${lessonItems||`<div class="empty" style="padding:12px 0;font-size:13px">Nenhuma aula planejada. <button class="linkbtn" onclick="openPlannedLessonModal('${c.id}','${u.id}','')">criar →</button></div>`}</div>
         <div style="margin-top:14px;display:flex;gap:12px">
-          <button class="linkbtn" onclick="openPlannedLessonModal('${cid}','${u.id}','')">+ nova aula planejada</button>
-          <button class="linkbtn" onclick="openUnitModal('${cid}','${u.id}')">editar unidade</button>
+          <button class="linkbtn" onclick="openPlannedLessonModal('${c.id}','${u.id}','')">+ nova aula planejada</button>
+          <button class="linkbtn" onclick="openUnitModal('${c.id}','${u.id}')">editar unidade</button>
         </div>
       </div>
     </div>`;
   }).join('');
 
-  // ── V2 Grade (cards) ─────────────────────────────────────────────
-  const gradeCards=units.map(u=>{
-    const planned=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status!=='arquivado');
-    const uMats=DB.materials.filter(m=>planned.some(p=>p.id===m.plannedLessonId)).length;
-    // alunos nesta unidade (via aulas reais vinculadas a aulas planejadas desta unidade)
-    const sidsNaUnidade=new Set(DB.lessons.filter(l=>planned.some(p=>p.id===l.plannedLessonId)).map(l=>l.studentId));
-    const chipsHtml=[...sidsNaUnidade].slice(0,5).map(sid=>{const st=byId(DB.students,sid);const initials=(st?.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();return `<div class="uc-chip" title="${esc(st?.name||'')}">${initials}</div>`}).join('');
-    const idx=units.indexOf(u);
-    return `<div class="unit-card" onclick="openUnitModal('${cid}','${u.id}')">
-      <div class="uc-num">${esc(u.code||(idx+1<10?'0'+(idx+1):String(idx+1)))}</div>
-      <div class="uc-name">${esc(u.name)}</div>
-      <div class="uc-stats">${planned.length} aula${planned.length!==1?'s':''} · ${uMats} mat${uMats!==1?'s':''}</div>
-      ${chipsHtml?`<div class="uc-chips">${chipsHtml}</div>`:''}
+  // ---------- GRADE (V2) ----------
+  const gradeHtml=`<div class="unit-grid">${units.map(u=>{
+    const planned=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status!=='arquivado').length;
+    const uMats=DB.materials.filter(m=>u.id&&DB.plannedLessons.some(p=>p.unitId===u.id&&p.id===m.plannedLessonId)).length;
+    const isCur=todayLessons.some(l=>DB.plannedLessons.find(p=>p.unitId===u.id&&p.id===l.plannedLessonId));
+    const studs=DB.students.filter(s=>s.courseId===c.id);
+    const chips=studs.length?studs.map(s=>`<span class="stuchip${isCur?' on':''}">${esc(s.name.split(' ')[0])}</span>`).join(''):`<span class="stuchip">—</span>`;
+    return `<div class="unit-card${isCur?' cur':''}" onclick="toggleUnitBlock('${u.id}');STATE._courseTab='indice';renderCoursesLevelB();setTimeout(()=>document.getElementById('unit-${u.id}')?.scrollIntoView({behavior:'smooth'}),100)">
+      <div class="uc-top"><div class="uno">${esc(u.code||String(units.indexOf(u)+1).padStart(2,'0'))}</div><div class="ust">${esc(u.kind||u.description?.slice(0,20)||'')}</div></div>
+      <div class="un">${esc(u.name)}</div>
+      <div class="ustats"><span>${planned}<small>aulas</small></span><span>${uMats}<small>mats</small></span></div>
+      <div class="stuchips">${chips}</div>
     </div>`;
-  }).join('');
+  }).join('')||'<div class="empty">Nenhuma unidade.</div>'}</div>`;
 
-  // ── V3 Trilha (timeline vertical) ────────────────────────────────
-  const trilhaRows=units.map(u=>{
-    const planned=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status!=='arquivado').sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)||String(a.code).localeCompare(String(b.code)));
-    const idx=units.indexOf(u);
-    const numLabel=u.code||(idx+1<10?'0'+(idx+1):String(idx+1));
-    const chips=planned.map(p=>`<div class="tl-chip" onclick="event.stopPropagation();openPlannedLessonModal('${cid}','${u.id}','${p.id}')">${p.code?`${esc(p.code)} `+`<em>${esc(p.title)}</em>`:`<em>${esc(p.title)}</em>`}</div>`).join('');
-    const isLast=idx===units.length-1;
-    return `<div class="tmark-col">
-      <div class="tmark-num">${numLabel}</div>
-      <div class="tmark-code">${esc(u.code||'')}</div>
-      <div class="tmark-dot"></div>
-      ${!isLast?'<div class="tmark-line"></div>':''}
-    </div>
-    <div class="trilha-body-col">
-      <div class="trilha-unit-name">${esc(u.name)}</div>
-      ${u.description?`<div class="trilha-unit-desc">${esc(u.description)}</div>`:''}
-      ${chips?`<div class="trilha-lessons">${chips}</div>`:'<div style="font-family:\'Geist Mono\',monospace;font-size:10px;color:var(--soft);letter-spacing:.14em;text-transform:uppercase;margin-top:4px">sem aulas planejadas</div>'}
-      <div style="margin-top:16px;display:flex;gap:12px">
-        <button class="linkbtn" onclick="openPlannedLessonModal('${cid}','${u.id}','')">+ aula</button>
-        <button class="linkbtn" onclick="openUnitModal('${cid}','${u.id}')">editar</button>
+  // ---------- TRILHA (V3) ----------
+  const trilhaHtml=`<div class="trilha">${units.map(u=>{
+    const planned=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status!=='arquivado').sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
+    const isCur=todayLessons.some(l=>planned.find(p=>p.id===l.plannedLessonId));
+    const chips=planned.map(p=>{
+      const isPCur=todayLessons.some(l=>l.plannedLessonId===p.id);
+      return `<span class="tl${isPCur?' cur':''}">${esc(p.code||'')}<em>${esc(p.title.length>20?p.title.slice(0,18)+'…':p.title)}</em></span>`;
+    }).join('');
+    return `<div class="trilha-unit${isCur?' cur':''}">
+      <div class="tmark">${esc(u.code||String(units.indexOf(u)+1).padStart(2,'0'))}<small>${esc(u.kind||u.description?.slice(0,12)||'')}</small></div>
+      <div class="trilha-body">
+        <div class="uname">${esc(u.name)}${isCur?`<span class="cur-tag">hoje</span>`:''}</div>
+        ${u.description?`<div class="udesc">${esc(u.description)}</div>`:''}
+        <div class="trilha-lessons">${chips||'<span class="tl" style="opacity:.4">sem aulas planejadas</span>'}</div>
+        <div style="margin-top:10px;display:flex;gap:12px">
+          <button class="linkbtn" onclick="openUnitModal('${c.id}','${u.id}')">editar</button>
+          <button class="linkbtn" onclick="openPlannedLessonModal('${c.id}','${u.id}','')">+ aula</button>
+        </div>
       </div>
     </div>`;
-  }).join('');
+  }).join('')||'<div class="empty">Nenhuma unidade.</div>'}</div>`;
 
-  // ── course-head ───────────────────────────────────────────────────
-  const nomePartes=c.name.split(' ');
-  const nomeDisplay=nomePartes.length>1?nomePartes.slice(0,-1).join(' ')+'<br><em>'+nomePartes[nomePartes.length-1]+'.</em>':esc(c.name)+'.';
+  const painel=curTab==='grade'?gradeHtml:curTab==='trilha'?trilhaHtml:unitBlocksHtml;
 
   $('page-courses').innerHTML=`
     <button class="ficha-back" onclick="courseNavTo('courses')">← Courses</button>
-    <div class="course-head" style="position:relative;padding-left:20px">
-      <div class="ch-stripe" style="background:${courseColor}"></div>
+    <div class="course-head">
       <div>
-        <div class="fid" style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">
-          <b style="color:var(--ink)">${esc(c.kind||'curso')}</b>${c.status&&c.status!=='ativo'?` · ${esc(c.status)}`:''}
+        <div class="fid" style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${esc(c.color||'#9a4626')};margin-right:8px;vertical-align:middle"></span>
+          <b style="color:var(--ink)">${esc(c.kind||c.status)}</b> · ${c.status}
         </div>
         <h1>${nomeDisplay}</h1>
-        ${c.description?`<p style="font-family:'Newsreader',serif;font-size:16px;color:var(--ink2);line-height:1.5;margin-top:12px;max-width:48ch">${esc(c.description)}</p>`:''}
       </div>
-      <div>
-        <dl style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;border-top:1px solid var(--line);padding-top:14px">
-          ${[['Unidades',units.length+' ativas'],['Aulas planejadas',allPlanned],['Materiais',allMats],['Alunos',studentsCount]].map(([dt,dd])=>`<div style="padding-right:14px;border-right:1px solid var(--line2)"><dt style="font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${dt}</dt><dd style="font-family:'Instrument Serif',serif;font-size:24px;line-height:1.05;margin-top:4px;letter-spacing:-.02em">${dd}</dd></div>`).join('')}
-        </dl>
-        <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
-          <button class="btn soft" onclick="openCourseModal('${cid}')">editar curso</button>
-          <button class="btn" onclick="openUnitModal('${cid}')">+ nova unidade</button>
-        </div>
-      </div>
+      <dl>
+        <div><dt>Unidades</dt><dd>${units.length} ativas</dd></div>
+        <div><dt>Aulas planejadas</dt><dd>${allPlanned}</dd></div>
+        <div><dt>Materiais na biblioteca</dt><dd>${allMats}</dd></div>
+        <div><dt>Alunos neste curso</dt><dd>${studentsCount}</dd></div>
+      </dl>
     </div>
-    <div class="variant-tabs" data-group="course-${cid}" style="margin-bottom:0">
-      <div class="vlabel">Vista</div>
-      <button data-v="indice" class="on" onclick="setCourseView('${cid}','indice')">Índice</button>
-      <button data-v="grade" onclick="setCourseView('${cid}','grade')">Grade</button>
-      <button data-v="trilha" onclick="setCourseView('${cid}','trilha')">Trilha</button>
+    <div style="display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap">
+      <button class="btn" onclick="openUnitModal('${c.id}')">+ nova unidade</button>
+      <button class="btn soft" onclick="openCourseModal('${c.id}')">editar curso</button>
     </div>
-    <div class="v-pane on" data-group="course-${cid}" data-pane="indice" style="padding-top:0">
-      ${unitBlocks||`<div class="empty" style="margin-top:24px">Nenhuma unidade neste curso. <button class="btn" style="margin-top:12px" onclick="openUnitModal('${cid}')">criar primeira unidade</button></div>`}
-      ${arquivadas.length?`<div style="margin-top:32px;opacity:.6"><div class="section-title">Arquivadas <span class="count">${arquivadas.length}</span></div>${arquivadas.map(u=>`<div style="padding:12px 0;border-bottom:1px solid var(--line2);font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted)">${esc(u.code||'')} ${esc(u.name)} <button class="linkbtn" onclick="archiveUnit('${u.id}')">reativar</button></div>`).join('')}</div>`:''}
-    </div>
-    <div class="v-pane" data-group="course-${cid}" data-pane="grade" style="padding-top:24px">
-      ${units.length?`<div class="unit-grid">${gradeCards}</div>`:`<div class="empty">Nenhuma unidade.</div>`}
-    </div>
-    <div class="v-pane" data-group="course-${cid}" data-pane="trilha" style="padding-top:24px">
-      ${units.length?`<div class="trilha">${trilhaRows}</div>`:`<div class="empty">Nenhuma unidade.</div>`}
-    </div>`;
-
-  // restaurar estado da aba se houver
-  const savedView=STATE._courseView?.[cid];
-  if(savedView&&savedView!=='indice')setCourseView(cid,savedView,false);
+    <div class="variant-tabs">${vtabs}</div>
+    <div id="course-painel">${painel}</div>
+    ${arquivadas.length?`<div style="margin-top:32px;opacity:.6"><div class="section-title">Arquivadas <span class="count">${arquivadas.length}</span></div>${arquivadas.map(u=>`<div style="padding:12px 0;border-bottom:1px solid var(--line2);font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted)">${esc(u.code||'')} ${esc(u.name)} <button class="linkbtn" onclick="archiveUnit('${u.id}')">reativar</button></div>`).join('')}</div>`:''}`;
 }
 function unitRow(u){const count=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status!=='arquivado').length;return `<div class="item"><div class="item-title" style="cursor:pointer" onclick="courseNavTo('planned','${u.courseId}','${u.id}')">${u.code?`<span class="subtle" style="margin-right:8px">${esc(u.code)}</span>`:''}<span style="text-decoration:underline">${esc(u.name)}</span></div><div class="meta">${count} aula(s) planejada(s)</div>${u.description?`<div class="meta subtle">${esc(u.description)}</div>`:''}<div class="row-actions"><button class="linkbtn" onclick="courseNavTo('planned','${u.courseId}','${u.id}')">abrir</button><button class="linkbtn" onclick="openUnitModal('${u.courseId}','${u.id}')">editar</button><button class="linkbtn" onclick="archiveUnit('${u.id}')">${u.status==='arquivado'?'reativar':'arquivar'}</button><button class="linkbtn" onclick="deleteUnit('${u.id}')">excluir</button></div></div>`}
 function renderCoursesLevelC(){const c=byId(DB.courses,STATE.coursesView.courseId);const u=byId(DB.units,STATE.coursesView.unitId);if(!c||!u){STATE.coursesView={level:'courses',courseId:'',unitId:''};return renderCourses()}const planned=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status!=='arquivado').sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)||String(a.code).localeCompare(String(b.code)));const arquivadas=DB.plannedLessons.filter(p=>p.unitId===u.id&&p.status==='arquivado');const breadcrumb=`<div class="meta subtle" style="margin-bottom:12px"><a href="#" onclick="event.preventDefault();courseNavTo('courses')">Courses</a> › <a href="#" onclick="event.preventDefault();courseNavTo('units','${c.id}')">${esc(c.name)}</a> › <b>${esc(u.name)}</b></div>`;$('page-courses').innerHTML=pageHead('Courses',`${courseDot(c)}${esc(c.name)} — ${esc(u.name)}`,`<button class="btn" onclick="openPlannedLessonModal('${c.id}','${u.id}')">nova aula planejada</button>`)+breadcrumb+`<div class="list">${planned.map(plannedRow).join('')||'<div class="empty">Nenhuma aula planejada nesta unidade.</div>'}</div>${arquivadas.length?`<div class="panel" style="margin-top:24px;opacity:0.7"><div class="panel-title">Arquivadas (${arquivadas.length})</div><div class="list">${arquivadas.map(plannedRow).join('')}</div></div>`:''}`}
