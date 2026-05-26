@@ -991,7 +991,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.18.1-alpha',
+  VERSION:'1.18.2-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -1805,7 +1805,7 @@ function renderStudents(q=''){
     ${tableRows||'<div class="empty">Nenhum aluno cadastrado.</div>'}`;
 }
 function studentCard(s){const lessons=DB.lessons.filter(l=>l.studentId===s.id);const next=lessons.filter(l=>!l.date||l.date>=today()).sort((a,b)=>String(a.date).localeCompare(String(b.date)))[0];const fin=financeForStudent(s.id);const course=s.courseId?byId(DB.courses,s.courseId):null;const courseBadge=course?`<span class="badge" style="background:${esc(course.color||'#8b3a1f')}22;color:${esc(course.color||'#8b3a1f')};border-color:${esc(course.color||'#8b3a1f')}44">${esc(course.name)}</span>`:badge('sem curso','warn');return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.status)}${badge(s.email||'sem e-mail',s.email?'ok':'warn')}${courseBadge}${badge(`${lessons.length} aulas`)}${badge('LTV '+money(fin.ltv),'ok')}${fin.aCobrar.length>0?badge(fin.aCobrar.length+' a cobrar','warn'):''}</div><div class="meta">${next?`Próxima: ${fmtDate(next.date)} ${esc(next.startTime||'')}`:'Sem próxima aula.'}<br>${esc(s.goal||'Sem objetivo registrado.')}</div><div class="row-actions"><button class="linkbtn" onclick="openStudentModal('${s.id}')">editar</button><button class="linkbtn" onclick="openLessonModal('${s.id}')">nova aula</button><button class="linkbtn" onclick="openPaymentModal('${s.id}')">novo pagamento</button><button class="linkbtn" onclick="previewStudent('${s.id}')">preview</button><button class="linkbtn" onclick="deleteStudent('${s.id}')">excluir</button></div></div>`}
-function renderLessons(q='',periodo='todas'){
+function renderLessons(q='',periodo='todas',filtroAluno='',filtroCurso='',filtroStatus='',filtroPlan=''){
   const query=String(q||'').toLowerCase();
   const tod=today();
   const d=new Date(tod);const dow=d.getDay();
@@ -1820,10 +1820,52 @@ function renderLessons(q='',periodo='todas'){
     if(periodo==='passadas')return l.date<tod;
     if(periodo==='futuras')return l.date>tod;
     return true;
+  }).filter(l=>{
+    if(filtroAluno&&l.studentId!==filtroAluno)return false;
+    if(filtroCurso&&l.courseId!==filtroCurso)return false;
+    if(filtroStatus&&l.status!==filtroStatus)return false;
+    if(filtroPlan&&(l.planStatus||'a planejar')!==filtroPlan)return false;
+    return true;
   }).sort((a,b)=>periodo==='passadas'?String(b.date||'').localeCompare(String(a.date||'')):String(a.date||'').localeCompare(String(b.date||'')));
+
   const periodos=[['todas','Todas'],['hoje','Hoje'],['semana','Esta semana'],['futuras','Futuras'],['passadas','Passadas']];
-  const sel=`<select style="border:0;border-bottom:1px solid var(--ink);padding:6px 0;background:transparent;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;outline:none;color:var(--ink)" onchange="renderLessons(document.querySelector('#page-lessons input')?.value||'',this.value)">${periodos.map(([v,l])=>`<option value="${v}" ${v===periodo?'selected':''}>${l}</option>`).join('')}</select>`;
-  $('page-lessons').innerHTML=`<div class="hero" style="margin-bottom:28px"><h1>Lessons</h1><p class="lede">${rows.length} aula${rows.length!==1?'s':''} · ${periodo==='todas'?'todas':periodo}.</p></div><div style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:28px"><input type="text" class="search" placeholder="buscar aula…" oninput="renderLessons(this.value,'${periodo}')" value="${esc(q)}" style="min-width:220px"><div style="display:flex;gap:12px;align-items:center">${sel}<button class="btn" onclick="openLessonModal()">+ nova aula</button></div></div><div>${rows.map(lessonCard).join('')||'<div class="empty">Sem aulas neste período.</div>'}</div>`
+  const ffSel=(id,opts,val,onch)=>`<select id="${id}" style="border:0;border-bottom:1px solid var(--line);padding:5px 0;background:transparent;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;outline:none;color:var(--muted)" onchange="${onch}">${opts}</select>`;
+
+  const getPeriodo=()=>`document.getElementById('fl-periodo').value`;
+  const getAluno=()=>`document.getElementById('fl-aluno').value`;
+  const getCurso=()=>`document.getElementById('fl-curso').value`;
+  const getStatus=()=>`document.getElementById('fl-status').value`;
+  const getPlan=()=>`document.getElementById('fl-plan').value`;
+  const getQ=()=>`document.querySelector('#page-lessons input[type=text]')?.value||''`;
+  const reload=`renderLessons(${getQ()},${getPeriodo()},${getAluno()},${getCurso()},${getStatus()},${getPlan()})`;
+
+  const selPeriodo=ffSel('fl-periodo',periodos.map(([v,l])=>`<option value="${v}" ${v===periodo?'selected':''}>${l}</option>`).join(''),periodo,reload);
+  const alunoOpts=`<option value="">Todos alunos</option>`+DB.students.filter(s=>s.status==='ativo').sort((a,b)=>a.name.localeCompare(b.name)).map(s=>`<option value="${s.id}" ${s.id===filtroAluno?'selected':''}>${esc(s.name)}</option>`).join('');
+  const selAluno=ffSel('fl-aluno',alunoOpts,filtroAluno,reload);
+  const cursoOpts=`<option value="">Todos cursos</option>`+DB.courses.filter(c=>c.status!=='arquivado').map(c=>`<option value="${c.id}" ${c.id===filtroCurso?'selected':''}>${esc(c.name)}</option>`).join('');
+  const selCurso=ffSel('fl-curso',cursoOpts,filtroCurso,reload);
+  const selStatus=ffSel('fl-status',`<option value="">Todos status</option><option value="agendada" ${filtroStatus==='agendada'?'selected':''}>Agendada</option><option value="dada" ${filtroStatus==='dada'?'selected':''}>Dada</option><option value="cancelada" ${filtroStatus==='cancelada'?'selected':''}>Cancelada</option>`,filtroStatus,reload);
+  const selPlan=ffSel('fl-plan',`<option value="">Planejamento</option><option value="a planejar" ${filtroPlan==='a planejar'?'selected':''}>A planejar</option><option value="preparada" ${filtroPlan==='preparada'?'selected':''}>Preparada</option>`,filtroPlan,reload);
+  const hasFilter=filtroAluno||filtroCurso||filtroStatus||filtroPlan||periodo!=='todas';
+  const clearBtn=hasFilter?`<button class="linkbtn" onclick="renderLessons('',)" style="color:var(--rust)">limpar</button>`:'';
+
+  $('page-lessons').innerHTML=`
+    <div class="hero" style="margin-bottom:24px"><h1>Lessons</h1><p class="lede">${rows.length} aula${rows.length!==1?'s':''} encontrada${rows.length!==1?'s':''}.</p></div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)">
+      <input type="text" class="search" placeholder="buscar…" oninput="${reload}" value="${esc(q)}" style="min-width:180px;max-width:240px">
+      ${selPeriodo}${selAluno}${selCurso}${selStatus}${selPlan}
+      ${clearBtn}
+      <button class="btn" onclick="openLessonModal()" style="margin-left:auto">+ nova aula</button>
+    </div>
+    <div id="lessons-list">${rows.map(l=>lessonCard(l)).join('')||'<div class="empty">Sem aulas com esses filtros.</div>'}</div>`;
+}
+function toggleLessonExpand(id){
+  const el=document.getElementById('lesson-mats-'+id);
+  if(!el)return;
+  const open=el.style.display==='none'||!el.style.display;
+  el.style.display=open?'block':'none';
+  const btn=document.getElementById('lesson-expand-btn-'+id);
+  if(btn)btn.textContent=open?'▲ ocultar materiais':'▼ ver materiais';
 }
 function lessonCard(l){
   const st=byId(DB.students,l.studentId);
@@ -1835,7 +1877,39 @@ function lessonCard(l){
   const needsSync=hasPlan&&planMats.length>0&&lMats.length===0;
   const stClass=l.status==='dada'?'ok':l.status==='cancelada'?'warn':'';
   const plClass=isPlanned?'ok':'todo';
-  return `<div style="display:grid;grid-template-columns:90px 1fr auto;gap:20px;padding:16px 0;border-bottom:1px solid var(--line);align-items:start"><div><div style="font-family:'Instrument Serif',serif;font-size:28px;line-height:.9;letter-spacing:-.025em">${l.date?fmtShort(l.date):'—'}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px">${l.startTime?l.startTime.slice(0,5):''}</div></div><div><div style="font-family:'Newsreader',serif;font-size:18px;line-height:1.1;letter-spacing:-.01em;margin-bottom:3px">${esc(st?.name||'Aluno')}</div><div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">${esc(course?.name||st?.activeCourseName||'')}${l.level?' · '+esc(l.level):''}${l.title&&l.title!=='Aula'?' · '+esc(l.title):''}</div>${l.unit?`<div style="font-size:13.5px;color:var(--ink2)">${esc(l.unit)}</div>`:''}${l.notes?`<div style="font-size:13px;color:var(--muted);margin-top:4px;max-width:52ch">${esc(l.notes.substring(0,120))}${l.notes.length>120?'…':''}</div>`:''}${needsSync?`<div style="font-size:12px;color:var(--rust);margin-top:6px">⚠ ${planMats.length} material(is) da ficha não copiado(s). <button class="linkbtn" onclick="syncMaterialsFromPlanned('${l.id}')">copiar agora</button></div>`:''}<div class="row-actions" style="margin-top:10px"><button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button><button class="linkbtn" onclick="togglePlanStatus('${l.id}')">marcar ${isPlanned?'a planejar':'preparada'}</button><button class="linkbtn" onclick="openMaterialModal('${l.studentId}','','${l.id}')">material</button><button class="linkbtn" onclick="deleteItem('lessons','${l.id}')">excluir</button></div></div><div style="text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:110px"><span class="tag-state ${stClass}">${l.status}</span><span class="tag-state ${plClass}">${l.planStatus||'a planejar'}</span>${lMats.length?`<span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em">${lMats.length} mat.</span>`:''}${hasPlan?`<span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);letter-spacing:.1em">ficha</span>`:''}</div></div>`;
+  const matsHtml=lMats.map(m=>{
+    const att=m.attachments?.[0];
+    const hasFile=att&&(att.driveLink||att.youtubeUrl||att.storageUrl);
+    return `<div class="material-card" style="padding:10px 0"><div><div class="mc-title" style="font-size:15px">${esc(m.title)}</div><div class="mc-kind">${esc(m.type||'material')} · ${m.studentVisible?'visível':'interno'}</div></div>${hasFile?`<button class="mc-open" onclick="openMaterialViewer('${m.id}')">abrir →</button>`:`<span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--soft)">sem arquivo</span>`}</div>`;
+  }).join('');
+  return `<div style="padding:16px 0;border-bottom:1px solid var(--line)">
+    <div style="display:grid;grid-template-columns:90px 1fr auto;gap:20px;align-items:start">
+      <div>
+        <div style="font-family:'Instrument Serif',serif;font-size:28px;line-height:.9;letter-spacing:-.025em">${l.date?fmtShort(l.date):'—'}</div>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px">${l.startTime?l.startTime.slice(0,5):''}</div>
+      </div>
+      <div>
+        <div style="font-family:'Newsreader',serif;font-size:18px;line-height:1.1;letter-spacing:-.01em;margin-bottom:3px">${esc(st?.name||'Aluno')}</div>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">${esc(course?.name||st?.activeCourseName||'')}${l.level?' · '+esc(l.level):''}${l.title&&l.title!=='Aula'?' · '+esc(l.title):''}</div>
+        ${l.unit?`<div style="font-size:13.5px;color:var(--ink2)">${esc(l.unit)}</div>`:''}
+        ${l.notes?`<div style="font-size:13px;color:var(--muted);margin-top:4px;max-width:52ch">${esc(l.notes.substring(0,120))}${l.notes.length>120?'…':''}</div>`:''}
+        ${needsSync?`<div style="font-size:12px;color:var(--rust);margin-top:6px">⚠ ${planMats.length} mat. da ficha não copiado(s). <button class="linkbtn" onclick="syncMaterialsFromPlanned('${l.id}')">copiar agora</button></div>`:''}
+        <div class="row-actions" style="margin-top:10px">
+          <button class="linkbtn" onclick="openLessonModal('${l.studentId}','${l.id}')">editar</button>
+          <button class="linkbtn" onclick="togglePlanStatus('${l.id}')">marcar ${isPlanned?'a planejar':'preparada'}</button>
+          <button class="linkbtn" onclick="openMaterialModal('${l.studentId}','','${l.id}')">+ material</button>
+          ${lMats.length?`<button class="linkbtn" id="lesson-expand-btn-${l.id}" onclick="toggleLessonExpand('${l.id}')">▼ ver ${lMats.length} material${lMats.length!==1?'is':''}</button>`:''}
+          <button class="linkbtn" onclick="deleteItem('lessons','${l.id}')">excluir</button>
+        </div>
+        <div id="lesson-mats-${l.id}" style="display:none;margin-top:12px;padding:12px 0;border-top:1px solid var(--line2)">${matsHtml}</div>
+      </div>
+      <div style="text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end;min-width:110px">
+        <span class="tag-state ${stClass}">${l.status}</span>
+        <span class="tag-state ${plClass}">${l.planStatus||'a planejar'}</span>
+        ${hasPlan?`<span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--blue);letter-spacing:.1em">ficha</span>`:''}
+      </div>
+    </div>
+  </div>`;
 }
 function renderMaterials(q=''){
   const query=String(q||'').toLowerCase();
@@ -3089,6 +3163,7 @@ function applyPlannedLesson(){
 // garantia explícita antes do Object.assign
 window.applyPlannedLesson=applyPlannedLesson;
 window.lessonSwitchTab=lessonSwitchTab;
+window.toggleLessonExpand=toggleLessonExpand;
 window.toggleLessonMaterial=toggleLessonMaterial;
 window.setMaterialReleaseDate=setMaterialReleaseDate;
 window.toggleUnitBlock=toggleUnitBlock;
