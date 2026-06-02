@@ -2711,8 +2711,45 @@ function financeStudentCard(s,fin){
     <div style="text-align:right"><span class="tag-state ${stateClass}">${stateLabel}</span></div>
   </div>`;
 }
+async function linkAndSyncPlanned(lessonId){
+  const selectEl=document.getElementById('editPlannedId');
+  if(!selectEl){toast('Erro: campo de ficha não encontrado.');return;}
+  const plannedId=selectEl.value;
+  const l=byId(DB.lessons,lessonId);
+  if(!l){toast('Aula não encontrada.');return;}
+  if(!plannedId){l.plannedLessonId='';saveLocal();scheduleSave();closeModal();toast('Ficha desvinculada.');return;}
+  const p=byId(DB.plannedLessons,plannedId);
+  if(!p){toast('Ficha não encontrada.');return;}
+  l.plannedLessonId=plannedId;
+  const st=byId(DB.students,l.studentId);
+  const sourceMats=DB.materials.filter(m=>m.plannedLessonId===plannedId&&!m.studentId);
+  let copied=0,shared=0;
+  for(const sm of sourceMats){
+    const exists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.lessonId===lessonId);
+    if(exists)continue;
+    const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:l.studentId,lessonId,plannedLessonId:'',studentVisible:sm.studentVisible!==false,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};
+    DB.materials.push(newMat);copied++;
+    if(st?.email&&newMat.studentVisible&&STATE.driveReady){
+      for(const a of newMat.attachments||[]){
+        if(a.driveId){const ok=await driveShare(a.driveId,st.email,newMat.downloadAllowed!==false);if(ok){a.sharedWith=a.sharedWith||[];if(!a.sharedWith.includes(st.email))a.sharedWith.push(st.email);shared++;}}
+      }
+    }
+  }
+  saveLocal();scheduleSave();closeModal();
+  const msg=copied>0?`Ficha vinculada. ${copied} material(is) copiado(s)${shared>0?', '+shared+' compartilhado(s) com o aluno':STATE.driveReady?'':' (conecte o Drive pra compartilhar)'}.`:`Ficha vinculada.${sourceMats.length===0?' Nenhum material na ficha ainda.':' Materiais já estavam copiados.'}`;
+  toast(msg);log('linkAndSyncPlanned: '+msg,'ok');
+}
+async function syncPlannedOnly(lessonId){
+  const l=byId(DB.lessons,lessonId);
+  if(!l||!l.plannedLessonId){toast('Esta aula não tem ficha vinculada.');return;}
+  closeModal();await syncMaterialsFromPlanned(lessonId);
+}
+window.linkAndSyncPlanned=linkAndSyncPlanned;
+window.syncPlannedOnly=syncPlannedOnly;
+
 function openPaymentModal(studentId,id=''){
-  const st=byId(DB.students,studentId);if(!st)return;
+  const st=byId(DB.students,studentId);
+  if(!st){toast('Erro: aluno não encontrado (id: '+(studentId||'vazio')+').');log('openPaymentModal: studentId inválido — '+studentId,'error');return;}
   const editing=id?byId(DB.payments,id):null;
   const linkedIds=editing?new Set(editing.lessonIds):new Set();
   const allLinkedElsewhere=new Set();
@@ -2900,16 +2937,26 @@ function openLessonModal(studentId='',id=''){
       plannedOpts+=`<optgroup label="${esc(label)}">${unitMap[uid].sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)||String(a.code).localeCompare(String(b.code))).map(p=>`<option value="${p.id}">${p.code?esc(p.code)+' · ':''}${esc(p.title)}</option>`).join('')}</optgroup>`;
     });
   });
+  const currentPlannedId=l.plannedLessonId||'';
+  const currentPlanned=currentPlannedId?byId(DB.plannedLessons,currentPlannedId):null;
   const pullBlock=!id?`<div class="form-section" style="background:rgba(154,70,38,.04);padding:20px;margin:0 0 28px;border:1px solid rgba(154,70,38,.15)">
     <div class="form-section-title" style="border-bottom-color:rgba(154,70,38,.3);color:var(--rust)">Puxar de aula planejada <span class="help" style="color:var(--rust-soft)">opcional</span></div>
     <div class="form-row"><label class="ff-label">Aula planejada</label><select class="ff-select" id="pullPlanned">${plannedOpts}</select></div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px">
       <label style="display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer"><input type="checkbox" id="pullCopyText" checked> título e conteúdo</label>
       <label style="display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer"><input type="checkbox" id="pullCopyNotes" checked> notas</label>
-
     </div>
     <button class="btn" style="border-color:var(--rust);color:var(--rust)" type="button" onclick="applyPlannedLesson()">aplicar</button>
-  </div>`:'';
+  </div>`:`<div class="form-section" style="background:rgba(154,70,38,.04);padding:20px;margin:0 0 28px;border:1px solid rgba(154,70,38,.15)">
+    <div class="form-section-title" style="border-bottom-color:rgba(154,70,38,.3);color:var(--rust)">Ficha planejada vinculada <span class="help" style="color:var(--rust-soft)">${currentPlanned?'troque ou sincronize materiais':'vincule para sincronizar materiais'}</span></div>
+    ${currentPlanned?`<div style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink2);padding:8px 0 14px">${esc(currentPlanned.code?currentPlanned.code+' · ':'')}${esc(currentPlanned.title)}</div>`:''}
+    <div class="form-row"><label class="ff-label">Ficha</label><select class="ff-select" id="editPlannedId"><option value="">— sem ficha —</option>${DB.plannedLessons.filter(p=>p.status!=='arquivado').map(p=>{const c=byId(DB.courses,p.courseId);const u=byId(DB.units,p.unitId);const grp=[(c?c.name:''),(u?u.name:'')].filter(Boolean).join(' › ');return `<option value="${p.id}" ${p.id===currentPlannedId?'selected':''}>${grp?grp+' — ':''}${p.code?p.code+' · ':''}${esc(p.title)}</option>`}).join('')}</select></div>
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+      <button class="btn" style="border-color:var(--rust);color:var(--rust)" type="button" onclick="linkAndSyncPlanned('${id}')">vincular + copiar materiais →</button>
+      ${currentPlanned?`<button class="btn soft" type="button" onclick="syncPlannedOnly('${id}')">só sincronizar materiais</button>`:''}
+    </div>
+    <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:10px">materiais copiados ficam visíveis ao aluno · arquivos compartilhados via Drive</div>
+  </div>`;
   const statusSeg=['agendada','dada','cancelada'].map(x=>{const disp=x==='cancelada'?'block':'none';return `<span class="seglbl ${lessonStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonStatus').value='${x}';var cr=document.getElementById('cancelRow');if(cr)cr.style.display='${disp}'">${x}</span>`;}).join('');
   const planSeg=['a planejar','preparada'].map(x=>`<span class="seglbl ${planStatus===x?'on':''}" onclick="this.parentElement.querySelectorAll('.seglbl').forEach(b=>b.classList.remove('on'));this.classList.add('on');document.getElementById('lessonPlanStatus').value='${x}'">${x}</span>`).join('');
   const matsTab=id?`<div id="lessonTabNav" style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px">
@@ -2988,7 +3035,7 @@ function saveLesson(id=''){
       sourceMats.forEach(sm=>{
         const alreadyExists=DB.materials.some(m=>m.fromPlannedMaterialId===sm.id&&m.studentId===sid&&m.lessonId===l.id);
         if(alreadyExists)return;
-        const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:sid,lessonId:l.id,plannedLessonId:'',studentVisible:false,releaseAt:null,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};
+        const newMat={id:uid('mat'),title:sm.title,type:sm.type,studentId:sid,lessonId:l.id,plannedLessonId:'',studentVisible:sm.studentVisible!==false,releaseAt:null,downloadAllowed:sm.downloadAllowed,attachments:(sm.attachments||[]).map(a=>({...a})),notes:sm.notes,createdAt:nowIso(),fromPlannedMaterialId:sm.id};
         DB.materials.push(newMat);
       });
       log('Materiais vinculados da ficha (ocultos): '+sourceMats.length,'ok');
@@ -3308,7 +3355,7 @@ window._updateDoneBtn=_updateDoneBtn;
 window.toggleLessonMaterial=toggleLessonMaterial;
 window.setMaterialReleaseDate=setMaterialReleaseDate;
 window.toggleUnitBlock=toggleUnitBlock;
-Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,markLessonDone,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,setCourseView,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock,setReportMonth,switchReportTab,imprimirRelatorio,gerarCSVRelatorio});
+Object.assign(window,{openStudentModal,saveStudent,deleteStudent,showStudentFicha,openLessonModal,saveLesson,togglePlanStatus,markLessonDone,syncMaterialsFromPlanned,openMaterialModal,saveMaterial,replaceMaterial,toggleMaterial,openMaterialViewer,openMaterialViewer_raw,openStudentMaterial,deleteItem,closeViewer,closeModal,showPage,showStudentPage,previewStudent,manualSaveAll,exportBackup,importBackup,forgetSession,driveSignIn,openPaymentModal,savePayment,markPaymentPaid,deletePayment,openFinanceDetail,printReceipt,closeMonth,openBusinessSettings,saveBusinessSettings,paySelectNextN,paySelectAllACobrar,updatePaymentSummary,openCourseModal,saveCourse,archiveCourse,deleteCourse,courseNavTo,setCourseView,openUnitModal,saveUnit,archiveUnit,deleteUnit,openPlannedLessonModal,savePlannedLesson,archivePlannedLesson,deletePlannedLesson,switchPlannedTab,newPlannedMaterial,applyPlannedLesson,toggleUnitBlock,setReportMonth,switchReportTab,imprimirRelatorio,gerarCSVRelatorio,linkAndSyncPlanned,syncPlannedOnly});
 function boot(){
   document.title='LessonHub v1.17.8-alpha — Supabase Storage + PDF Viewer';
   $('dateBox').innerHTML=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'<br>supabase storage · pdf.js viewer';
