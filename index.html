@@ -1038,7 +1038,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.20.0-alpha',
+  VERSION:'1.20.1-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -3308,17 +3308,20 @@ function fcAllStudentCards(){
   const mine=(STATE.fcState?.myCards||[]).map(c=>({id:c.id,deckId:'my',ladoA:c.ladoA,ladoB:c.ladoB,origem:'my'}));
   return official.concat(mine);
 }
+function fcShuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function fcDueInfo(){
   const stt=STATE.fcState;if(!stt)return{due:[],fresh:[],total:0};
-  const t=today();const due=[],fresh=[];
+  const t=today();const fresh=[];const byBox={1:[],2:[],3:[]};
   fcAllStudentCards().forEach(c=>{
     const p=stt.progress[c.id];
     if(!p)fresh.push(c);
-    else if(String(p.due||'')<=t)due.push({...c,_box:p.box||1});
+    else if(String(p.due||'')<=t){const b=p.box||1;(byBox[b]||byBox[1]).push({...c,_box:b})}
   });
-  due.sort((a,b)=>(a._box||1)-(b._box||1));
+  // prioridade pedagógica: caixa 1 (mais frágil) → 2 → 3 → novos.
+  // dentro de cada grupo, embaralha: a sessão mistura decks e Meus cards.
+  const due=fcShuffle(byBox[1]).concat(fcShuffle(byBox[2]),fcShuffle(byBox[3]));
   const usedToday=stt.newLog.date===t?Number(stt.newLog.count)||0:0;
-  const freshAllowed=fresh.slice(0,Math.max(0,FC_NEW_PER_DAY-usedToday));
+  const freshAllowed=fcShuffle(fresh).slice(0,Math.max(0,FC_NEW_PER_DAY-usedToday));
   return{due,fresh:freshAllowed,total:due.length+freshAllowed.length};
 }
 function fcStartSession(){
@@ -3471,7 +3474,7 @@ function fcAdminDeckHtml(deck){
       <div class="panel"><div class="panel-title">Cards <span class="count">${cards.length}</span></div>
         <div style="margin-bottom:6px"><label class="ff-label">Lado A — chunk (EN)</label><input class="ff-input" id="fcNewA" placeholder="ex: Could I get the bill, please?"></div>
         <div style="margin:10px 0 6px"><label class="ff-label">Lado B — ${deck.modo==='en_en'?'paráfrase (EN)':'significado (PT)'}</label><input class="ff-input" id="fcNewB" placeholder="${deck.modo==='en_en'?'ex: Can you bring the check?':'ex: pode trazer a conta, por favor?'}"></div>
-        <div class="row-actions" style="margin:12px 0 18px"><button class="btn" onclick="fcAddCard('${deck.id}')">+ adicionar card</button></div>
+        <div class="row-actions" style="margin:12px 0 18px"><button class="btn" onclick="fcAddCard('${deck.id}')">+ adicionar card</button><button class="btn soft" onclick="fcOpenImportModal('${deck.id}')">importar em massa</button></div>
         ${cardRows||'<div class="empty">Sem cards. Adicione a partir do chunk bank da lição.</div>'}</div>
       <div class="panel"><div class="panel-title">Liberação por aluno</div><div class="meta" style="margin-bottom:10px">O deck precisa estar <b>publicado</b> e <b>liberado</b> para aparecer no portal.</div><div class="list">${relRows||'<div class="empty">Nenhum aluno ativo com e-mail.</div>'}</div></div>
     </div>`;
@@ -3548,6 +3551,52 @@ async function fcViewStudentState(studentId){
     <div class="panel-title">Meus cards do aluno</div>
     ${myHtml||'<div class="empty">O aluno ainda não criou cards próprios.</div>'}
     <div class="meta" style="margin-top:12px">O que o aluno escolhe transformar em card é uma janela no <i>noticing</i> dele — material de conversa em aula.</div>`);
+}
+function fcOpenImportModal(deckId){
+  const deck=byId(DB.fcDecks,deckId);if(!deck)return;
+  openModal('Importar cards · '+deck.titulo,'Um card por linha. Lado A e lado B separados por TAB, "|" ou ";". Cole direto de uma planilha (duas colunas) ou digite.',`<div class="ff-modal-body">
+<div class="form-section">
+<div class="form-row"><label class="ff-label">Cards (lado A ⇥ lado B)</label><textarea class="ff-textarea" id="fcImpText" rows="12" placeholder="Could I get the bill, please?	pode trazer a conta, por favor?
+I'm running late	estou atrasado
+How long does it take?	quanto tempo leva?" oninput="fcImportPreview()"></textarea></div>
+<div class="meta" id="fcImpPreview" style="margin-top:4px">0 cards detectados.</div>
+</div>
+<div class="form-actions"><div class="form-meta">Linhas inválidas são ignoradas.</div><div class="right"><button class="btn" onclick="fcImportCards('${deckId}')">importar →</button></div></div>
+</div>`,'ff-modal');
+  setTimeout(()=>$('fcImpText')?.focus(),50);
+}
+function fcParseImport(text){
+  const out=[];const bad=[];
+  String(text||'').split(/\r?\n/).forEach(line=>{
+    const raw=line.trim();if(!raw)return;
+    let a='',b='';
+    if(raw.includes('\t')){const i=raw.indexOf('\t');a=raw.slice(0,i);b=raw.slice(i+1)}
+    else if(raw.includes('|')){const i=raw.indexOf('|');a=raw.slice(0,i);b=raw.slice(i+1)}
+    else if(raw.includes(';')){const i=raw.indexOf(';');a=raw.slice(0,i);b=raw.slice(i+1)}
+    a=a.trim();b=b.trim();
+    if(a&&b)out.push({ladoA:a,ladoB:b});else bad.push(raw);
+  });
+  return{out,bad};
+}
+function fcImportPreview(){
+  const r=fcParseImport($('fcImpText')?.value);
+  const el=$('fcImpPreview');if(!el)return;
+  el.textContent=r.out.length+' card(s) detectado(s)'+(r.bad.length?' · '+r.bad.length+' linha(s) inválida(s) — falta separador':'')+'.';
+}
+function fcImportCards(deckId){
+  const deck=byId(DB.fcDecks,deckId);if(!deck)return;
+  const r=fcParseImport($('fcImpText')?.value);
+  if(!r.out.length){toast('Nenhum card válido. Use TAB, "|" ou ";" entre os lados.');return}
+  const existing=new Set((DB.fcCards||[]).filter(c=>c.deckId===deckId).map(c=>(c.ladoA+'\u0001'+c.ladoB).toLowerCase()));
+  let added=0,dup=0;
+  r.out.forEach(c=>{
+    const key=(c.ladoA+'\u0001'+c.ladoB).toLowerCase();
+    if(existing.has(key)){dup++;return}
+    existing.add(key);
+    DB.fcCards.push({id:uid('fccard'),deckId,ladoA:c.ladoA,ladoB:c.ladoB,createdAt:nowIso()});added++;
+  });
+  closeModal();scheduleSave();
+  toast(added+' card(s) importado(s)'+(dup?' · '+dup+' duplicado(s) ignorado(s)':'')+(r.bad.length?' · '+r.bad.length+' linha(s) inválida(s)':'')+'.');
 }
 /* =================== fim FLASHCARDS =================== */
 
