@@ -437,10 +437,10 @@ body.portal-mode .rail{background:#fbf9f3;border-right-color:var(--line2)}
 /* ---------- ficha edit inline (bloco 8) ---------- */
 .ficha-display{display:block}
 .ficha-edit{display:none}
-.page-students.editing .ficha-display{display:none}
-.page-students.editing .ficha-edit{display:block}
+#page-students.editing #ftab-ficha-panel{display:none}
+#page-students.editing .ficha-edit{display:block}
 .edit-banner{display:none;align-items:center;justify-content:space-between;gap:18px;padding:12px 20px;border:1px solid var(--rust);background:rgba(154,70,38,.06);margin-bottom:24px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);position:sticky;top:0;z-index:10}
-.page-students.editing .edit-banner{display:flex}
+#page-students.editing .edit-banner{display:flex}
 .edit-banner .eb-actions{display:flex;gap:10px}
 .edit-banner button{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:8px 14px;border:1px solid var(--rust);background:transparent;color:var(--rust);cursor:pointer;line-height:1}
 .edit-banner button.primary{background:var(--rust);color:var(--paper)}
@@ -1038,7 +1038,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.20.1-alpha',
+  VERSION:'1.20.2-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -1797,7 +1797,7 @@ function showStudentFicha(id){
 </div>
 <div class="variant-tabs" style="margin-bottom:28px">
   <button class="vtab on" id="ftab-ficha" onclick="switchFichaTab('ficha','${id}')">Ficha</button>
-  <button class="vtab" id="ftab-assess" onclick="switchFichaTab('assess','${id}')">Assessments${DB.assessments.filter(a=>a.studentId==='${id}').length?` <span style="font-family:'Geist Mono',monospace;font-size:9px;color:var(--rust)">${DB.assessments.filter(a=>a.studentId==='${id}').length}</span>`:''}</button>
+  <button class="vtab" id="ftab-assess" onclick="switchFichaTab('assess','${id}')">Assessments${DB.assessments.filter(a=>a.studentId===id).length?` <span style="font-family:'Geist Mono',monospace;font-size:9px;color:var(--rust)">${DB.assessments.filter(a=>a.studentId===id).length}</span>`:''}</button>
 </div>
 <div id="ftab-ficha-panel">
 <div class="ficha-head">
@@ -2790,7 +2790,7 @@ function openPaymentModal(studentId,id=''){
     const dateStr=l.date?fmtDate(l.date):'sem data';
     const statusBadge=l.status==='dada'?`<span class="tag-state ok">dada</span>`:l.status==='cancelada'&&!l.cancelNoticeOk?`<span class="tag-state todo">falta paga</span>`:l.status==='agendada'?`<span class="tag-state">agendada</span>`:`<span class="tag-state">${l.status}</span>`;
     const val=l.value||defaultVal;
-    return `<label style="display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line2);cursor:pointer"><input type="checkbox" class="payLessonCheck" data-id="${l.id}" data-value="${val}" ${checked?'checked':''} style="margin-top:3px"><span style="font-family:'Newsreader',serif;font-size:15px">${esc(l.title||'Aula')} <span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted)">${dateStr}${l.startTime?' · '+l.startTime.slice(0,5):''}</span></span><span style="display:flex;align-items:center;gap:8px">${statusBadge}<span style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted)">${val?money(val):''}</span></span></label>`;
+    return `<label style="display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line2);cursor:pointer"><input type="checkbox" class="payLessonCheck" data-id="${l.id}" data-value="${val}" ${checked?'checked':''} onchange="updatePaymentSummary()" style="margin-top:3px"><span style="font-family:'Newsreader',serif;font-size:15px">${esc(l.title||'Aula')} <span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted)">${dateStr}${l.startTime?' · '+l.startTime.slice(0,5):''}</span></span><span style="display:flex;align-items:center;gap:8px">${statusBadge}<span style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted)">${val?money(val):''}</span></span></label>`;
   }).join(''):`<div class="empty" style="padding:16px 0">Nenhuma aula disponível. Crie aulas pra este aluno primeiro.</div>`;
   openModal(editing?'Editar pagamento':'Novo pagamento',esc(st.name),`<div class="ff-modal-body">
 <div class="form-section">
@@ -2807,9 +2807,9 @@ function openPaymentModal(studentId,id=''){
 <div class="form-section-title">Aulas cobertas <span id="payCountSummary" class="help">${linkedIds.size} selecionada(s)</span></div>
 <div style="max-height:280px;overflow-y:auto">${lessonRows}</div>
 <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
-<button class="ff-add-row" onclick="paySelectNextN('${studentId}',4)">vincular próximas 4</button>
-<button class="ff-add-row" onclick="paySelectNextN('${studentId}',8)">próximas 8</button>
-<button class="ff-add-row" onclick="paySelectAllACobrar('${studentId}')">só as a cobrar</button>
+<button class="ff-add-row" onclick="paySelectNextN('${studentId}',4,'${id}')">vincular próximas 4</button>
+<button class="ff-add-row" onclick="paySelectNextN('${studentId}',8,'${id}')">próximas 8</button>
+<button class="ff-add-row" onclick="paySelectAllACobrar('${studentId}','${id}')">só as a cobrar</button>
 </div>
 </div>
 <div class="form-section">
@@ -2821,8 +2821,8 @@ function openPaymentModal(studentId,id=''){
   setTimeout(()=>{document.querySelectorAll('.payLessonCheck').forEach(c=>c.addEventListener('change',updatePaymentSummary));updatePaymentSummary()},50)
 }
 function updatePaymentSummary(){const checks=[...document.querySelectorAll('.payLessonCheck:checked')];const summary=$('payCountSummary');if(summary)summary.textContent=checks.length+' aula(s) selecionada(s)';const valorEl=$('payValor');if(valorEl&&!valorEl.value){const total=checks.reduce((s,c)=>s+(Number(c.dataset.value)||0),0);if(total>0)valorEl.placeholder='sugestão: R$ '+total.toFixed(2).replace('.',',')}}
-function paySelectNextN(studentId,n){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid)));const futureLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&(!l.date||l.date>=today())).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999'))).slice(0,n);const ids=new Set(futureLessons.map(l=>l.id));document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
-function paySelectAllACobrar(studentId){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid)));const aCobrar=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&lessonCountsForPackage(l));const ids=new Set(aCobrar.map(l=>l.id));document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
+function paySelectNextN(studentId,n,excludeId=''){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>{if(p.id!==excludeId)p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid))});const futureLessons=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&(!l.date||l.date>=today())).sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999'))).slice(0,n);const ids=new Set(futureLessons.map(l=>l.id));if(!ids.size){toast('Nenhuma aula futura disponível pra vincular.');return}document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
+function paySelectAllACobrar(studentId,excludeId=''){const allLinkedElsewhere=new Set();DB.payments.forEach(p=>{if(p.id!==excludeId)p.lessonIds.forEach(lid=>allLinkedElsewhere.add(lid))});const aCobrar=DB.lessons.filter(l=>l.studentId===studentId&&!allLinkedElsewhere.has(l.id)&&lessonCountsForPackage(l));const ids=new Set(aCobrar.map(l=>l.id));if(!ids.size){toast('Nenhuma aula "a cobrar" disponível — ou nenhuma aula foi marcada como dada, ou todas já estão em outro pagamento.');return}document.querySelectorAll('.payLessonCheck').forEach(c=>{c.checked=ids.has(c.dataset.id)});updatePaymentSummary()}
 function savePayment(studentId,id=''){const checks=[...document.querySelectorAll('.payLessonCheck:checked')].map(c=>c.dataset.id);const sumFromLessons=[...document.querySelectorAll('.payLessonCheck:checked')].reduce((s,c)=>s+(Number(c.dataset.value)||0),0);const valor=Number($('payValor').value)||sumFromLessons||0;const paidStatus=$('payPaid').value==='true';const dateStr=$('payDate').value;const method=$('payMethod').value.trim();const notes=$('payNotes').value.trim();if(checks.length===0&&!confirm('Nenhuma aula selecionada. Criar pagamento mesmo assim? (Você pode vincular aulas depois.)'))return;const p=id?byId(DB.payments,id):{id:uid('pay'),studentId,createdAt:nowIso()};p.valor=valor;p.paid=paidStatus;p.paidAt=paidStatus?(dateStr?dateStr+'T12:00:00.000Z':nowIso()):'';p.method=method;p.notes=notes;p.lessonIds=checks;DB.lessons.forEach(l=>{if(checks.includes(l.id))l.paymentId=p.id;else if(l.paymentId===p.id)l.paymentId=''});if(!id)DB.payments.push(p);closeModal();scheduleSave();toast(id?'Pagamento atualizado.':'Pagamento criado com '+checks.length+' aula(s) vinculada(s).')}
 function markPaymentPaid(payId){const p=byId(DB.payments,payId);if(!p)return;p.paid=true;p.paidAt=nowIso();scheduleSave();toast('Pagamento marcado como pago.')}
 function openFinanceDetail(studentId){const st=byId(DB.students,studentId);const fin=financeForStudent(studentId);openModal('Histórico financeiro · '+st.name,`LTV acumulado: ${money(fin.ltv)} · Pendente: ${money(fin.pending)}`,`<div class="form"><div class="panel"><div class="panel-title">Pagamentos (${fin.pays.length})</div><div class="list">${fin.pays.map(p=>{const lessons=DB.lessons.filter(l=>p.lessonIds.includes(l.id));const given=lessons.filter(l=>lessonCountsForPackage(l)).length;const future=lessons.filter(l=>!lessonCountsForPackage(l)).length;return `<div class="item"><div class="item-title">${money(p.valor)}${p.method?' · '+esc(p.method):''}</div><div class="badges">${badge(p.paid?'pago':'pendente',p.paid?'ok':'warn')}${badge(lessons.length+' aula(s)')}${given?badge(given+' já dadas','ok'):''}${future?badge(future+' agendadas','blue'):''}</div><div class="meta subtle">Criado ${fmtDate(p.createdAt)}${p.paid&&p.paidAt?' · pago em '+fmtDate(p.paidAt):''}</div><div class="row-actions">${!p.paid?`<button class="linkbtn" onclick="markPaymentPaid('${p.id}');closeModal();openFinanceDetail('${studentId}')">marcar pago</button>`:''}<button class="linkbtn" onclick="openPaymentModal('${studentId}','${p.id}')">editar / vincular aulas</button>${p.paid?`<button class="linkbtn" onclick="printReceipt('${p.id}')">imprimir recibo</button>`:''}<button class="linkbtn" onclick="deletePayment('${p.id}','${studentId}')">excluir</button></div></div>`}).join('')||'<div class="empty">Sem histórico de pagamentos.</div>'}</div></div></div>`)}
