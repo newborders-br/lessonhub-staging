@@ -939,6 +939,30 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
   .actions{margin-top:12px;margin-left:0}
   .page-title h2{font-size:32px}
 }
+
+/* ============ Flashcards ============ */
+.fc-stage{max-width:560px;margin:0 auto;text-align:center}
+.fc-progress{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;justify-content:space-between}
+.fc-card{background:#fff;border:1px solid var(--line);border-radius:10px;min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:36px 28px;cursor:pointer;user-select:none;-webkit-user-select:none;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.fc-card .fc-side{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
+.fc-card .fc-text{font-family:'Newsreader',serif;font-size:27px;line-height:1.32;letter-spacing:-.015em;color:var(--ink)}
+.fc-card.flipped{background:var(--paper2,#f8f5f0)}
+.fc-card .fc-answer{font-family:'Newsreader',serif;font-size:22px;font-style:italic;line-height:1.35;color:var(--ink2)}
+.fc-hint{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-top:14px}
+.fc-actions{display:flex;gap:14px;justify-content:center;margin-top:22px}
+.fc-btn{flex:1;max-width:170px;padding:16px 10px;font-size:20px;line-height:1;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-family:'Geist',sans-serif}
+.fc-btn small{display:block;font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px;color:var(--muted)}
+.fc-btn.ko{color:#a63a2a;border-color:#d8b6ad}
+.fc-btn.ok{color:#2a6e3f;border-color:#b9d2c0}
+.fc-btn:active{transform:translateY(1px)}
+.fc-due-big{font-family:'Newsreader',serif;font-size:56px;letter-spacing:-.03em;line-height:1}
+.fc-deckline{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.fc-deckline .t{font-family:'Newsreader',serif;font-size:18px;letter-spacing:-.01em}
+.fc-deckline .k{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fc-mycard{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);text-align:left}
+.fc-mycard .a{font-size:14px;color:var(--ink)}
+.fc-mycard .b{font-size:13px;font-style:italic;color:var(--ink2)}
+@media(max-width:640px){.fc-card .fc-text{font-size:22px}.fc-due-big{font-size:44px}}
 </style>
 </head>
 <body>
@@ -974,6 +998,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
       <section id="page-lessons" class="page"></section>
       <section id="page-courses" class="page"></section>
       <section id="page-materials" class="page"></section>
+      <section id="page-flashcards" class="page"></section>
       <section id="page-finance" class="page"></section>
       <section id="page-portal" class="page"></section>
       <section id="page-health" class="page"></section>
@@ -996,6 +1021,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
       <button class="active" data-spage="today" onclick="showStudentPage('today')">Today</button>
       <button data-spage="lessons" onclick="showStudentPage('lessons')">Lessons</button>
       <button data-spage="materials" onclick="showStudentPage('materials')">Materials</button>
+      <button data-spage="flashcards" onclick="showStudentPage('flashcards')">Flashcards</button>
       <button data-spage="finance" onclick="showStudentPage('finance')">Finance</button>
       <button style="margin-left:auto" onclick="forgetSession()">sair</button>
     </nav>
@@ -1012,7 +1038,7 @@ body.portal-mode .tl-item::before{border-color:#fbf9f3}
 <script>
 'use strict';
 const CONFIG={
-  VERSION:'1.19.0-alpha',
+  VERSION:'1.20.0-alpha',
   ADMIN_EMAIL:'zruc04@gmail.com',
   LOCAL_KEY:'lessonhub_v1_11_alpha_data',
   LEGACY_KEYS:['lessonhub_v1_4_data','lessonhub_v1_3_2_data','lessonhub_v1_3_1_data','lessonhub_v1_3_data','lessonhub_v1_2_data','aula_api_v1_data','aula_api_v0_1_data'],
@@ -1054,14 +1080,16 @@ window.forgetSession=forgetSession;
 function dataCount(d=DB){return ['students','lessons','materials','packages','plannedLessons','courseUnits','assessments','formLogs'].reduce((s,k)=>s+((d[k]||[]).length),0)}
 function sizeOf(d=DB){return new Blob([JSON.stringify(d)]).size}
 function newer(a,b){return String(a?.meta?.updatedAt||'')>String(b?.meta?.updatedAt||'')}
-function blankDB(){return{meta:{version:CONFIG.VERSION,updatedAt:nowIso(),createdAt:nowIso(),authority:'Supabase JSON backend · Drive files · local cache',business:{cnpj:'',razaoSocial:'',endereco:''}},students:[],lessons:[],materials:[],courses:[],units:[],plannedLessons:[],payments:[],packages:[],courseUnits:[],assessments:[],formLogs:[]}}
-function normalizeDB(input){const d=input&&typeof input==='object'?input:blankDB();d.meta=d.meta||{};d.meta.version=CONFIG.VERSION;d.meta.authority='Supabase JSON backend · Drive files · local cache';d.meta.business=d.meta.business||{cnpj:'',razaoSocial:'',endereco:''};['students','lessons','materials','courses','units','plannedLessons','payments','packages','courseUnits','assessments','formLogs'].forEach(k=>d[k]=Array.isArray(d[k])?d[k]:[]);
+function blankDB(){return{meta:{version:CONFIG.VERSION,updatedAt:nowIso(),createdAt:nowIso(),authority:'Supabase JSON backend · Drive files · local cache',business:{cnpj:'',razaoSocial:'',endereco:''}},students:[],lessons:[],materials:[],courses:[],units:[],plannedLessons:[],payments:[],packages:[],courseUnits:[],assessments:[],formLogs:[],fcDecks:[],fcCards:[]}}
+function normalizeDB(input){const d=input&&typeof input==='object'?input:blankDB();d.meta=d.meta||{};d.meta.version=CONFIG.VERSION;d.meta.authority='Supabase JSON backend · Drive files · local cache';d.meta.business=d.meta.business||{cnpj:'',razaoSocial:'',endereco:''};['students','lessons','materials','courses','units','plannedLessons','payments','packages','courseUnits','assessments','formLogs','fcDecks','fcCards'].forEach(k=>d[k]=Array.isArray(d[k])?d[k]:[]);
   d.courses.forEach(c=>{c.id=c.id||uid('course');c.name=c.name||'Curso';c.kind=c.kind||'';c.color=c.color||'#8b3a1f';c.status=c.status||'ativo';c.description=c.description||'';c.createdAt=c.createdAt||nowIso()});
   d.units.forEach(u=>{u.id=u.id||uid('unit');u.courseId=u.courseId||'';u.code=u.code||'';u.name=u.name||'Unidade';u.order=Number(u.order)||0;u.status=u.status||'ativo';u.description=u.description||'';u.createdAt=u.createdAt||nowIso()});
   d.plannedLessons.forEach(p=>{p.id=p.id||uid('planned');p.unitId=p.unitId||'';p.courseId=p.courseId||'';p.code=p.code||'';p.title=p.title||'Aula planejada';p.content=p.content||'';p.level=p.level||'';p.studentNotes=p.studentNotes||'';p.privateNotes=p.privateNotes||'';p.order=Number(p.order)||0;p.status=p.status||'ativo';p.createdAt=p.createdAt||nowIso()});
   d.students.forEach(s=>{s.id=s.id||uid('student');s.name=s.name||'Aluno';s.email=String(s.email||s.loginEmail||'').trim().toLowerCase();s.status=s.status||'ativo';s.activeCourseLevel=s.activeCourseLevel||s.level||'';s.activeCourseName=s.activeCourseName||s.activeCourseLevel||'';s.courseId=s.courseId||'';s.defaultLessonValue=Number(s.defaultLessonValue)||0;s.goal=s.goal||'';s.notes=s.notes||s.importantNotes||''});
   d.lessons.forEach(l=>{l.id=l.id||uid('lesson');l.studentId=l.studentId||'';l.courseId=l.courseId||'';l.plannedLessonId=l.plannedLessonId||'';l.date=l.date||'';l.startTime=l.startTime||l.time||'';l.title=l.title||'Aula';l.level=l.level||'';l.unit=l.unit||l.topic||'';l.status=l.status||l.pedStatus||'agendada';l.planStatus=l.planStatus||'a planejar';l.finStatus=l.finStatus||'paga';l.value=Number(l.value)||0;l.notes=l.notes||'';l.studentNotes=l.studentNotes||'';l.materialsStatus=l.materialsStatus||'pendente';l.studentPortalVisible=l.studentPortalVisible!==false;l.paymentId=l.paymentId||l.packageId||'';l.packageId=l.paymentId;l.prepMinutes=Number(l.prepMinutes)||0;l.cancelNoticeOk=typeof l.cancelNoticeOk==='boolean'?l.cancelNoticeOk:false});
   d.materials.forEach(m=>{m.id=m.id||uid('mat');m.title=m.title||'Material';m.type=m.type||'material';m.studentId=m.studentId||'';m.lessonId=m.lessonId||'';m.plannedLessonId=m.plannedLessonId||'';m.studentVisible=typeof m.studentVisible==='boolean'?m.studentVisible:true;m.downloadAllowed=typeof m.downloadAllowed==='boolean'?m.downloadAllowed:true;m.attachments=Array.isArray(m.attachments)?m.attachments:[];m.notes=m.notes||'';m.createdAt=m.createdAt||nowIso()});
+  d.fcDecks.forEach(k=>{k.id=k.id||uid('fcdeck');k.titulo=k.titulo||'Deck';k.nivel=k.nivel||'';k.produto=k.produto||'';k.unidadeRef=k.unidadeRef||'';k.modo=k.modo==='en_en'?'en_en':'en_pt';k.status=k.status==='publicado'?'publicado':'rascunho';k.releasedTo=Array.isArray(k.releasedTo)?k.releasedTo:[];k.createdAt=k.createdAt||nowIso()});
+  d.fcCards.forEach(k=>{k.id=k.id||uid('fccard');k.deckId=k.deckId||'';k.ladoA=k.ladoA||'';k.ladoB=k.ladoB||'';k.createdAt=k.createdAt||nowIso()});
   // Migração: packages antigos viram payments
   d.packages.forEach(p=>{if(!d.payments.some(pay=>pay.id===p.id)){const lessonsLinked=d.lessons.filter(l=>l.paymentId===p.id).map(l=>l.id);d.payments.push({id:p.id,studentId:p.studentId||'',createdAt:p.createdAt||nowIso(),valor:Number(p.valor||p.amount)||0,paid:typeof p.paid==='boolean'?p.paid:false,paidAt:p.paidAt||'',method:p.method||'',notes:p.notes||'',lessonIds:lessonsLinked,migratedFromPackage:true,aulasContratadas:Number(p.aulasContratadas||p.lessonCount)||0})}});
   d.payments.forEach(p=>{p.id=p.id||uid('pay');p.studentId=p.studentId||'';p.createdAt=p.createdAt||nowIso();p.valor=Number(p.valor)||0;p.paid=typeof p.paid==='boolean'?p.paid:false;p.paidAt=p.paidAt||'';p.method=p.method||'';p.notes=p.notes||'';p.lessonIds=Array.isArray(p.lessonIds)?p.lessonIds:[]});
@@ -1070,7 +1098,7 @@ function saveLocal(){DB.meta.updatedAt=nowIso();DB.meta.version=CONFIG.VERSION;l
 function loadLocal(){for(const k of [CONFIG.LOCAL_KEY,...CONFIG.LEGACY_KEYS]){try{const raw=localStorage.getItem(k);if(raw){const d=normalizeDB(JSON.parse(raw));if(dataCount(d)>0||k===CONFIG.LOCAL_KEY)return d}}catch(e){}}return blankDB()}
 function scheduleSave(){saveLocal();clearTimeout(STATE.saveTimer);STATE.saveTimer=setTimeout(async()=>{await saveRemoteAll()},900);render()}
 async function saveRemoteAll(){if(STATE.mode!=='admin')return;await sbSaveDB();await driveSaveDB();await autoPublishPortals()}
-function portalFingerprint(snap){if(!snap)return '';try{return JSON.stringify({l:snap.lessons,m:snap.materials,f:snap.finance,s:snap.student})}catch(e){return String(Math.random())}}
+function portalFingerprint(snap){if(!snap)return '';try{return JSON.stringify({l:snap.lessons,m:snap.materials,f:snap.finance,s:snap.student,fc:snap.flashcards})}catch(e){return String(Math.random())}}
 async function autoPublishPortals(){
   if(STATE.mode!=='admin')return;
   STATE.portalHashes=STATE.portalHashes||{};
@@ -1094,7 +1122,7 @@ function lessonTitle(l){return `${studentName(l.studentId)} — ${fmtShort(l.dat
 function lessonMaterials(l){return DB.materials.filter(m=>m.studentVisible&&(m.lessonId===l.id || (!m.lessonId&&m.studentId===l.studentId))) }
 function financeForStudent(id){const pays=DB.payments.filter(p=>p.studentId===id).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));const allLinkedIds=new Set();pays.forEach(p=>p.lessonIds.forEach(lid=>allLinkedIds.add(lid)));const linkedLessons=DB.lessons.filter(l=>allLinkedIds.has(l.id));const aCobrar=DB.lessons.filter(l=>l.studentId===id&&!allLinkedIds.has(l.id)&&lessonCountsForPackage(l));const futureLinked=linkedLessons.filter(l=>l.date>=today()&&l.status==='agendada');const consumedLinked=linkedLessons.filter(l=>lessonCountsForPackage(l));const ltv=pays.filter(p=>p.paid).reduce((s,p)=>s+(Number(p.valor)||0),0);const realPays=pays.filter(p=>!(p.auto&&!Number(p.valor)));const pending=realPays.filter(p=>!p.paid&&Number(p.valor)>0).reduce((s,p)=>s+(Number(p.valor)||0),0);const lastPaid=pays.filter(p=>p.paid).sort((a,b)=>String(b.paidAt).localeCompare(String(a.paidAt)))[0];return{pays,linkedLessons,futureLinked,consumedLinked,aCobrar,ltv,pending,status:aCobrar.length>0?'a cobrar':pending>0?'pendente':'em dia',lastPaidAt:lastPaid?.paidAt||''}}
 function lessonCountsForPackage(l){return l.status==='dada'||(l.status==='cancelada'&&l.cancelNoticeOk===false)}
-function snapshotForStudent(studentId){const st=byId(DB.students,studentId);if(!st||!st.email)return null;const lessons=DB.lessons.filter(l=>l.studentId===studentId&&l.studentPortalVisible!==false).sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))).map(l=>{const c={...l};delete c.notes;delete c.prepMinutes;delete c.paymentId;delete c.packageId;delete c.value;return c});const mats=DB.materials.filter(m=>m.studentVisible&&(m.studentId===studentId||lessons.some(l=>l.id===m.lessonId))).map(m=>({...m}));return{meta:{kind:'studentPortal',version:CONFIG.VERSION,generatedAt:nowIso(),studentEmail:st.email},student:{id:st.id,name:st.name,email:st.email,course:st.activeCourseName,level:st.activeCourseLevel},lessons,materials:mats,finance:financeForStudent(studentId)}}
+function snapshotForStudent(studentId){const st=byId(DB.students,studentId);if(!st||!st.email)return null;const lessons=DB.lessons.filter(l=>l.studentId===studentId&&l.studentPortalVisible!==false).sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))).map(l=>{const c={...l};delete c.notes;delete c.prepMinutes;delete c.paymentId;delete c.packageId;delete c.value;return c});const mats=DB.materials.filter(m=>m.studentVisible&&(m.studentId===studentId||lessons.some(l=>l.id===m.lessonId))).map(m=>({...m}));return{meta:{kind:'studentPortal',version:CONFIG.VERSION,generatedAt:nowIso(),studentEmail:st.email},student:{id:st.id,name:st.name,email:st.email,course:st.activeCourseName,level:st.activeCourseLevel},lessons,materials:mats,finance:financeForStudent(studentId),flashcards:fcSnapshotForStudent(studentId)}}
 function showAdmin(){STATE.mode='admin';document.body.classList.remove('student-mode');$('privacyGate').classList.add('hidden');$('loginScreen').classList.add('hidden');$('adminShell').classList.remove('hidden');$('studentShell').classList.add('hidden');render()}
 function showStudent(){STATE.mode='student';document.body.classList.add('student-mode');$('privacyGate').classList.add('hidden');$('loginScreen').classList.add('hidden');$('studentShell').classList.remove('hidden');$('adminShell').classList.add('hidden');renderStudent()}
 function showLogin(msg=''){STATE.mode='login';$('privacyGate').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('loginMsg').textContent=msg}
@@ -1626,14 +1654,14 @@ async function bootStudent(email){status('Carregando portal do aluno…',0);let 
   STATE.studentPortal={unauthorized:true,email};showStudent();status('Acesso não autorizado')}
 
 function buildNav(){
-  const pages=[['dashboard','Today'],['students','Students'],['lessons','Lessons'],['courses','Courses'],['materials','Materials'],['finance','Finance'],['portal','Student Portal'],['health','Health']];
+  const pages=[['dashboard','Today'],['students','Students'],['lessons','Lessons'],['courses','Courses'],['materials','Materials'],['flashcards','Flashcards'],['finance','Finance'],['portal','Student Portal'],['health','Health']];
   const driveBtn=STATE.driveReady
     ?`<button class="linkbtn" onclick="driveSignIn()" title="Drive conectado">Drive ✓</button>`
     :`<button class="btn soft" onclick="driveSignIn()" title="Conecte para enviar arquivos">⚠ Drive</button>`;
   $('nav').innerHTML=pages.map(p=>`<button data-page="${p[0]}" onclick="showPage('${p[0]}')">${p[1]}</button>`).join('')
     +`<div class="actions"><button class="linkbtn" onclick="exportBackup()">backup</button><button class="linkbtn" onclick="backupInput.click()">importar</button>${driveBtn}<button class="linkbtn" onclick="forgetSession()">sair</button></div>`;
   // atualiza crumbs
-  const pageLabels={dashboard:'Today',students:'Students',lessons:'Lessons',courses:'Courses',materials:'Materials',finance:'Finance',portal:'Student Portal',health:'Health'};
+  const pageLabels={dashboard:'Today',students:'Students',lessons:'Lessons',courses:'Courses',materials:'Materials',flashcards:'Flashcards',finance:'Finance',portal:'Student Portal',health:'Health'};
   if($('crumbs'))$('crumbs').innerHTML=`<b>LessonHub</b> · ${pageLabels[STATE.page]||'Admin'}`;
   // data
   const d=new Date();const dias=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
@@ -1642,7 +1670,7 @@ function buildNav(){
 }
 function showPage(p){STATE.page=p;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+p)?.classList.add('active');document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===p));render()}
 function pageHead(title,sub,actions=''){return `<div class="page-head"><div class="page-title"><h2>${title}</h2><p>${sub}</p></div><div class="toolbar-left">${actions}</div></div>`}
-function render(){if(STATE.mode!=='admin')return;buildNav();document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===STATE.page));renderDashboard();renderStudents();renderLessons();renderCourses();renderMaterials();renderFinanceAdmin();renderPortalAdmin();renderHealth()}
+function render(){if(STATE.mode!=='admin')return;buildNav();document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===STATE.page));renderDashboard();renderStudents();renderLessons();renderCourses();renderMaterials();renderFlashcardsAdmin();renderFinanceAdmin();renderPortalAdmin();renderHealth()}
 function renderDashboard(){
   const tod=today();
   const todayLessons=DB.lessons.filter(l=>l.date===tod).sort((a,b)=>String(a.startTime).localeCompare(String(b.startTime)));
@@ -2839,7 +2867,7 @@ function openStudentModal(id=''){
 </div>`,'ff-modal')
 }
 function saveStudent(id=''){if(!stName.value.trim())return toast('Nome obrigatório.');const existing=byId(DB.students,id);const oldEmail=existing?String(existing.email||'').toLowerCase():'';const s=existing||{id:uid('student'),createdAt:nowIso()};s.name=stName.value.trim();s.email=stEmail.value.trim().toLowerCase();s.status=stStatus.value;s.courseId=$('stCourseId')?.value||'';s.activeCourseLevel=stLevel.value.trim();const c=s.courseId?byId(DB.courses,s.courseId):null;s.activeCourseName=c?c.name:s.activeCourseLevel;s.defaultLessonValue=Number(stValue.value)||0;s.phone=stPhone.value.trim();s.goal=stGoal.value.trim();s.notes=stNotes.value.trim();if(!id)DB.students.push(s);if(oldEmail&&oldEmail!==s.email){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(oldEmail))}catch(e){}sbDelete(oldEmail).catch(()=>{});log('E-mail do aluno mudou de '+oldEmail+' para '+s.email+'. Linha antiga limpa.','ok');}closeModal();scheduleSave();toast('Aluno salvo.')}
-async function deleteStudent(id){const s=byId(DB.students,id);if(!s)return;if(!confirm(`Excluir ${s.name}? Aulas, materiais e pagamentos vinculados também serão removidos do LessonHub. Arquivos no Drive não serão apagados.`))return;const orphanEmail=s.email?String(s.email).toLowerCase():'';DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(x=>x.studentId!==id);DB.materials=DB.materials.filter(x=>x.studentId!==id);DB.packages=DB.packages.filter(x=>x.studentId!==id);DB.payments=DB.payments.filter(x=>x.studentId!==id);if(STATE.portalHashes)delete STATE.portalHashes[id];if(orphanEmail){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(orphanEmail))}catch(e){}sbDelete(orphanEmail).catch(()=>{});}scheduleSave();toast('Aluno excluído.')}
+async function deleteStudent(id){const s=byId(DB.students,id);if(!s)return;if(!confirm(`Excluir ${s.name}? Aulas, materiais e pagamentos vinculados também serão removidos do LessonHub. Arquivos no Drive não serão apagados.`))return;const orphanEmail=s.email?String(s.email).toLowerCase():'';DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(x=>x.studentId!==id);DB.materials=DB.materials.filter(x=>x.studentId!==id);DB.packages=DB.packages.filter(x=>x.studentId!==id);DB.payments=DB.payments.filter(x=>x.studentId!==id);if(STATE.portalHashes)delete STATE.portalHashes[id];if(orphanEmail){try{localStorage.removeItem('lessonhub_student_portal_'+sanitizeEmail(orphanEmail))}catch(e){}sbDelete(orphanEmail).catch(()=>{});sbDelete('fc__'+orphanEmail).catch(()=>{});}scheduleSave();toast('Aluno excluído.')}
 function lessonSwitchTab(tab){
   ['ficha','materiais'].forEach(t=>{
     const panel=document.getElementById('ltab-panel-'+t);
@@ -3181,6 +3209,8 @@ function renderStudent(){
   } else if(STATE.studentPage==='materials'){
     const allMats=[...mats].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
     $('studentApp').innerHTML=`<div class="hero" style="margin-bottom:28px"><h1>Materiais</h1><p class="lede">${allMats.length} ${allMats.length===1?'material disponível':'materiais disponíveis'}.</p></div><div>${allMats.map(m=>studentMaterialCard(m)).join('')||'<div class="empty">Sem materiais liberados.</div>'}</div>`;
+  } else if(STATE.studentPage==='flashcards'){
+    renderStudentFlashcards();
   } else {
     $('studentApp').innerHTML=studentFinancePage(fin);
   }
@@ -3227,6 +3257,300 @@ function openMaterialViewer_raw(att,title,downloadAllowed,materialId){const t=$(
 
 function exportBackup(){saveLocal();const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessonhub_v1_11_2_alpha_backup_'+today()+'.json';a.click();URL.revokeObjectURL(a.href);toast('Backup exportado.')}
 function importBackup(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{DB=normalizeDB(JSON.parse(r.result));saveLocal();scheduleSave();toast('Backup importado.')}catch(e){toast('Erro ao importar.')}};r.readAsText(file)}
+
+/* ===================== FLASHCARDS ===================== */
+/* Modelo: DB.fcDecks / DB.fcCards (blob admin) · estado do aluno em linha própria
+   no lh_backups com chave 'fc__<email>' (progresso Leitner + Meus cards).
+   Leitner 3 caixas · intervalos 1/3/7 dias · autoavaliação binária ✗/✓. */
+
+const FC_INTERVALS={1:1,2:3,3:7};
+const FC_NEW_PER_DAY=10;
+
+function fcAddDays(n){const d=new Date(today()+'T12:00:00');d.setDate(d.getDate()+n);return d.toLocaleDateString('sv-SE',{timeZone:'America/Sao_Paulo'})}
+function fcKey(email){return 'fc__'+String(email||'').toLowerCase()}
+function fcModoLabel(m){return m==='en_en'?'EN → EN':'EN → PT'}
+
+function fcSnapshotForStudent(studentId){
+  const decks=(DB.fcDecks||[]).filter(d=>d.status==='publicado'&&(d.releasedTo||[]).includes(studentId))
+    .map(d=>({id:d.id,titulo:d.titulo,nivel:d.nivel,produto:d.produto,unidadeRef:d.unidadeRef,modo:d.modo}));
+  const ids=new Set(decks.map(d=>d.id));
+  const cards=(DB.fcCards||[]).filter(c=>ids.has(c.deckId)).map(c=>({id:c.id,deckId:c.deckId,ladoA:c.ladoA,ladoB:c.ladoB}));
+  return{decks,cards}
+}
+
+/* ---------- estado do aluno (Supabase + cache local) ---------- */
+function fcBlankState(email){return{meta:{kind:'fcState',studentEmail:String(email||'').toLowerCase(),updatedAt:nowIso()},progress:{},myCards:[],newLog:{date:'',count:0}}}
+function fcNormalizeState(s,email){const st=s&&typeof s==='object'&&s.meta?.kind==='fcState'?s:fcBlankState(email);st.progress=st.progress&&typeof st.progress==='object'?st.progress:{};st.myCards=Array.isArray(st.myCards)?st.myCards:[];st.newLog=st.newLog&&typeof st.newLog==='object'?st.newLog:{date:'',count:0};return st}
+function fcCacheState(email,stt){try{localStorage.setItem('lessonhub_fcstate_'+sanitizeEmail(email),JSON.stringify(stt))}catch(e){}}
+function fcLoadCachedState(email){try{const raw=localStorage.getItem('lessonhub_fcstate_'+sanitizeEmail(email));return raw?JSON.parse(raw):null}catch(e){return null}}
+async function fcLoadState(email){
+  let remote=await sbRead(fcKey(email));
+  const local=fcLoadCachedState(email);
+  let chosen=null;
+  if(remote&&local)chosen=String(remote.meta?.updatedAt||'')>=String(local.meta?.updatedAt||'')?remote:local;
+  else chosen=remote||local;
+  return fcNormalizeState(chosen,email);
+}
+function fcSaveState(){
+  const email=STATE.studentPortal?.student?.email;if(!email||!STATE.fcState)return;
+  // preview do admin: não grava progresso no estado real do aluno
+  if(STATE.userEmail&&STATE.userEmail.toLowerCase()!==String(email).toLowerCase())return;
+  STATE.fcState.meta.updatedAt=nowIso();
+  fcCacheState(email,STATE.fcState);
+  clearTimeout(STATE._fcSaveTimer);
+  STATE._fcSaveTimer=setTimeout(()=>{sbWrite(fcKey(email),STATE.fcState)},1200);
+}
+
+/* ---------- fila / Leitner ---------- */
+function fcAllStudentCards(){
+  const snap=STATE.studentPortal;const fc=snap?.flashcards||{decks:[],cards:[]};
+  const official=(fc.cards||[]).map(c=>({...c,origem:'deck'}));
+  const mine=(STATE.fcState?.myCards||[]).map(c=>({id:c.id,deckId:'my',ladoA:c.ladoA,ladoB:c.ladoB,origem:'my'}));
+  return official.concat(mine);
+}
+function fcDueInfo(){
+  const stt=STATE.fcState;if(!stt)return{due:[],fresh:[],total:0};
+  const t=today();const due=[],fresh=[];
+  fcAllStudentCards().forEach(c=>{
+    const p=stt.progress[c.id];
+    if(!p)fresh.push(c);
+    else if(String(p.due||'')<=t)due.push({...c,_box:p.box||1});
+  });
+  due.sort((a,b)=>(a._box||1)-(b._box||1));
+  const usedToday=stt.newLog.date===t?Number(stt.newLog.count)||0:0;
+  const freshAllowed=fresh.slice(0,Math.max(0,FC_NEW_PER_DAY-usedToday));
+  return{due,fresh:freshAllowed,total:due.length+freshAllowed.length};
+}
+function fcStartSession(){
+  const info=fcDueInfo();if(!info.total){toast('Nada para revisar agora.');return}
+  STATE.fcSession={queue:info.due.concat(info.fresh.map(c=>({...c,_new:true}))),idx:0,flipped:false,seen:0,ok:0,ko:0,done:false};
+  renderStudent();
+}
+function fcFlip(){if(!STATE.fcSession||STATE.fcSession.flipped)return;STATE.fcSession.flipped=true;renderStudent()}
+function fcAnswer(correct){
+  const s=STATE.fcSession;if(!s||!s.flipped)return;
+  const stt=STATE.fcState;const card=s.queue[s.idx];const t=today();
+  let p=stt.progress[card.id];
+  const isNew=!p;
+  if(isNew){p=stt.progress[card.id]={box:1,due:t,ok:0,ko:0,last:''};
+    if(stt.newLog.date!==t){stt.newLog={date:t,count:0}}stt.newLog.count++;}
+  p.last=nowIso();
+  if(correct){
+    p.ok=(p.ok||0)+1;s.ok++;
+    if(!card._lapsed){p.box=Math.min((p.box||1)+1,3)}
+    p.due=fcAddDays(FC_INTERVALS[p.box]||1);
+  }else{
+    p.ko=(p.ko||0)+1;s.ko++;
+    p.box=1;p.due=fcAddDays(1);
+    s.queue.push({...card,_lapsed:true});
+  }
+  s.seen++;s.idx++;s.flipped=false;
+  if(s.idx>=s.queue.length)s.done=true;
+  fcSaveState();renderStudent();
+}
+function fcEndSession(){STATE.fcSession=null;renderStudent()}
+
+/* ---------- portal do aluno: página ---------- */
+function renderStudentFlashcards(){
+  const snap=STATE.studentPortal;if(!snap)return;
+  const email=snap.student?.email;
+  if(STATE.fcState===undefined||STATE._fcStateEmail!==email){
+    if(STATE._fcLoadingEmail!==email){
+      STATE._fcLoadingEmail=email;STATE.fcState=undefined;
+      fcLoadState(email).then(stt=>{if(STATE._fcLoadingEmail!==email)return;STATE.fcState=stt;STATE._fcStateEmail=email;STATE._fcLoadingEmail='';if(STATE.studentPage==='flashcards'&&STATE.mode==='student')renderStudent()});
+    }
+    $('studentApp').innerHTML=`<div class="hero" style="margin-bottom:28px"><h1>Flashcards</h1><p class="lede">Carregando sua revisão…</p></div>`;
+    return;
+  }
+  if(STATE.fcSession){renderFcSession();return}
+  const fc=snap.flashcards||{decks:[],cards:[]};
+  const info=fcDueInfo();
+  const my=STATE.fcState.myCards||[];
+  const decksHtml=(fc.decks||[]).map(d=>{
+    const n=(fc.cards||[]).filter(c=>c.deckId===d.id).length;
+    return `<div class="fc-deckline"><div><div class="t">${esc(d.titulo)}</div><div class="k">${esc(d.nivel||'')}${d.unidadeRef?' · '+esc(d.unidadeRef):''} · ${fcModoLabel(d.modo)}</div></div><div class="k">${n} cards</div></div>`;
+  }).join('');
+  const myHtml=my.map(c=>`<div class="fc-mycard"><div><div class="a">${esc(c.ladoA)}</div><div class="b">${esc(c.ladoB)}</div></div><button class="linkbtn" onclick="fcDeleteMyCard('${c.id}')">excluir</button></div>`).join('');
+  $('studentApp').innerHTML=`
+    <div class="hero" style="margin-bottom:28px"><h1>Flash<em>cards.</em></h1><p class="lede">Revisão espaçada dos chunks das suas aulas. Pouco por dia, todo dia.</p></div>
+    <div class="fc-stage" style="margin-bottom:40px">
+      <div class="fc-due-big">${info.total}</div>
+      <div class="fc-hint" style="margin-top:6px">${info.total===1?'card para revisar hoje':'cards para revisar hoje'}${info.fresh.length?' · '+info.fresh.length+' novo(s)':''}</div>
+      <div class="fc-actions" style="margin-top:18px">
+        ${info.total?`<button class="fc-btn ok" onclick="fcStartSession()" style="font-size:14px;letter-spacing:.06em">PRATICAR →</button>`:`<button class="fc-btn" disabled style="font-size:13px;color:var(--soft)">Tudo em dia ✓</button>`}
+      </div>
+    </div>
+    ${decksHtml?`<div class="section-title">Seus decks</div><div style="margin-bottom:36px">${decksHtml}</div>`:`<div class="empty" style="margin-bottom:36px">Nenhum deck liberado ainda. Erik vai liberar conforme você avança nas unidades.</div>`}
+    <div class="section-title">Meus cards <span class="count">${my.length}</span></div>
+    <div style="margin-bottom:14px">${myHtml||'<div class="empty">Crie seus próprios cards com chunks que você quer lembrar.</div>'}</div>
+    <button class="btn soft" onclick="fcOpenMyCardModal()">+ criar card</button>`;
+}
+function renderFcSession(){
+  const s=STATE.fcSession;
+  if(s.done){
+    const pct=s.seen?Math.round(s.ok/s.seen*100):0;
+    $('studentApp').innerHTML=`<div class="fc-stage" style="padding-top:40px">
+      <div class="fc-due-big">✓</div>
+      <div style="font-family:'Newsreader',serif;font-size:24px;margin:14px 0 6px">Sessão concluída.</div>
+      <div class="fc-hint">${s.seen} respostas · ${s.ok} ✓ · ${s.ko} ✗ · ${pct}% de acerto</div>
+      <div class="fc-actions" style="margin-top:24px"><button class="fc-btn" onclick="fcEndSession()" style="font-size:13px">voltar</button></div>
+    </div>`;
+    return;
+  }
+  const card=s.queue[s.idx];
+  const pos=`${s.idx+1} / ${s.queue.length}`;
+  $('studentApp').innerHTML=`<div class="fc-stage" style="padding-top:8px">
+    <div class="fc-progress"><span>${pos}</span><span>${card._new?'novo':card._lapsed?'de novo':'revisão'}</span><span>✓ ${s.ok} · ✗ ${s.ko}</span></div>
+    <div class="fc-card${s.flipped?' flipped':''}" onclick="fcFlip()">
+      ${s.flipped
+        ?`<div class="fc-side">resposta</div><div class="fc-answer">${esc(card.ladoB)}</div><div class="fc-side" style="margin-top:10px;color:var(--muted)">${esc(card.ladoA)}</div>`
+        :`<div class="fc-side">${card.origem==='my'?'meu card':'chunk'}</div><div class="fc-text">${esc(card.ladoA)}</div>`}
+    </div>
+    ${s.flipped
+      ?`<div class="fc-actions"><button class="fc-btn ko" onclick="fcAnswer(false)">✗<small>errei</small></button><button class="fc-btn ok" onclick="fcAnswer(true)">✓<small>acertei</small></button></div>`
+      :`<div class="fc-hint">toque no card para ver a resposta</div>`}
+    <div style="margin-top:28px"><button class="linkbtn" onclick="fcEndSession()" style="color:var(--soft)">sair da sessão</button></div>
+  </div>`;
+}
+function fcOpenMyCardModal(){
+  openModal('Criar card','Frente: o chunk em inglês. Verso: o que ele significa pra você.',`<div class="ff-modal-body">
+<div class="form-section">
+<div class="form-row"><label class="ff-label">Frente — chunk / expressão</label><input class="ff-input ff-large" id="fcMyA" placeholder="ex: I'm running late"></div>
+<div class="form-row"><label class="ff-label">Verso — significado / paráfrase</label><input class="ff-input" id="fcMyB" placeholder="ex: estou atrasado"></div>
+</div>
+<div class="form-actions"><div class="form-meta">Meu card</div><div class="right"><button class="btn" onclick="fcSaveMyCard()">salvar →</button></div></div>
+</div>`,'ff-modal');
+  setTimeout(()=>$('fcMyA')?.focus(),50);
+}
+function fcSaveMyCard(){
+  const a=$('fcMyA')?.value.trim();const b=$('fcMyB')?.value.trim();
+  if(!a||!b){toast('Preencha frente e verso.');return}
+  STATE.fcState.myCards.push({id:uid('fcmy'),ladoA:a,ladoB:b,createdAt:nowIso()});
+  fcSaveState();closeModal();toast('Card criado.');renderStudent();
+}
+function fcDeleteMyCard(id){
+  if(!confirm('Excluir este card?'))return;
+  STATE.fcState.myCards=STATE.fcState.myCards.filter(c=>c.id!==id);
+  delete STATE.fcState.progress[id];
+  fcSaveState();renderStudent();
+}
+
+/* ---------- admin ---------- */
+function renderFlashcardsAdmin(){
+  STATE.fcAdmin=STATE.fcAdmin||{deckId:''};
+  const page=$('page-flashcards');if(!page)return;
+  const deck=STATE.fcAdmin.deckId?byId(DB.fcDecks,STATE.fcAdmin.deckId):null;
+  if(!deck){page.innerHTML=fcAdminListHtml();return}
+  page.innerHTML=fcAdminDeckHtml(deck);
+}
+function fcAdminListHtml(){
+  const decks=DB.fcDecks||[];
+  const rows=decks.map(d=>{
+    const n=(DB.fcCards||[]).filter(c=>c.deckId===d.id).length;
+    const rel=(d.releasedTo||[]).length;
+    return `<div class="item"><div class="item-title">${esc(d.titulo)}</div>
+      <div class="badges">${badge(d.nivel||'sem nível','blue')}${badge(fcModoLabel(d.modo))}${badge(n+' cards')}${badge(d.status,d.status==='publicado'?'ok':'warn')}${badge('liberado p/ '+rel+' aluno(s)',rel?'ok':'')}</div>
+      ${d.unidadeRef||d.produto?`<div class="meta">${esc(d.produto||'')}${d.produto&&d.unidadeRef?' · ':''}${esc(d.unidadeRef||'')}</div>`:''}
+      <div class="row-actions"><button class="linkbtn" onclick="fcOpenDeck('${d.id}')">abrir</button><button class="linkbtn" onclick="fcToggleStatus('${d.id}')">${d.status==='publicado'?'despublicar':'publicar'}</button><button class="linkbtn" onclick="fcDeleteDeck('${d.id}')">excluir</button></div></div>`;
+  }).join('');
+  return pageHead('Flashcards','Decks de chunks com revisão espaçada (Leitner) no portal do aluno. Publicar + liberar por aluno = visível.',`<button class="btn" onclick="fcOpenDeckModal()">+ novo deck</button>`)
+    +`<div class="panel"><div class="panel-title">Decks</div><div class="list">${rows||'<div class="empty">Nenhum deck ainda. Crie o primeiro a partir do chunk bank de uma lição.</div>'}</div></div>`;
+}
+function fcAdminDeckHtml(deck){
+  const cards=(DB.fcCards||[]).filter(c=>c.deckId===deck.id);
+  const cardRows=cards.map(c=>`<div class="fc-mycard"><div><div class="a">${esc(c.ladoA)}</div><div class="b">${esc(c.ladoB)}</div></div><div class="row-actions"><button class="linkbtn" onclick="fcEditCard('${c.id}')">editar</button><button class="linkbtn" onclick="fcDeleteCard('${c.id}')">excluir</button></div></div>`).join('');
+  const students=DB.students.filter(s=>s.email&&s.status!=='arquivado');
+  const relRows=students.map(s=>{
+    const on=(deck.releasedTo||[]).includes(s.id);
+    return `<div class="item"><div class="item-title">${esc(s.name)}</div><div class="badges">${badge(s.activeCourseLevel||'—','blue')}${badge(on?'liberado':'não liberado',on?'ok':'')}</div>
+      <div class="row-actions"><button class="linkbtn" onclick="fcToggleRelease('${deck.id}','${s.id}')">${on?'revogar':'liberar'}</button><button class="linkbtn" onclick="fcViewStudentState('${s.id}')">estado / meus cards</button></div></div>`;
+  }).join('');
+  return pageHead(esc(deck.titulo),`${esc(deck.nivel||'sem nível')} · ${fcModoLabel(deck.modo)} · ${deck.status}${deck.unidadeRef?' · '+esc(deck.unidadeRef):''}`,
+      `<button class="btn soft" onclick="fcCloseDeck()">← decks</button><button class="btn soft" onclick="fcOpenDeckModal('${deck.id}')">editar deck</button><button class="btn" onclick="fcToggleStatus('${deck.id}')">${deck.status==='publicado'?'despublicar':'publicar'}</button>`)
+    +`<div class="two">
+      <div class="panel"><div class="panel-title">Cards <span class="count">${cards.length}</span></div>
+        <div style="margin-bottom:6px"><label class="ff-label">Lado A — chunk (EN)</label><input class="ff-input" id="fcNewA" placeholder="ex: Could I get the bill, please?"></div>
+        <div style="margin:10px 0 6px"><label class="ff-label">Lado B — ${deck.modo==='en_en'?'paráfrase (EN)':'significado (PT)'}</label><input class="ff-input" id="fcNewB" placeholder="${deck.modo==='en_en'?'ex: Can you bring the check?':'ex: pode trazer a conta, por favor?'}"></div>
+        <div class="row-actions" style="margin:12px 0 18px"><button class="btn" onclick="fcAddCard('${deck.id}')">+ adicionar card</button></div>
+        ${cardRows||'<div class="empty">Sem cards. Adicione a partir do chunk bank da lição.</div>'}</div>
+      <div class="panel"><div class="panel-title">Liberação por aluno</div><div class="meta" style="margin-bottom:10px">O deck precisa estar <b>publicado</b> e <b>liberado</b> para aparecer no portal.</div><div class="list">${relRows||'<div class="empty">Nenhum aluno ativo com e-mail.</div>'}</div></div>
+    </div>`;
+}
+function fcOpenDeck(id){STATE.fcAdmin={deckId:id};renderFlashcardsAdmin()}
+function fcCloseDeck(){STATE.fcAdmin={deckId:''};renderFlashcardsAdmin()}
+function fcOpenDeckModal(id=''){
+  const d=id?byId(DB.fcDecks,id):null;
+  openModal(d?'Editar deck':'Novo deck','Um deck por unidade/lição funciona bem: os 8 chunks base.',`<div class="ff-modal-body">
+<div class="form-section">
+<div class="form-row"><label class="ff-label">Título <span class="req">*</span></label><input class="ff-input ff-large" id="fcDkTitulo" value="${esc(d?.titulo||'')}" placeholder="ex: Travel 01 — At the airport"></div>
+<div class="form-row split">
+<div><label class="ff-label">Nível</label><input class="ff-input" id="fcDkNivel" value="${esc(d?.nivel||'')}" placeholder="A1, A2, B1.1…"></div>
+<div><label class="ff-label">Modo</label><select class="ff-select" id="fcDkModo"><option value="en_pt"${(d?.modo||'en_pt')==='en_pt'?' selected':''}>EN → PT (até A2)</option><option value="en_en"${d?.modo==='en_en'?' selected':''}>EN → EN (B1.1+)</option></select></div>
+</div>
+<div class="form-row split">
+<div><label class="ff-label">Produto</label><input class="ff-input" id="fcDkProduto" value="${esc(d?.produto||'')}" placeholder="travel · nbe · efc"></div>
+<div><label class="ff-label">Unidade / ref.</label><input class="ff-input" id="fcDkUnidade" value="${esc(d?.unidadeRef||'')}" placeholder="TR01, 5B…"></div>
+</div>
+</div>
+<div class="form-actions"><div class="form-meta">${id?'ID: '+id:'Novo deck'}</div><div class="right"><button class="btn" onclick="fcSaveDeck('${id}')">salvar →</button></div></div>
+</div>`,'ff-modal');
+  setTimeout(()=>$('fcDkTitulo')?.focus(),50);
+}
+function fcSaveDeck(id=''){
+  const titulo=$('fcDkTitulo')?.value.trim();if(!titulo){toast('Título obrigatório.');return}
+  const d=id?byId(DB.fcDecks,id):{id:uid('fcdeck'),status:'rascunho',releasedTo:[],createdAt:nowIso()};
+  d.titulo=titulo;d.nivel=$('fcDkNivel').value.trim();d.modo=$('fcDkModo').value;d.produto=$('fcDkProduto').value.trim();d.unidadeRef=$('fcDkUnidade').value.trim();
+  if(!id)DB.fcDecks.push(d);
+  closeModal();scheduleSave();toast('Deck salvo.');
+}
+function fcToggleStatus(id){const d=byId(DB.fcDecks,id);if(!d)return;d.status=d.status==='publicado'?'rascunho':'publicado';scheduleSave();toast(d.status==='publicado'?'Deck publicado.':'Deck despublicado.')}
+function fcDeleteDeck(id){const d=byId(DB.fcDecks,id);if(!d)return;const n=(DB.fcCards||[]).filter(c=>c.deckId===id).length;if(!confirm(`Excluir "${d.titulo}" e seus ${n} cards? O progresso dos alunos nesses cards deixa de contar.`))return;DB.fcDecks=DB.fcDecks.filter(x=>x.id!==id);DB.fcCards=DB.fcCards.filter(c=>c.deckId!==id);if(STATE.fcAdmin?.deckId===id)STATE.fcAdmin={deckId:''};scheduleSave();toast('Deck excluído.')}
+function fcAddCard(deckId){
+  const a=$('fcNewA')?.value.trim();const b=$('fcNewB')?.value.trim();
+  if(!a||!b){toast('Preencha lado A e lado B.');return}
+  DB.fcCards.push({id:uid('fccard'),deckId,ladoA:a,ladoB:b,createdAt:nowIso()});
+  scheduleSave();toast('Card adicionado.');
+}
+function fcEditCard(id){
+  const c=byId(DB.fcCards,id);if(!c)return;
+  openModal('Editar card','',`<div class="ff-modal-body">
+<div class="form-section">
+<div class="form-row"><label class="ff-label">Lado A</label><input class="ff-input ff-large" id="fcEdA" value="${esc(c.ladoA)}"></div>
+<div class="form-row"><label class="ff-label">Lado B</label><input class="ff-input" id="fcEdB" value="${esc(c.ladoB)}"></div>
+</div>
+<div class="form-actions"><div class="form-meta">ID: ${id}</div><div class="right"><button class="linkbtn" style="color:var(--rust)" onclick="fcDeleteCard('${id}');closeModal()">excluir</button><button class="btn" onclick="fcSaveCardEdit('${id}')">salvar →</button></div></div>
+</div>`,'ff-modal');
+}
+function fcSaveCardEdit(id){const c=byId(DB.fcCards,id);if(!c)return;const a=$('fcEdA').value.trim();const b=$('fcEdB').value.trim();if(!a||!b){toast('Preencha os dois lados.');return}c.ladoA=a;c.ladoB=b;closeModal();scheduleSave();toast('Card atualizado.')}
+function fcDeleteCard(id){if(!confirm('Excluir este card?'))return;DB.fcCards=DB.fcCards.filter(c=>c.id!==id);scheduleSave();toast('Card excluído.')}
+function fcToggleRelease(deckId,studentId){
+  const d=byId(DB.fcDecks,deckId);if(!d)return;
+  d.releasedTo=d.releasedTo||[];
+  const i=d.releasedTo.indexOf(studentId);
+  if(i>=0)d.releasedTo.splice(i,1);else d.releasedTo.push(studentId);
+  scheduleSave();toast(i>=0?'Liberação revogada.':'Deck liberado. Portal será republicado.');
+}
+async function fcViewStudentState(studentId){
+  const st=byId(DB.students,studentId);if(!st?.email){toast('Aluno sem e-mail.');return}
+  openModal('Flashcards · '+st.name,'Carregando estado…','<div class="empty">Buscando no Supabase…</div>');
+  const stt=fcNormalizeState(await sbRead(fcKey(st.email)),st.email);
+  const prog=Object.values(stt.progress);
+  const boxes=[1,2,3].map(b=>prog.filter(p=>(p.box||1)===b).length);
+  const ok=prog.reduce((s,p)=>s+(p.ok||0),0);const ko=prog.reduce((s,p)=>s+(p.ko||0),0);
+  const myHtml=(stt.myCards||[]).map(c=>`<div class="fc-mycard"><div><div class="a">${esc(c.ladoA)}</div><div class="b">${esc(c.ladoB)}</div></div></div>`).join('');
+  openModal('Flashcards · '+st.name,'Estado de revisão e cards criados pelo aluno (leitura).',`
+    <div class="student-grid" style="margin-bottom:16px">
+      <div class="student-card"><div class="num">${prog.length}</div><div class="label">cards vistos</div></div>
+      <div class="student-card"><div class="num">${ok+ko?Math.round(ok/(ok+ko)*100)+'%':'—'}</div><div class="label">acerto</div></div>
+      <div class="student-card"><div class="num">${boxes[0]} · ${boxes[1]} · ${boxes[2]}</div><div class="label">caixas 1 · 2 · 3</div></div>
+      <div class="student-card"><div class="num">${(stt.myCards||[]).length}</div><div class="label">meus cards</div></div>
+    </div>
+    <div class="panel-title">Meus cards do aluno</div>
+    ${myHtml||'<div class="empty">O aluno ainda não criou cards próprios.</div>'}
+    <div class="meta" style="margin-top:12px">O que o aluno escolhe transformar em card é uma janela no <i>noticing</i> dele — material de conversa em aula.</div>`);
+}
+/* =================== fim FLASHCARDS =================== */
+
 
 function togglePlanStatus(id){const l=byId(DB.lessons,id);if(!l)return;l.planStatus=l.planStatus==='preparada'?'a planejar':'preparada';scheduleSave();toast('Marcada como '+l.planStatus+'.')}
 function markLessonDone(id){const l=byId(DB.lessons,id);if(!l)return;l.status=l.status==='dada'?'agendada':'dada';scheduleSave();renderDashboard();toast(l.status==='dada'?'Aula marcada como dada ✓':'Aula desmarcada.');}
